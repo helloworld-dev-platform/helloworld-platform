@@ -1,0 +1,4 @@
+rootProject.name = 'helloworld-platform'
+
+include 'backend-api'
+include 'websocket-server'
