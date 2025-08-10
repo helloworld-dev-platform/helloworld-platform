@@ -1,0 +1,77 @@
+name: backend_deploy
+
+# main 브랜치에 push 이벤트 발생 시 실행
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: [self-hosted]
+    env:
+      NGROK_TOKEN:        ${{ secrets.NGROK_TOKEN }}
+      DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # --------------------------------------------------------
+      # 1) 빌드 & 배포: 오류 나도 바로 실패 처리하지 않고 다음 스텝에서 판단
+      - name: Build & start containers
+        id: deploy-step
+        continue-on-error: true
+        run: |
+          docker-compose up -d --build
+
+      # --------------------------------------------------------
+      # 2) 롤백 (빌드/배포 실패 시 이전 이미지로 복구)
+      - name: Rollback to last successful version
+        if: ${{ steps.deploy-step.outcome != 'success' }}
+        run: |
+          echo "🚨 Deployment failed – rolling back to last known-good state"
+          docker-compose down
+          docker-compose up -d --no-build
+          exit 1
+
+      # --------------------------------------------------------
+      # 3) ngrok 터널링 (배포 성공 시에만 실행됩니다)
+      - name: Start ngrok tunnels
+        id: ngrok
+        run: |
+          ./ngrok authtoken $NGROK_TOKEN
+          nohup ./ngrok http 8081 --region=ap --log=stdout > ngrok-api.log &
+          nohup ./ngrok http 8091 --region=ap --log=stdout > ngrok-ws.log &
+          sleep 5
+
+          # ngrok 로컬 API에서 터널 정보 파싱
+          DATA=$(curl -s http://127.0.0.1:4040/api/tunnels)
+          API_URL=$(echo "$DATA" \
+            | jq -r '.tunnels[] | select(.config.addr=="http://localhost:8081") .public_url')
+          WS_URL=$(echo "$DATA" \
+            | jq -r '.tunnels[] | select(.config.addr=="http://localhost:8091") .public_url')
+
+          # GitHub Actions Outputs 설정
+          echo "api_url=$API_URL" >> $GITHUB_OUTPUT
+          echo "ws_url=$WS_URL"   >> $GITHUB_OUTPUT
+
+      - name: Show public URLs
+        run: |
+          echo "REST API 👉 ${{ steps.ngrok.outputs.api_url }}"
+          echo "WebSocket 👉 ${{ steps.ngrok.outputs.ws_url }}"
+
+      # --------------------------------------------------------
+      # 4) 배포 성공 시 Discord 알림
+      - name: Discord Notification (Success)
+        if: ${{ success() }}
+        run: |
+          curl -H "Content-Type: application/json" -X POST "${{ env.DISCORD_WEBHOOK_URL }}" \
+            -d "{\"content\":\"✅ 배포 성공!\n• REST API: ${{ steps.ngrok.outputs.api_url }}\n• WebSocket: ${{ steps.ngrok.outputs.ws_url }}\"}"
+
+      # 5) 배포 실패 시 Discord 알림 (롤백 직후 실행)
+      - name: Discord Notification (Failure)
+        if: ${{ failure() }}
+        run: |
+          curl -H "Content-Type: application/json" -X POST "${{ env.DISCORD_WEBHOOK_URL }}" \
+            -d "{\"content\":\"❌ 배포 실패했습니다. 롤백이 완료되었어요.\"}"
