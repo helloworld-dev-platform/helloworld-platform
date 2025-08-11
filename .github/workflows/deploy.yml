@@ -8,11 +8,13 @@ on:
 
 jobs:
   deploy:
-    runs-on: [self-hosted]
+    runs-on: [ self-hosted ]
     env:
-      NGROK_TOKEN:        ${{ secrets.NGROK_TOKEN }}
+      NGROK_TOKEN: ${{ secrets.NGROK_TOKEN }}
       DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
-
+      POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
+      POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
+      POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -23,16 +25,16 @@ jobs:
         id: deploy-step
         continue-on-error: true
         run: |
-          docker-compose up -d --build
+          docker compose up -d --build
 
       # --------------------------------------------------------
       # 2) 롤백 (빌드/배포 실패 시 이전 이미지로 복구)
       - name: Rollback to last successful version
         if: ${{ steps.deploy-step.outcome != 'success' }}
         run: |
-          echo "🚨 Deployment failed – rolling back to last known-good state"
-          docker-compose down
-          docker-compose up -d --no-build
+          echo "Deployment failed – rolling back to last known-good state"
+          docker compose down
+          docker compose up -d --no-build
           exit 1
 
       # --------------------------------------------------------
