@@ -41,6 +41,7 @@ jobs:
       # 3) ngrok 터널링 (배포 성공 시에만 실행됩니다)
       - name: Start ngrok tunnels
         id: ngrok
+        shell: bash
         run: |
           ./ngrok authtoken $NGROK_TOKEN
           nohup ./ngrok http 8081 --region=ap --log=stdout > ngrok-api.log &
