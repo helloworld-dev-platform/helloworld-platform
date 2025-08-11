@@ -1,11 +1,19 @@
 FROM gradle:8.7-jdk21 AS build
 WORKDIR /app
-COPY . .
+
+# 1. 빌드 파일만 복사
+COPY build.gradle gradlew gradlew.bat ./
+COPY gradle ./gradle
+
+# 2. 의존성 다운로드 (캐시 활용)
+RUN gradle dependencies --no-daemon
+
+# 3. 나머지 소스 코드 복사
+COPY src ./src
+
+# 4. 애플리케이션 빌드
 RUN gradle clean bootJar --no-daemon
-#jar 파일 경로 확인하기 위한 디버깅
-RUN find /app/build -maxdepth 2 -type f -name "*.jar" -ls
-RUN ls -la /app/build || true
-RUN ls -la /app/build/libs || true
+
 
 FROM eclipse-temurin:21-jre
 WORKDIR /app
