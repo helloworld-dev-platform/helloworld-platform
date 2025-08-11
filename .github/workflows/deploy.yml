@@ -31,8 +31,10 @@ jobs:
       # 2) 롤백 (빌드/배포 실패 시 이전 이미지로 복구)
       - name: Rollback to last successful version
         if: ${{ steps.deploy-step.outcome != 'success' }}
+        shell: powershell
         run: |
-          echo "Deployment failed – rolling back to last known-good state"
+          $ErrorActionPreference = "Stop"
+          Write-Host "Deployment failed - rolling back to last known good state"
           docker compose down
           docker compose up -d --no-build
           exit 1
@@ -41,40 +43,57 @@ jobs:
       # 3) ngrok 터널링 (배포 성공 시에만 실행됩니다)
       - name: Start ngrok tunnels
         id: ngrok
-        shell: bash
+        shell: powershell
         run: |
-          ./ngrok authtoken $NGROK_TOKEN
-          nohup ./ngrok http 8081 --region=ap --log=stdout > ngrok-api.log &
-          nohup ./ngrok http 8091 --region=ap --log=stdout > ngrok-ws.log &
-          sleep 5
+          $ErrorActionPreference = "Stop"
+          
+          # ngrok 다운로드
+          Invoke-WebRequest https://bin.equinox.io/c/bNyj1mQVY4c/ngrok-v3-stable-windows-amd64.zip -OutFile ngrok.zip
+          Expand-Archive ngrok.zip -DestinationPath .
 
-          # ngrok 로컬 API에서 터널 정보 파싱
-          DATA=$(curl -s http://127.0.0.1:4040/api/tunnels)
-          API_URL=$(echo "$DATA" \
-            | jq -r '.tunnels[] | select(.config.addr=="http://localhost:8081") .public_url')
-          WS_URL=$(echo "$DATA" \
-            | jq -r '.tunnels[] | select(.config.addr=="http://localhost:8091") .public_url')
-
+          # ngrok.yml을 config로 터널 시작
+          Start-Process -FilePath .\ngrok.exe -ArgumentList "start --all --config ngrok.yml --log=stdout" -RedirectStandardOutput ngrok.log -NoNewWindow
+          Start-Sleep -Seconds 5
+          
+          # 4040 API에서 퍼블릭URL 조회
+          $data = Invoke-RestMethod http://127.0.0.1:4040/api/tunnels
+          $api = ($data.tunnels | Where-Object { $_.name -eq "api" }).public_url
+          $ws  = ($data.tunnels | Where-Object { $_.name -eq "ws" }).public_url
+          
           # GitHub Actions Outputs 설정
-          echo "api_url=$API_URL" >> $GITHUB_OUTPUT
-          echo "ws_url=$WS_URL"   >> $GITHUB_OUTPUT
+          "api_url=$api" | Out-File -FilePath $env:GITHUB_OUTPUT -Append -Encoding utf8
+          "ws_url=$ws"   | Out-File -FilePath $env:GITHUB_OUTPUT -Append -Encoding utf8
 
       - name: Show public URLs
+        shell: powershell
         run: |
-          echo "REST API  ${{ steps.ngrok.outputs.api_url }}"
-          echo "WebSocket  ${{ steps.ngrok.outputs.ws_url }}"
+          Write-Host "REST API    ${{ steps.ngrok.outputs.api_url }}"
+          Write-Host "WebSocket   ${{ steps.ngrok.outputs.ws_url }}"
 
       # --------------------------------------------------------
       # 4) 배포 성공 시 Discord 알림
       - name: Discord Notification (Success)
         if: ${{ success() }}
+        shell: powershell
         run: |
-          curl -H "Content-Type: application/json" -X POST "${{ env.DISCORD_WEBHOOK_URL }}" \
-            -d "{\"content\":\" 배포 성공!\n• REST API: ${{ steps.ngrok.outputs.api_url }}\n• WebSocket: ${{ steps.ngrok.outputs.ws_url }}\"}"
+          $ErrorActionPreference = "Stop"
+          $webhook = $env:DISCORD_WEBHOOK_URL
+          $content = @"
+                배포성공!!!!
+                • REST API: ${{ steps.ngrok.outputs.api_url }}
+                • WebSocket: ${{ steps.ngrok.outputs.ws_url }}
+                "@
+          $body = @{ content = $content } | ConvertTo-Json
+          Invoke-RestMethod -Uri $webhook -Method Post -ContentType 'application/json' -Body $body
 
+      # --------------------------------------------------------
       # 5) 배포 실패 시 Discord 알림 (롤백 직후 실행)
       - name: Discord Notification (Failure)
         if: ${{ failure() }}
+        shell: powershell
         run: |
-          curl -H "Content-Type: application/json" -X POST "${{ env.DISCORD_WEBHOOK_URL }}" \
-            -d "{\"content\":\" 배포 실패했습니다. 롤백이 완료되었어요.\"}"
+          $ErrorActionPreference = "Stop"
+          $webhook = $env:DISCORD_WEBHOOK_URL
+          $content = "배포 실패! 롤백 완료."
+          $body = @{ content = $content } | ConvertTo-Json
+          Invoke-RestMethod -Uri $webhook -Method Post -ContentType 'application/json' -Body $body
