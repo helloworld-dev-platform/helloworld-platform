@@ -61,8 +61,8 @@ jobs:
 
       - name: Show public URLs
         run: |
-          echo "REST API 👉 ${{ steps.ngrok.outputs.api_url }}"
-          echo "WebSocket 👉 ${{ steps.ngrok.outputs.ws_url }}"
+          echo "REST API  ${{ steps.ngrok.outputs.api_url }}"
+          echo "WebSocket  ${{ steps.ngrok.outputs.ws_url }}"
 
       # --------------------------------------------------------
       # 4) 배포 성공 시 Discord 알림
@@ -70,11 +70,11 @@ jobs:
         if: ${{ success() }}
         run: |
           curl -H "Content-Type: application/json" -X POST "${{ env.DISCORD_WEBHOOK_URL }}" \
-            -d "{\"content\":\"✅ 배포 성공!\n• REST API: ${{ steps.ngrok.outputs.api_url }}\n• WebSocket: ${{ steps.ngrok.outputs.ws_url }}\"}"
+            -d "{\"content\":\" 배포 성공!\n• REST API: ${{ steps.ngrok.outputs.api_url }}\n• WebSocket: ${{ steps.ngrok.outputs.ws_url }}\"}"
 
       # 5) 배포 실패 시 Discord 알림 (롤백 직후 실행)
       - name: Discord Notification (Failure)
         if: ${{ failure() }}
         run: |
           curl -H "Content-Type: application/json" -X POST "${{ env.DISCORD_WEBHOOK_URL }}" \
-            -d "{\"content\":\"❌ 배포 실패했습니다. 롤백이 완료되었어요.\"}"
+            -d "{\"content\":\" 배포 실패했습니다. 롤백이 완료되었어요.\"}"
