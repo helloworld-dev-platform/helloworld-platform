@@ -1,0 +1,11 @@
+version: "3"
+agent:
+  authtoken: ${NGROK_AUTH_TOKEN}
+tunnels:
+  api:
+    proto: http
+    addr: 8081
+
+  ws:
+    proto: http # HTTP 터널(=WebSocket 트래픽도 처리) 
+    addr: 8091
