@@ -76,14 +76,28 @@ jobs:
         if: ${{ success() }}
         shell: powershell
         run: |
-          $ErrorActionPreference = "Stop"
           $webhook = $env:DISCORD_WEBHOOK_URL
-          $content = @"
-                배포성공!!!!
-                • REST API: ${{ steps.ngrok.outputs.api_url }}
-                • WebSocket: ${{ steps.ngrok.outputs.ws_url }}
-                "@
-          $body = @{ content = $content } | ConvertTo-Json
+          $body = @{
+            "content" = ""
+            "embeds" = @(
+              @{
+                "title" = "배포 성공!"
+                "color" = 65280 # Green
+                "fields" = @(
+                  @{
+                    "name" = "REST API"
+                    "value" = "${{ steps.ngrok.outputs.api_url }}"
+                    "inline" = $false
+                  },
+                  @{
+                    "name" = "WebSocket"
+                    "value" = "${{ steps.ngrok.outputs.ws_url }}"
+                    "inline" = $false
+                  }
+                )
+              }
+            )
+          } | ConvertTo-Json -Depth 5
           Invoke-RestMethod -Uri $webhook -Method Post -ContentType 'application/json' -Body $body
 
       # --------------------------------------------------------
@@ -92,8 +106,15 @@ jobs:
         if: ${{ failure() }}
         shell: powershell
         run: |
-          $ErrorActionPreference = "Stop"
           $webhook = $env:DISCORD_WEBHOOK_URL
-          $content = "배포 실패! 롤백 완료."
-          $body = @{ content = $content } | ConvertTo-Json
+          $body = @{
+            "content" = ""
+            "embeds" = @(
+              @{
+                "title" = "배포 실패!"
+                "description" = "배포에 실패하여 이전 버전으로 롤백했습니다."
+                "color" = 16711680 # Red
+              }
+            )
+          } | ConvertTo-Json -Depth 5
           Invoke-RestMethod -Uri $webhook -Method Post -ContentType 'application/json' -Body $body
