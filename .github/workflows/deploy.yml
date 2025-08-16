@@ -174,9 +174,7 @@ jobs:
               }
             )
           } | ConvertTo-Json -Depth 5 -Compress
-          $encodedBody = [System.Text.Encoding]::UTF8.GetBytes($jsonBody)
-          Invoke-RestMethod -Uri $webhook -Method Post -ContentType 'application/json; charset=utf-8' -Body $encodedBody
-
+          Invoke-RestMethod -Uri $webhook -Method Post -ContentType 'application/json; charset=utf-8' -Body $jsonBody
       # --------------------------------------------------------
       # 6) 배포 실패 시 Discord 알림 (롤백 직후 실행)
       - name: Discord Notification (Failure)
@@ -194,5 +192,4 @@ jobs:
               }
             )
           } | ConvertTo-Json -Depth 5 -Compress
-          $encodedBody = [System.Text.Encoding]::UTF8.GetBytes($jsonBody)
-          Invoke-RestMethod -Uri $webhook -Method Post -ContentType 'application/json; charset=utf-8' -Body $encodedBody
+          Invoke-RestMethod -Uri $webhook -Method Post -ContentType 'application/json; charset=utf-8' -Body $jsonBody
