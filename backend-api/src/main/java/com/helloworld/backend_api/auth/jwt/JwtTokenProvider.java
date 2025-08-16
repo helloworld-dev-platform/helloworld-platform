@@ -1,12 +1,16 @@
 package com.helloworld.backend_api.auth.jwt;
 
 import com.helloworld.backend_api.user.domain.Users;
-import io.jsonwebtoken.*;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jws;
+import io.jsonwebtoken.JwtException;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
-import java.nio.charset.StandardCharsets;
-import java.security.Key;
 import java.util.Date;
+import javax.crypto.SecretKey;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -18,16 +22,17 @@ import org.springframework.stereotype.Component;
 public class JwtTokenProvider {
 
   private final JwtProperties jwtProperties;
-  private Key secretKey; //시크릿키객체
+  private SecretKey secretKey; //시크릿키객체
 
   //의존성주입 후, 시크릿키 초기화 메서드 실행함
   @PostConstruct
   public void init() {
     if (jwtProperties.getSecretKey() == null) {
       throw new IllegalArgumentException("JWT시크릿 키가 null입니다.");
+    } else {
+      byte[] keyBytes = Decoders.BASE64.decode(this.jwtProperties.getSecretKey());
+      this.secretKey = Keys.hmacShaKeyFor(keyBytes);
     }
-    this.secretKey = Keys.hmacShaKeyFor(
-        jwtProperties.getSecretKey().getBytes(StandardCharsets.UTF_8));
   }
 
   /**
