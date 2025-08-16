@@ -169,12 +169,12 @@ jobs:
       - name: Discord Notification (Success)
         if: ${{ success() }}
         run: |
-          curl.exe -H "Content-Type: application/json" -X POST "${{ env.DISCORD_WEBHOOK_URL }}" \
-            -d "{\"content\":\" Deploy Success!\n• REST API: ${{ steps.ngrok.outputs.api_url }}\n• WebSocket: ${{ steps.ngrok.outputs.ws_url }}\"}"
+          curl.exe -H "Content-Type: application/json" -X POST "${{ env.DISCORD_WEBHOOK_URL }}" `
+            -d "{\"content\":\" Deploy Success!\\n• REST API: ${{ steps.ngrok.outputs.api_url }}\\n• WebSocket: ${{ steps.ngrok.outputs.ws_url }}\"}"
       # --------------------------------------------------------
       # 6) 배포 실패 시 Discord 알림 (롤백 직후 실행)
       - name: Discord Notification (Failure)
         if: ${{ failure() }}
         run: |
-          curl.exe -H "Content-Type: application/json" -X POST "${{ env.DISCORD_WEBHOOK_URL }}" \
+          curl.exe -H "Content-Type: application/json" -X POST "${{ env.DISCORD_WEBHOOK_URL }}" `
             -d "{\"content\":\" Deploy failure..rollback complete.\"}"
