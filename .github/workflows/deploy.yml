@@ -33,12 +33,27 @@ jobs:
       - name: Tag previous versions for rollback
         shell: powershell
         run: |
-          # 💡 [개선] IMAGE_NAMES에 정의된 모든 서비스에 대해 반복 실행
           foreach ($imageName in "${{ env.IMAGE_NAMES }}".Split(',')) {
-            Write-Host "Backing up image: $imageName"
-            docker pull ${{ env.REGISTRY }}/${{ env.DOCKER_USERNAME }}/$imageName:latest || true
-            docker tag ${{ env.REGISTRY }}/${{ env.DOCKER_USERNAME }}/$imageName:latest ${{ env.REGISTRY }}/${{ env.DOCKER_USERNAME }}/$imageName:previous || true
-            docker push ${{ env.REGISTRY }}/${{ env.DOCKER_USERNAME }}/$imageName:previous || true
+            # docker pull 실패 시 경고만 출력하고 계속 진행
+              try {
+              docker pull ${{ env.REGISTRY }}/${{ env.DOCKER_USERNAME }}/$imageName:latest -ErrorAction Stop
+            } catch {
+              Write-Warning "Failed to pull 'latest' for $imageName. It might be the first deployment."
+            }
+          
+              # docker tag 실패 시 경고만 출력하고 계속 진행
+              try {
+              docker tag ${{ env.REGISTRY }}/${{ env.DOCKER_USERNAME }}/$imageName:latest ${{ env.REGISTRY }}/${{ env.DOCKER_USERNAME }}/$imageName:previous -ErrorAction Stop
+            } catch {
+              Write-Warning "Failed to tag 'previous' for $imageName."
+            }
+          
+              # docker push 실패 시 경고만 출력하고 계속 진행
+              try {
+              docker push ${{ env.REGISTRY }}/${{ env.DOCKER_USERNAME }}/$imageName:previous -ErrorAction Stop
+            } catch {
+              Write-Warning "Failed to push 'previous' for $imageName."
+            }
           }
 
       # --------------------------------------------------------
@@ -157,7 +172,7 @@ jobs:
             "content" = ""
             "embeds" = @(
               @{
-                "title" = "💡배포 성공!"
+                "title" = "✅ 배포 성공!"
                 "color" = 65280 # Green
                 "fields" = @(
                   @{
@@ -174,7 +189,12 @@ jobs:
               }
             )
           } | ConvertTo-Json -Depth 5 -Compress
-          Invoke-RestMethod -Uri $webhook -Method Post -ContentType 'application/json; charset=utf-8' -Body $jsonBody
+          
+          # JSON 문자열을 UTF-8 형식으로 임시 파일에 저장
+          $jsonBody | Out-File -FilePath payload.json -Encoding utf8
+          
+          # curl을 사용해 임시 파일을 본문으로 전송 (-d @파일이름)
+          curl.exe -X POST -H "Content-Type: application/json" -d "@payload.json" -v $webhook
       # --------------------------------------------------------
       # 6) 배포 실패 시 Discord 알림 (롤백 직후 실행)
       - name: Discord Notification (Failure)
@@ -186,10 +206,15 @@ jobs:
             "content" = ""
             "embeds" = @(
               @{
-                "title" = "❌배포 실패!"
+                "title" = "❌ 배포 실패!"
                 "description" = "배포에 실패하여 이전 버전으로 롤백했습니다."
                 "color" = 16711680 # Red
               }
             )
           } | ConvertTo-Json -Depth 5 -Compress
-          Invoke-RestMethod -Uri $webhook -Method Post -ContentType 'application/json; charset=utf-8' -Body $jsonBody
+          
+          # JSON 문자열을 UTF-8 형식으로 임시 파일에 저장
+          jsonBody | Out-File -FilePath payload.json -Encoding utf8
+
+          # curl을 사용해 임시 파일을 본문으로 전송 (-d @파일이름)
+          url.exe -X POST -H "Content-Type: application/json" -d "@payload.json" -v $webhook
