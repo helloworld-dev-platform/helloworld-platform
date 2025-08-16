@@ -214,7 +214,7 @@ jobs:
           } | ConvertTo-Json -Depth 5 -Compress
           
           # JSON 문자열을 UTF-8 형식으로 임시 파일에 저장
-          jsonBody | Out-File -FilePath payload.json -Encoding utf8
+          $jsonBody | Out-File -FilePath payload.json -Encoding utf8
 
           # curl을 사용해 임시 파일을 본문으로 전송 (-d @파일이름)
-          url.exe -X POST -H "Content-Type: application/json" -d "@payload.json" -v $webhook
+          curl.exe -X POST -H "Content-Type: application/json" -d "@payload.json" -v $webhook
