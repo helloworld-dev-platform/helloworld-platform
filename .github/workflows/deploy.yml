@@ -166,56 +166,13 @@ jobs:
       # 5) 배포 성공 시 Discord 알림
       - name: Discord Notification (Success)
         if: ${{ success() }}
-        shell: powershell
         run: |
-          $webhook = $env:DISCORD_WEBHOOK_URL
-          $jsonBody = @{
-            "content" = ""
-            "embeds" = @(
-              @{
-                "title" = "✅ 배포 성공!"
-                "color" = 65280 # Green
-                "fields" = @(
-                  @{
-                    "name" = "REST API"
-                    "value" = "${{ steps.ngrok.outputs.api_url }}"
-                    "inline" = $false
-                  },
-                  @{
-                    "name" = "WebSocket"
-                    "value" = "${{ steps.ngrok.outputs.ws_url }}"
-                    "inline" = $false
-                  }
-                )
-              }
-            )
-          } | ConvertTo-Json -Depth 5 -Compress
-          
-          # JSON 문자열을 UTF-8 형식으로 임시 파일에 저장
-          Set-Content -Path payload.json -Value $jsonBody -Encoding utf8
-          
-          # curl을 사용해 임시 파일을 본문으로 전송 (-d @파일이름)
-          curl.exe -X POST -H "Content-Type: application/json" -d "@payload.json" -v $webhook
+          curl -H "Content-Type: application/json" -X POST "${{ env.DISCORD_WEBHOOK_URL }}" \
+            -d "{\"content\":\" Deploy Success!\n• REST API: ${{ steps.ngrok.outputs.api_url }}\n• WebSocket: ${{ steps.ngrok.outputs.ws_url }}\"}"
       # --------------------------------------------------------
       # 6) 배포 실패 시 Discord 알림 (롤백 직후 실행)
       - name: Discord Notification (Failure)
         if: ${{ failure() }}
-        shell: powershell
         run: |
-          $webhook = $env:DISCORD_WEBHOOK_URL
-          $jsonBody = @{
-            "content" = ""
-            "embeds" = @(
-              @{
-                "title" = "❌ 배포 실패!"
-                "description" = "배포에 실패하여 이전 버전으로 롤백했습니다."
-                "color" = 16711680 # Red
-              }
-            )
-          } | ConvertTo-Json -Depth 5 -Compress
-          
-          # JSON 문자열을 UTF-8 형식으로 임시 파일에 저장
-          Set-Content -Path payload.json -Value $jsonBody -Encoding utf8
-
-          # curl을 사용해 임시 파일을 본문으로 전송 (-d @파일이름)
-          curl.exe -X POST -H "Content-Type: application/json" -d "@payload.json" -v $webhook
+          curl -H "Content-Type: application/json" -X POST "${{ env.DISCORD_WEBHOOK_URL }}" \
+            -d "{\"content\":\" Deploy failure..rollback complete.\"}"
