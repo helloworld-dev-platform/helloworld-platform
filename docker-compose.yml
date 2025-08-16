@@ -2,7 +2,7 @@ services:
   backend-server:
     build:
       context: ./backend-api
-    image: helloworld-backend-server:latest
+    image: backend-server:${IMAGE_TAG:-latest}
     container_name: backend-server
     environment:
       - SPRING_PROFILES_ACTIVE=local
@@ -22,7 +22,7 @@ services:
   websocket-server:
     build:
       context: ./websocket-server
-    image: helloworld-websocket-server:latest
+    image: websocket-server:${IMAGE_TAG:-latest}
     container_name: websocket-server
     environment:
       - SPRING_PROFILES_ACTIVE=local
