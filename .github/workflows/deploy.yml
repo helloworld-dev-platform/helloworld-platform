@@ -101,13 +101,15 @@ jobs:
           }
           
           #ngrok.yml 파일 환경변수 설정
-          $ngrokConfigPath = "${{ github.workspace }}/.github/workflows/ngrok.yml"
-          $content = Get-Content $ngrokConfigPath
+          $ngrokTemplatePath = "${{ github.workspace }}/.github/workflows/ngrok.yml"
+          $ngrokConfigPath = "ngrok-config.yml" 
+          
+          $content = Get-Content $ngrokTemplatePath
           $content = $content -replace '\${NGROK_TOKEN}', "$env:NGROK_TOKEN"
           Set-Content -Path $ngrokConfigPath -Value $content
           
           # ngrok.yml을 config로 터널 시작
-          Start-Process -FilePath .\ngrok.exe -ArgumentList "start --all --config ngrok.yml --log=stdout" -RedirectStandardOutput ngrok.log -NoNewWindow
+          Start-Process -FilePath .\ngrok.exe -ArgumentList "start --all --config $ngrokConfigPath --log=stdout" -RedirectStandardOutput ngrok.log -NoNewWindow
           
           # ngrok API 준비될때까지 5회 재시도
           Write-Host "Waiting for ngrok API to be ready..."
@@ -155,7 +157,7 @@ jobs:
             "content" = ""
             "embeds" = @(
               @{
-                "title" = "배포 성공!"
+                "title" = "💡배포 성공!"
                 "color" = 65280 # Green
                 "fields" = @(
                   @{
@@ -186,7 +188,7 @@ jobs:
             "content" = ""
             "embeds" = @(
               @{
-                "title" = "배포 실패!"
+                "title" = "❌배포 실패!"
                 "description" = "배포에 실패하여 이전 버전으로 롤백했습니다."
                 "color" = 16711680 # Red
               }
