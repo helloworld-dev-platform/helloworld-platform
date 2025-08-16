@@ -29,31 +29,31 @@ jobs:
           password: ${{ secrets.DOCKER_TOKEN }}
 
       # 1) 롤백을 위한 이전 버전(latest) 백업
-      - name: Tag previous versions for rollback
-        shell: powershell
-        run: |
-          foreach ($imageName in "${{ env.IMAGE_NAMES }}".Split(',')) {
-              Write-Host "Attempting to back up latest version of $imageName.."
-              try {
-              $srcImage = "$($env:REGISTRY)/$($env:DOCKER_USERNAME)/$imageName:latest"
-              $dstImage = "$($env:REGISTRY)/$($env:DOCKER_USERNAME)/$imageName:previous"
-                        
-              docker pull $srcImage -ErrorAction Stop
-              Write-Host "Pull successful. Tagging and pushing 'previous' version of $imageName"
-          
-              docker tag $srcImage $dstImage
-              if ($LASTEXITCODE -ne 0) {
-              throw "Failed to tag 'previous' for $imageName."
-            }
-          
-              docker push $dstImage
-              if ($LASTEXITCODE -ne 0) {
-              throw "Failed to push 'previous' for $imageName."
-            }
-            } catch {
-              Write-Warning "Could not pull 'latest' for $imageName. This is expected on the first deployment. Skipping backup."
-            }
-          }
+      #      - name: Tag previous versions for rollback
+      #        shell: powershell
+      #        run: |
+      #          foreach ($imageName in "${{ env.IMAGE_NAMES }}".Split(',')) {
+      #              Write-Host "Attempting to back up latest version of $imageName.."
+      #              try {
+      #              $srcImage = "$($env:REGISTRY)/$($env:DOCKER_USERNAME)/$imageName:latest"
+      #              $dstImage = "$($env:REGISTRY)/$($env:DOCKER_USERNAME)/$imageName:previous"
+      #
+      #              docker pull $srcImage -ErrorAction Stop
+      #              Write-Host "Pull successful. Tagging and pushing 'previous' version of $imageName"
+      #
+      #              docker tag $srcImage $dstImage
+      #              if ($LASTEXITCODE -ne 0) {
+      #              throw "Failed to tag 'previous' for $imageName."
+      #            }
+      #
+      #              docker push $dstImage
+      #              if ($LASTEXITCODE -ne 0) {
+      #              throw "Failed to push 'previous' for $imageName."
+      #            }
+      #            } catch {
+      #              Write-Warning "Could not pull 'latest' for $imageName. This is expected on the first deployment. Skipping backup."
+      #            }
+      #          }
 
       # --------------------------------------------------------
       # 2) 새 버전 빌드 & 푸시 & 배포
