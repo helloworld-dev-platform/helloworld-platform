@@ -101,7 +101,7 @@ jobs:
           }
           
           #ngrok.yml 파일 환경변수 설정
-          $ngrokTemplatePath = "${{ github.workspace }}/.github/workflows/ngrok.yml"
+          $ngrokTemplatePath = "${{ github.workspace }}/ngrok.yml"
           $ngrokConfigPath = "ngrok-config.yml" 
           
           $content = Get-Content $ngrokTemplatePath
