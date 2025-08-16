@@ -41,22 +41,59 @@ jobs:
 
       # --------------------------------------------------------
       # 3) ngrok 터널링 (배포 성공 시에만 실행됩니다)
-      - name: Start ngrok tunnels
+      - name: Setup ngrok with cache
+        id: setup-ngrok
+        uses: actions/cache@v4
+        with:
+          path: ngrok.exe #ngrok설치파일 캐싱
+          key: ${{ runner.os }}-ngrok-v3 #캐시 식별 고유키
+
+      - name: Download and start ngrok
         id: ngrok
         shell: powershell
         run: |
           $ErrorActionPreference = "Stop"
           
           # ngrok 다운로드
-          Invoke-WebRequest https://bin.equinox.io/c/bNyj1mQVY4c/ngrok-v3-stable-windows-amd64.zip -OutFile ngrok.zip
-          Expand-Archive ngrok.zip -DestinationPath .
-
+          if ($env:CACHE_HIT -ne 'true') {
+            Write-Host "ngrok not found in cache. Downloading..."
+            Invoke-WebRequest https://bin.equinox.io/c/bNyj1mQVY4c/ngrok-v3-stable-windows-amd64.zip -OutFile ngrok.zip
+            Expand-Archive ngrok.zip -DestinationPath .
+          } else {
+            Write-Host "ngrok restored from cache."
+          }
+          
+          #ngrok.yml 파일 환경변수 설정
+          $ngrokConfigPath = "${{ github.workspace }}/.github/workflows/ngrok.yml"
+          $content = Get-Content $ngrokConfigPath
+          $content = $content -replace '\${NGROK_TOKEN}', "$env:NGROK_TOKEN"
+          Set-Content -Path $ngrokConfigPath -Value $content
+          
           # ngrok.yml을 config로 터널 시작
           Start-Process -FilePath .\ngrok.exe -ArgumentList "start --all --config ngrok.yml --log=stdout" -RedirectStandardOutput ngrok.log -NoNewWindow
-          Start-Sleep -Seconds 5
           
-          # 4040 API에서 퍼블릭URL 조회
-          $data = Invoke-RestMethod http://127.0.0.1:4040/api/tunnels
+          # ngrok API 준비될때까지 5회 재시도
+          Write-Host "Waiting for ngrok API to be ready..."
+          $maxRetries = 5
+          $retryDelay = 3
+          for ($i=0; $i -lt $maxRetries; $i++) {
+              try {
+                  Start-Sleep -Seconds $retryDelay
+                  $data = Invoke-RestMethod http://127.0.0.1:4040/api/tunnels -ErrorAction Stop
+                  if ($data.tunnels.Count -gt 0) {
+                      Write-Host "ngrok API is ready."
+                      break
+                  }
+              } catch {
+                  Write-Host "ngrok API not ready, retrying... ($($i+1)/$maxRetries)"
+              }
+              if ($i -eq ($maxRetries - 1)) {
+                  Write-Error "Failed to connect to ngrok API after $maxRetries retries."
+                  exit 1
+              }
+          }
+          
+          # 퍼블릭URL 조회
           $api = ($data.tunnels | Where-Object { $_.name -eq "api" }).public_url
           $ws  = ($data.tunnels | Where-Object { $_.name -eq "ws" }).public_url
           
@@ -77,7 +114,7 @@ jobs:
         shell: powershell
         run: |
           $webhook = $env:DISCORD_WEBHOOK_URL
-          $body = @{
+          $jsonBody = @{
             "content" = ""
             "embeds" = @(
               @{
@@ -97,8 +134,9 @@ jobs:
                 )
               }
             )
-          } | ConvertTo-Json -Depth 5
-          Invoke-RestMethod -Uri $webhook -Method Post -ContentType 'application/json' -Body $body
+          } | ConvertTo-Json -Depth 5 -Compress
+          $encodedBody = [System.Text.Encoding]::UTF8.GetBytes($jsonBody)
+          Invoke-RestMethod -Uri $webhook -Method Post -ContentType 'application/json; charset=utf-8' -Body $encodedBody
 
       # --------------------------------------------------------
       # 5) 배포 실패 시 Discord 알림 (롤백 직후 실행)
@@ -107,7 +145,7 @@ jobs:
         shell: powershell
         run: |
           $webhook = $env:DISCORD_WEBHOOK_URL
-          $body = @{
+          $jsonBody = @{
             "content" = ""
             "embeds" = @(
               @{
@@ -116,5 +154,6 @@ jobs:
                 "color" = 16711680 # Red
               }
             )
-          } | ConvertTo-Json -Depth 5
-          Invoke-RestMethod -Uri $webhook -Method Post -ContentType 'application/json' -Body $body
+          } | ConvertTo-Json -Depth 5 -Compress
+          $encodedBody = [System.Text.Encoding]::UTF8.GetBytes($jsonBody)
+          Invoke-RestMethod -Uri $webhook -Method Post -ContentType 'application/json; charset=utf-8' -Body $encodedBody
