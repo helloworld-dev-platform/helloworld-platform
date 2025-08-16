@@ -28,26 +28,33 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_TOKEN }}
 
-      # --------------------------------------------------------
       # 1) 롤백을 위한 이전 버전(latest) 백업
       - name: Tag previous versions for rollback
         shell: powershell
         run: |
           foreach ($imageName in "${{ env.IMAGE_NAMES }}".Split(',')) {
-               docker pull ${{ env.REGISTRY }}/${{ env.DOCKER_USERNAME }}/$imageName:latest
-               if ($LASTEXITCODE -ne 0) {
-               Write-Warning "Failed to pull 'latest' for $imageName. It might be the first deployment."
-             }
+            Write-Host "Attempting to back up latest version of $imageName..."
+            docker pull ${{ env.REGISTRY }}/${{ env.DOCKER_USERNAME }}/$imageName:latest
           
-               docker tag ${{ env.REGISTRY }}/${{ env.DOCKER_USERNAME }}/$imageName:latest ${{ env.REGISTRY }}/${{ env.DOCKER_USERNAME }}/$imageName:previous
-               if ($LASTEXITCODE -ne 0) {
-               Write-Warning "Failed to tag 'previous' for $imageName."
-             }
+            # docker pull이 성공했을 때만, tag와 push를 실행
+            if ($LASTEXITCODE -eq 0) {
+              Write-Host "Pull successful. Tagging and pushing 'previous' version of $imageName."
           
-               docker push ${{ env.REGISTRY }}/${{ env.DOCKER_USERNAME }}/$imageName:previous
-               if ($LASTEXITCODE -ne 0) {
-               Write-Warning "Failed to push 'previous' for $imageName."
-             }
+              docker tag ${{ env.REGISTRY }}/${{ env.DOCKER_USERNAME }}/$imageName:latest ${{ env.REGISTRY }}/${{ env.DOCKER_USERNAME }}/$imageName:previous
+              if ($LASTEXITCODE -ne 0) {
+                # tag 실패, Error로 표시
+                Write-Error "Failed to tag 'previous' for $imageName."
+              }
+          
+              docker push ${{ env.REGISTRY }}/${{ env.DOCKER_USERNAME }}/$imageName:previous
+              if ($LASTEXITCODE -ne 0) {
+                # push 실패, Error로 표시
+                Write-Error "Failed to push 'previous' for $imageName."
+              }
+            } else {
+              # pull 실패 시 (첫 배포 등)
+              Write-Warning "Could not pull 'latest' for $imageName. This might be the first deployment. Skipping backup."
+            }
           }
 
       # --------------------------------------------------------
@@ -185,7 +192,7 @@ jobs:
           } | ConvertTo-Json -Depth 5 -Compress
           
           # JSON 문자열을 UTF-8 형식으로 임시 파일에 저장
-          $jsonBody | Out-File -FilePath payload.json -Encoding utf8
+          Set-Content -Path payload.json -Value $jsonBody -Encoding utf8
           
           # curl을 사용해 임시 파일을 본문으로 전송 (-d @파일이름)
           curl.exe -X POST -H "Content-Type: application/json" -d "@payload.json" -v $webhook
@@ -208,7 +215,7 @@ jobs:
           } | ConvertTo-Json -Depth 5 -Compress
           
           # JSON 문자열을 UTF-8 형식으로 임시 파일에 저장
-          $jsonBody | Out-File -FilePath payload.json -Encoding utf8
+          Set-Content -Path payload.json -Value $jsonBody -Encoding utf8
 
           # curl을 사용해 임시 파일을 본문으로 전송 (-d @파일이름)
           curl.exe -X POST -H "Content-Type: application/json" -d "@payload.json" -v $webhook
