@@ -164,19 +164,22 @@ jobs:
       # 5) 배포 성공 시 Discord 알림
       - name: Discord Notification (Success)
         if: ${{ success() }}
-        uses: Ilshidur/action-discord@v2
+        uses: sarisia/actions-status-discord@v1
         with:
-          webhook: ${{ env.DISCORD_WEBHOOK_URL }}
-          args: |
-            ✅ Deploy Success!
+          webhook: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          title: "✅ 배포 성공!"
+          description: |
             • REST API: ${{ steps.ngrok.outputs.api_url }}
             • WebSocket: ${{ steps.ngrok.outputs.ws_url }}
+          color: 65280 #green
+          username: Deploy Bot
       # --------------------------------------------------------
       # 6) 배포 실패 시 Discord 알림 (롤백 직후 실행)
       - name: Discord Notification (Failure)
         if: ${{ failure() }}
-        uses: Ilshidur/action-discord@v2
+        uses: sarisia/actions-status-discord@v1
         with:
-          webhook: ${{ env.DISCORD_WEBHOOK_URL }}
-          args: |
-            🚨 Deploy failure.. rollback complete.
+          webhook: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          title: "🚨 배포실패"
+          color: 16711680 #Red
+          username: Deploy Bot
