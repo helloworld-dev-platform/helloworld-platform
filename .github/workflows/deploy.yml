@@ -34,26 +34,20 @@ jobs:
         shell: powershell
         run: |
           foreach ($imageName in "${{ env.IMAGE_NAMES }}".Split(',')) {
-            # docker pull 실패 시 경고만 출력하고 계속 진행
-              try {
-              docker pull ${{ env.REGISTRY }}/${{ env.DOCKER_USERNAME }}/$imageName:latest -ErrorAction Stop
-            } catch {
-              Write-Warning "Failed to pull 'latest' for $imageName. It might be the first deployment."
-            }
+               docker pull ${{ env.REGISTRY }}/${{ env.DOCKER_USERNAME }}/$imageName:latest
+               if ($LASTEXITCODE -ne 0) {
+               Write-Warning "Failed to pull 'latest' for $imageName. It might be the first deployment."
+             }
           
-              # docker tag 실패 시 경고만 출력하고 계속 진행
-              try {
-              docker tag ${{ env.REGISTRY }}/${{ env.DOCKER_USERNAME }}/$imageName:latest ${{ env.REGISTRY }}/${{ env.DOCKER_USERNAME }}/$imageName:previous -ErrorAction Stop
-            } catch {
-              Write-Warning "Failed to tag 'previous' for $imageName."
-            }
+               docker tag ${{ env.REGISTRY }}/${{ env.DOCKER_USERNAME }}/$imageName:latest ${{ env.REGISTRY }}/${{ env.DOCKER_USERNAME }}/$imageName:previous
+               if ($LASTEXITCODE -ne 0) {
+               Write-Warning "Failed to tag 'previous' for $imageName."
+             }
           
-              # docker push 실패 시 경고만 출력하고 계속 진행
-              try {
-              docker push ${{ env.REGISTRY }}/${{ env.DOCKER_USERNAME }}/$imageName:previous -ErrorAction Stop
-            } catch {
-              Write-Warning "Failed to push 'previous' for $imageName."
-            }
+               docker push ${{ env.REGISTRY }}/${{ env.DOCKER_USERNAME }}/$imageName:previous
+               if ($LASTEXITCODE -ne 0) {
+               Write-Warning "Failed to push 'previous' for $imageName."
+             }
           }
 
       # --------------------------------------------------------
