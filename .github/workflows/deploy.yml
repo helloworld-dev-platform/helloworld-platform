@@ -33,27 +33,29 @@ jobs:
         shell: powershell
         run: |
           foreach ($imageName in "${{ env.IMAGE_NAMES }}".Split(',')) {
-            Write-Host "Attempting to back up latest version of $imageName..."
-            docker pull ${{ env.REGISTRY }}/${{ env.DOCKER_USERNAME }}/$imageName:latest
+              Write-Host "Attempting to back up latest version of $imageName..."
           
-            # docker pull이 성공했을 때만, tag와 push를 실행
-            if ($LASTEXITCODE -eq 0) {
+              # docker pull 명령어의 실패를 정상적으로 처리
+              try {
+              docker pull ${{ env.REGISTRY }}/${{ env.DOCKER_USERNAME }}/$imageName:latest -ErrorAction Stop
+          
+              # pull이 성공했을 때만 아래 로직 실행
               Write-Host "Pull successful. Tagging and pushing 'previous' version of $imageName."
           
               docker tag ${{ env.REGISTRY }}/${{ env.DOCKER_USERNAME }}/$imageName:latest ${{ env.REGISTRY }}/${{ env.DOCKER_USERNAME }}/$imageName:previous
               if ($LASTEXITCODE -ne 0) {
-                # tag 실패, Error로 표시
-                Write-Error "Failed to tag 'previous' for $imageName."
-              }
+              # tag 실패시, 스크립트 중단
+              throw "Failed to tag 'previous' for $imageName."
+            }
           
               docker push ${{ env.REGISTRY }}/${{ env.DOCKER_USERNAME }}/$imageName:previous
               if ($LASTEXITCODE -ne 0) {
-                # push 실패, Error로 표시
-                Write-Error "Failed to push 'previous' for $imageName."
-              }
-            } else {
-              # pull 실패 시 (첫 배포 등)
-              Write-Warning "Could not pull 'latest' for $imageName. This might be the first deployment. Skipping backup."
+              # push 실패시, 스크립트 중단
+              throw "Failed to push 'previous' for $imageName."
+            }
+            } catch {
+              # docker pull이 실패하면 (첫 배포 등) 이 블록이 실행됨
+              Write-Warning "Could not pull 'latest' for $imageName. This is expected on the first deployment. Skipping backup."
             }
           }
 
