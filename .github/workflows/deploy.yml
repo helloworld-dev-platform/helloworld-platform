@@ -64,8 +64,8 @@ jobs:
             cd ~/dev/helloworld-platform
             echo "IMAGE_TAG=latest" > .env
             
-            docker compose pull
-            docker compose up -d
+            docker-compose pull
+            docker-compose up -d
             docker image prune -f
           
       # --------------------------------------------------------
