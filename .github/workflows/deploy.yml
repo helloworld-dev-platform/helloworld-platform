@@ -110,6 +110,7 @@ jobs:
             • WebSocket: http://${{ secrets.NCP_SERVER_HOST }}:8091
           color: 65280 #green
           username: Deploy Bot
+
       # --------------------------------------------------------
       # 6) 배포 실패 시 Discord 알림 (롤백 직후 실행)
       - name: Discord Notification (Failure)
