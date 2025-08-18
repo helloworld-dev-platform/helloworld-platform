@@ -39,16 +39,24 @@ jobs:
 
       # --------------------------------------------------------
       # 2) Docker 이미지 빌드 및 푸시 (CI과정)
-      - name: Build, Push Docker images
-        shell: bash
-        run: |
-          docker compose build
-          
-          for imageName in $(echo $IMAGE_NAMES | sed "s/,/ /g")
-          do
-            echo "Pushing new latest image for $imageName"
-            docker push ${{ env.REGISTRY }}/${{ env.DOCKER_USERNAME }}/$imageName:latest
-          done
+      - name: Build, Push backend-server images with cache
+        uses: docker/build-push-action@v5
+        with:
+          context: ./backend-api
+          push: true
+          tags: ${{ env.REGISTRY }}/${{ env.DOCKER_USERNAME }}/backend-server:latest
+          cache-from: type=gha,scope=${{ github.workflow }}-${{ github.job }}-backend-server
+          cache-to: type=gha,mode=max,scope=${{ github.workflow }}-${{ github.job }}-backend-server
+
+
+      - name: Build and push websocket-server image with cache
+        uses: docker/build-push-action@v5
+        with:
+          context: ./websocket-server
+          push: true
+          tags: ${{ env.REGISTRY }}/${{ env.DOCKER_USERNAME }}/websocket-server:latest
+          cache-from: type=gha,scope=${{ github.workflow }}-${{ github.job }}-websocket-server
+          cache-to: type=gha,mode=max,scope=${{ github.workflow }}-${{ github.job }}-websocket-server
       
 
       # --------------------------------------------------------
