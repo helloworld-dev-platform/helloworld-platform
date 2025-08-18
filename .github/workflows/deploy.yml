@@ -1,4 +1,4 @@
-name: backend_deploy
+name: Deploy to NCP Server
 
 # main 브랜치에 push 이벤트 발생 시 실행
 on:
@@ -7,17 +7,13 @@ on:
       - main
 
 jobs:
-  deploy:
-    runs-on: [ self-hosted ]
+  build-and-deploy:
+    runs-on: ubuntu-latest
     env:
       REGISTRY: docker.io
       DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
       IMAGE_NAMES: "backend-server,websocket-server"
-      NGROK_TOKEN: ${{ secrets.NGROK_TOKEN }}
-      DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
-      POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
-      POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
-      POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -28,137 +24,67 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_TOKEN }}
 
-      # 1) 롤백을 위한 이전 버전(latest) 백업
-      #      - name: Tag previous versions for rollback
-      #        shell: powershell
-      #        run: |
-      #          foreach ($imageName in "${{ env.IMAGE_NAMES }}".Split(',')) {
-      #              Write-Host "Attempting to back up latest version of $imageName.."
-      #              try {
-      #              $srcImage = "$($env:REGISTRY)/$($env:DOCKER_USERNAME)/$imageName:latest"
-      #              $dstImage = "$($env:REGISTRY)/$($env:DOCKER_USERNAME)/$imageName:previous"
-      #
-      #              docker pull $srcImage -ErrorAction Stop
-      #              Write-Host "Pull successful. Tagging and pushing 'previous' version of $imageName"
-      #
-      #              docker tag $srcImage $dstImage
-      #              if ($LASTEXITCODE -ne 0) {
-      #              throw "Failed to tag 'previous' for $imageName."
-      #            }
-      #
-      #              docker push $dstImage
-      #              if ($LASTEXITCODE -ne 0) {
-      #              throw "Failed to push 'previous' for $imageName."
-      #            }
-      #            } catch {
-      #              Write-Warning "Could not pull 'latest' for $imageName. This is expected on the first deployment. Skipping backup."
-      #            }
-      #          }
+      # 1. 롤백을 위한 이전 버전 백업 (Docker Hub에 :previous 태그로 저장)
+      - name: Backup latest to previous tag
+        shell: bash
+      # continue-on-error: true # 첫 배포 시 latest 이미지가 없어 실패하므로 오류를 무시하고 계속 진행
+        run: |
+          for imageName in $(echo $IMAGE_NAMES | sed "s/,/ /g")
+          do
+            echo "Backing up latest version of $imageName to previous tag..."
+            docker pull ${{ env.REGISTRY }}/${{ env.DOCKER_USERNAME }}/$imageName:latest || true
+            docker tag ${{ env.REGISTRY }}/${{ env.DOCKER_USERNAME }}/$imageName:latest ${{ env.REGISTRY }}/${{ env.DOCKER_USERNAME }}/$imageName:previous || true
+            docker push ${{ env.REGISTRY }}/${{ env.DOCKER_USERNAME }}/$imageName:previous || true
+          done
 
       # --------------------------------------------------------
-      # 2) 새 버전 빌드 & 푸시 & 배포
-      - name: Build, Push and Deploy new versions
-        id: deploy-step
-        continue-on-error: true
-        shell: powershell
+      # 2) Docker 이미지 빌드 및 푸시 (CI과정)
+      - name: Build, Push Docker images
+        shell: bash
         run: |
           docker compose build
           
-          # 빌드된 모든 이미지에 대해 태그 지정 및 푸시 반복
-          foreach ($imageName in "${{ env.IMAGE_NAMES }}".Split(',')) {
-            Write-Host "Tagging and pushing image: $imageName"
-            $imageFullName = "${{ env.DOCKER_USERNAME }}/$imageName"
-            $registryFullName = "${{ env.REGISTRY }}/$imageFullName"
-          
-            docker tag $imageFullName:latest $registryFullName:latest
-            docker tag $imageFullName:latest $registryFullName:${{ github.sha }}
-          
-            docker push $registryFullName:latest
-            docker push $registryFullName:${{ github.sha }}
-          }
-          
-          docker compose up -d
+          for imageName in $(echo $IMAGE_NAMES | sed "s/,/ /g")
+          do
+            echo "Pushing new latest image for $imageName"
+            docker push ${{ env.REGISTRY }}/${{ env.DOCKER_USERNAME }}/$imageName:latest
+          done
+      
 
       # --------------------------------------------------------
-      # 3) 롤백 (빌드/배포 실패 시 이전 이미지로 복구)
-      - name: Rollback to last successful version
-        if: ${{ steps.deploy-step.outcome != 'success' }}
-        shell: powershell
-        run: |
-          Write-Host "Deployment failed - rolling back to last known good state"
-          $env:IMAGE_TAG="previous"
-          docker compose up -d
-          exit 1
-
-      # --------------------------------------------------------
-      # 4) ngrok 터널링 (배포 성공 시에만 실행됩니다)
-      - name: Setup ngrok with cache
-        id: setup-ngrok
-        uses: actions/cache@v4
+      # 3) NCP 서버 접속하여 배포(CD과정)
+      - name: Deploy to NCP Server
+        id: deploy_latest
+        uses: appleboy/ssh-action@master
         with:
-          path: ngrok.exe #ngrok설치파일 캐싱
-          key: ${{ runner.os }}-ngrok-v3 #캐시 식별 고유키
-
-      - name: Download and start ngrok
-        id: ngrok
-        shell: powershell
-        run: |
-          $ErrorActionPreference = "Stop"
+          host: ${{ secrets.NCP_SERVER_HOST }}
+          username: ${{ secrets.NCP_SERVER_USERNAME }}
+          key: ${{ secrets.NCP_SSH_PRIVATE_KEY }}
+          script: |
+            cd ~/dev/helloworld-platform
+            echo "IMAGE_TAG=latest" > .env
+            
+            docker compose pull
+            docker compose up -d
+            docker image prune -f
           
-          # ngrok 다운로드
-          if ($env:CACHE_HIT -ne 'true') {
-            Write-Host "ngrok not found in cache. Downloading..."
-            Invoke-WebRequest https://bin.equinox.io/c/bNyj1mQVY4c/ngrok-v3-stable-windows-amd64.zip -OutFile ngrok.zip
-            Expand-Archive ngrok.zip -DestinationPath .
-          } else {
-            Write-Host "ngrok restored from cache."
-          }
-          
-          #ngrok.yml 파일 환경변수 설정
-          $ngrokTemplatePath = "${{ github.workspace }}/ngrok.yml"
-          $ngrokConfigPath = "ngrok-config.yml" 
-          
-          $content = Get-Content $ngrokTemplatePath
-          $content = $content -replace '\${NGROK_TOKEN}', "$env:NGROK_TOKEN"
-          Set-Content -Path $ngrokConfigPath -Value $content
-          
-          # ngrok.yml을 config로 터널 시작
-          Start-Process -FilePath .\ngrok.exe -ArgumentList "start --all --config $ngrokConfigPath --log=stdout" -RedirectStandardOutput ngrok.log -NoNewWindow
-          
-          # ngrok API 준비될때까지 5회 재시도
-          Write-Host "Waiting for ngrok API to be ready..."
-          $maxRetries = 5
-          $retryDelay = 3
-          for ($i=0; $i -lt $maxRetries; $i++) {
-              try {
-                  Start-Sleep -Seconds $retryDelay
-                  $data = Invoke-RestMethod http://127.0.0.1:4040/api/tunnels -ErrorAction Stop
-                  if ($data.tunnels.Count -gt 0) {
-                      Write-Host "ngrok API is ready."
-                      break
-                  }
-              } catch {
-                  Write-Host "ngrok API not ready, retrying... ($($i+1)/$maxRetries)"
-              }
-              if ($i -eq ($maxRetries - 1)) {
-                  Write-Error "Failed to connect to ngrok API after $maxRetries retries."
-                  exit 1
-              }
-          }
-          
-          # 퍼블릭URL 조회
-          $api = ($data.tunnels | Where-Object { $_.name -eq "api" }).public_url
-          $ws  = ($data.tunnels | Where-Object { $_.name -eq "ws" }).public_url
-          
-          # GitHub Actions Outputs 설정
-          "api_url=$api" | Out-File -FilePath $env:GITHUB_OUTPUT -Append -Encoding utf8
-          "ws_url=$ws"   | Out-File -FilePath $env:GITHUB_OUTPUT -Append -Encoding utf8
-
-      - name: Show public URLs
-        shell: powershell
-        run: |
-          Write-Host "REST API    ${{ steps.ngrok.outputs.api_url }}"
-          Write-Host "WebSocket   ${{ steps.ngrok.outputs.ws_url }}"
+      # --------------------------------------------------------
+      # 4. 배포 실패 시 이전 버전으로 롤백
+      - name: Rollback to previous version on failure
+        if: failure() && steps.deploy_latest.outcome == 'failure'
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.NCP_SERVER_HOST }}
+          username: ${{ secrets.NCP_SERVER_USERNAME }}
+          key: ${{ secrets.NCP_SSH_PRIVATE_KEY }}
+          script: |
+            echo "Deployment failed. Rolling back to previous version..."
+            cd ~/dev/helloworld-platform
+            # .env 파일에 IMAGE_TAG=previous 설정
+            echo "IMAGE_TAG=previous" > .env
+            
+            docker compose pull
+            docker compose up -d
 
       # --------------------------------------------------------
       # 5) 배포 성공 시 Discord 알림
@@ -169,8 +95,8 @@ jobs:
           webhook: ${{ secrets.DISCORD_WEBHOOK_URL }}
           title: "✅ 배포 성공!"
           description: |
-            • REST API: ${{ steps.ngrok.outputs.api_url }}
-            • WebSocket: ${{ steps.ngrok.outputs.ws_url }}
+            • REST API: http://${{ secrets.NCP_PUBLIC_IP }}:8081
+            • WebSocket: http://${{ secrets.NCP_PUBLIC_IP }}:8091
           color: 65280 #green
           username: Deploy Bot
       # --------------------------------------------------------
@@ -181,5 +107,6 @@ jobs:
         with:
           webhook: ${{ secrets.DISCORD_WEBHOOK_URL }}
           title: "🚨 배포실패"
+          description: "NCP 서버 배포 중 오류가 발생했습니다. Actions 로그를 확인해주세요."
           color: 16711680 #Red
           username: Deploy Bot
