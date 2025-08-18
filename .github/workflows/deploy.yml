@@ -27,7 +27,7 @@ jobs:
       # 1. 롤백을 위한 이전 버전 백업 (Docker Hub에 :previous 태그로 저장)
       - name: Backup latest to previous tag
         shell: bash
-      # continue-on-error: true # 첫 배포 시 latest 이미지가 없어 실패하므로 오류를 무시하고 계속 진행
+        continue-on-error: true # 첫 배포 시 latest 이미지가 없어 실패하므로 오류를 무시하고 계속 진행
         run: |
           for imageName in $(echo $IMAGE_NAMES | sed "s/,/ /g")
           do
