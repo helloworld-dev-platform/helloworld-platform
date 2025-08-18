@@ -95,8 +95,8 @@ jobs:
           webhook: ${{ secrets.DISCORD_WEBHOOK_URL }}
           title: "✅ 배포 성공!"
           description: |
-            • REST API: http://${{ secrets.NCP_PUBLIC_IP }}:8081
-            • WebSocket: http://${{ secrets.NCP_PUBLIC_IP }}:8091
+            • REST API: http://${{ secrets.NCP_SERVER_HOST }}:8081
+            • WebSocket: http://${{ secrets.NCP_SERVER_HOST }}:8091
           color: 65280 #green
           username: Deploy Bot
       # --------------------------------------------------------
