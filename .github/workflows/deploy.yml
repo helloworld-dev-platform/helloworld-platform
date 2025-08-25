@@ -73,10 +73,9 @@ jobs:
           key: ${{ secrets.NCP_SSH_PRIVATE_KEY }}
           script: |
             cd ~/dev/helloworld-platform
-            echo "IMAGE_TAG=latest" > .env
             
-            docker-compose pull
-            docker-compose up -d
+            IMAGE_TAG=latest docker-compose pull
+            IMAGE_TAG=latest docker-compose up -d
             docker image prune -f
           
       # --------------------------------------------------------
@@ -91,11 +90,9 @@ jobs:
           script: |
             echo "Deployment failed. Rolling back to previous version..."
             cd ~/dev/helloworld-platform
-            # .env 파일에 IMAGE_TAG=previous 설정
-            echo "IMAGE_TAG=previous" > .env
             
-            docker compose pull
-            docker compose up -d
+            IMAGE_TAG=previous docker-compose pull
+            IMAGE_TAG=previous docker-compose up -d
 
       # --------------------------------------------------------
       # 5) 배포 성공 시 Discord 알림
