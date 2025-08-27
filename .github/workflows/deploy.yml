@@ -72,9 +72,18 @@ jobs:
           username: ${{ secrets.NCP_SERVER_USERNAME }}
           key: ${{ secrets.NCP_SSH_PRIVATE_KEY }}
           script: |
+            set -e  # 스크립트 내의 명령어 중 하나라도 실패하면 스크립트 중단
             cd ~/dev/helloworld-platform
-            echo "IMAGE_TAG=latest" > .env
             
+            echo "DOCKER_USERNAME=${{ secrets.DOCKER_USERNAME }}" > .env
+            echo "IMAGE_TAG=latest" >> .env
+            echo "POSTGRES_DB=${{ secrets.POSTGRES_DB }}" >> .env
+            echo "POSTGRES_USER=${{ secrets.POSTGRES_USER }}" >> .env
+            echo "POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}" >> .env
+            echo "JWT_SECRET_KEY=${{ secrets.JWT_SECRET_KEY }}" >> .env
+            echo "GOOGLE_CLIENT_ID=${{ secrets.GOOGLE_CLIENT_ID }}" >> .env
+            echo "GOOGLE_CLIENT_SECRET=${{ secrets.GOOGLE_CLIENT_SECRET }}" >> .env
+      
             docker-compose pull
             docker-compose up -d
             docker image prune -f
@@ -89,13 +98,14 @@ jobs:
           username: ${{ secrets.NCP_SERVER_USERNAME }}
           key: ${{ secrets.NCP_SSH_PRIVATE_KEY }}
           script: |
+            set -e
             echo "Deployment failed. Rolling back to previous version..."
             cd ~/dev/helloworld-platform
-            # .env 파일에 IMAGE_TAG=previous 설정
-            echo "IMAGE_TAG=previous" > .env
             
-            docker compose pull
-            docker compose up -d
+            sed -i 's/^IMAGE_TAG=.*/IMAGE_TAG=previous/' .env
+            
+            docker-compose pull
+            docker-compose up -d
 
       # --------------------------------------------------------
       # 5) 배포 성공 시 Discord 알림
