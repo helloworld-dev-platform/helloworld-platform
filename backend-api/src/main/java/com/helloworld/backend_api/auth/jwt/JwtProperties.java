@@ -3,7 +3,6 @@ package com.helloworld.backend_api.auth.jwt;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
@@ -17,7 +16,6 @@ import org.springframework.stereotype.Component;
 @Schema(description = "JWT설정 정보")
 public class JwtProperties {
 
-  @Value("${jwt.secret-key}")
   @Schema(description = "JWT 서명용 시크릿 키")
   private String secretKey;
   @Schema(description = "Access Token 만료시간(밀리초)", example = "3600000")
