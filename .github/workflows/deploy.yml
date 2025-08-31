@@ -116,7 +116,10 @@ jobs:
             set -e  # 스크립트 내의 명령어 중 하나라도 실패하면 스크립트 중단
             cd ~/dev/helloworld-platform
             
-            # .env 파일을 한번에 생성하여 안정성을 높입니다.
+            # docker-compose.yml 파일을 최신버전으로 업데이트
+            git pull origin main
+            
+            # .env 파일을 한번에 생성
             echo "--- Creating .env file on server ---"
             cat << EOF > .env
             DOCKER_USERNAME=${{ secrets.DOCKER_USERNAME }}
