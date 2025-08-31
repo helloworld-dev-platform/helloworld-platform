@@ -21,7 +21,7 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class JwtTokenProvider {
 
-  private final JwtProperties jwtProperties;
+  private final JwtProperties jwtProperties;//jwt 설정값 자동바인딩(DTO)
   private SecretKey secretKey; //시크릿키객체
 
   //의존성주입 후, 시크릿키 초기화 메서드 실행함
