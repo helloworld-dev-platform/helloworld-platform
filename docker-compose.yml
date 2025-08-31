@@ -4,16 +4,12 @@ services:
       context: ./backend-api
     image: docker.io/${DOCKER_USERNAME}/backend-server:${IMAGE_TAG:-latest}
     container_name: backend-server
+    env_file:
+      - ./.env
     environment:
       - SPRING_PROFILES_ACTIVE=local
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/${POSTGRES_DB}
-      - SPRING_DATASOURCE_USERNAME=${POSTGRES_USER}
-      - SPRING_DATASOURCE_PASSWORD=${POSTGRES_PASSWORD}
       - SPRING_REDIS_HOST=redis
       - SPRING_REDIS_PORT=6379
-      - JWT_SECRET_KEY=${JWT_SECRET_KEY}
-      - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
-      - GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET}
     depends_on:
       - postgres
       - redis
@@ -27,13 +23,12 @@ services:
       context: ./websocket-server
     image: docker.io/${DOCKER_USERNAME}/websocket-server:${IMAGE_TAG:-latest}
     container_name: websocket-server
+    env_file:
+      - ./.env
     environment:
       - SPRING_PROFILES_ACTIVE=local
       - SPRING_REDIS_HOST=redis
       - SPRING_REDIS_PORT=6379
-      - JWT_SECRET_KEY=${JWT_SECRET_KEY}
-      - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
-      - GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET}
     depends_on:
       - redis
     networks:
@@ -45,10 +40,8 @@ services:
     image: postgres:17
     container_name: postgres
     restart: unless-stopped
-    environment:
-      - POSTGRES_DB=${POSTGRES_DB}
-      - POSTGRES_USER=${POSTGRES_USER}
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    env_file:
+      - ./.env
     volumes:
       - postgres-data:/var/lib/postgresql/data
     networks:
