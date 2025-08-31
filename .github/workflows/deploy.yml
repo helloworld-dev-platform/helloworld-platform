@@ -117,6 +117,7 @@ jobs:
             cd ~/dev/helloworld-platform
             
             # docker-compose.yml 파일을 최신버전으로 업데이트
+            echo "--- Pulling latest source code from main branch ---"
             git pull origin main
             
             # .env 파일을 한번에 생성
