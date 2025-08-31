@@ -61,9 +61,50 @@ jobs:
           cache-from: type=gha,scope=${{ github.workflow }}-${{ github.job }}-websocket-server
           cache-to: type=gha,mode=max,scope=${{ github.workflow }}-${{ github.job }}-websocket-server
       
+      # --------------------------------------------------------
+      # 3) 배포 전, 시크릿 값 유효성 검사
+      - name: Verify Secrets
+        shell: bash
+        run: |
+          if [ -z "${{ secrets.JWT_SECRET_KEY }}" ]; then
+            echo "❌ ERROR: JWT_SECRET_KEY secret is not set or empty!"
+            exit 1
+          else
+            echo "✅ SUCCESS: JWT_SECRET_KEY secret is loaded."
+          fi
+          if [ -z "${{ secrets.GOOGLE_CLIENT_ID }}" ]; then
+            echo "❌ ERROR: GOOGLE_CLIENT_ID secret is not set or empty!"
+            exit 1
+          else
+            echo "✅ SUCCESS: GOOGLE_CLIENT_ID secret is loaded."
+          fi
+          if [ -z "${{ secrets.GOOGLE_CLIENT_SECRET }}" ]; then
+            echo "❌ ERROR: GOOGLE_CLIENT_SECRET secret is not set or empty!"
+            exit 1
+          else
+            echo "✅ SUCCESS: GOOGLE_CLIENT_SECRET secret is loaded."
+          fi
+          if [ -z "${{ secrets.POSTGRES_DB }}" ]; then
+            echo "❌ ERROR: POSTGRES_DB secret is not set or empty!"
+            exit 1
+          else
+            echo "✅ SUCCESS: POSTGRES_DB secret is loaded."
+          fi
+          if [ -z "${{ secrets.POSTGRES_PASSWORD }}" ]; then
+            echo "❌ ERROR: POSTGRES_PASSWORD secret is not set or empty!"
+            exit 1
+          else
+            echo "✅ SUCCESS: POSTGRES_PASSWORD secret is loaded."
+          fi
+          if [ -z "${{ secrets.POSTGRES_USER }}" ]; then
+            echo "❌ ERROR: POSTGRES_USER secret is not set or empty!"
+            exit 1
+          else
+            echo "✅ SUCCESS: POSTGRES_USER secret is loaded."
+          fi
 
       # --------------------------------------------------------
-      # 3) NCP 서버 접속하여 배포(CD과정)
+      # 4) NCP 서버 접속하여 배포(CD과정)
       - name: Deploy to NCP Server
         id: deploy_latest
         uses: appleboy/ssh-action@master
@@ -75,21 +116,28 @@ jobs:
             set -e  # 스크립트 내의 명령어 중 하나라도 실패하면 스크립트 중단
             cd ~/dev/helloworld-platform
             
-            echo "DOCKER_USERNAME=${{ secrets.DOCKER_USERNAME }}" > .env
-            echo "IMAGE_TAG=latest" >> .env
-            echo "POSTGRES_DB=${{ secrets.POSTGRES_DB }}" >> .env
-            echo "POSTGRES_USER=${{ secrets.POSTGRES_USER }}" >> .env
-            echo "POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}" >> .env
-            echo "JWT_SECRET_KEY=${{ secrets.JWT_SECRET_KEY }}" >> .env
-            echo "GOOGLE_CLIENT_ID=${{ secrets.GOOGLE_CLIENT_ID }}" >> .env
-            echo "GOOGLE_CLIENT_SECRET=${{ secrets.GOOGLE_CLIENT_SECRET }}" >> .env
+            # .env 파일을 한번에 생성하여 안정성을 높입니다.
+            echo "--- Creating .env file on server ---"
+            cat << EOF > .env
+            DOCKER_USERNAME=${{ secrets.DOCKER_USERNAME }}
+            IMAGE_TAG=latest
+            POSTGRES_DB=${{ secrets.POSTGRES_DB }}
+            POSTGRES_USER=${{ secrets.POSTGRES_USER }}
+            POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}
+            JWT_SECRET_KEY=${{ secrets.JWT_SECRET_KEY }}
+            GOOGLE_CLIENT_ID=${{ secrets.GOOGLE_CLIENT_ID }}
+            GOOGLE_CLIENT_SECRET=${{ secrets.GOOGLE_CLIENT_SECRET }}
+            EOF
             
+            echo "--- Pulling latest images ---"
             docker compose pull
+            echo "--- Starting containers ---"
             docker compose up -d
+            echo "--- Pruning unused images ---"
             docker image prune -f
 
       # --------------------------------------------------------
-      # 4. 배포 실패 시 이전 버전으로 롤백
+      # 5. 배포 실패 시 이전 버전으로 롤백
       - name: Rollback to previous version on failure
         if: failure() && steps.deploy_latest.outcome == 'failure'
         uses: appleboy/ssh-action@master
@@ -108,7 +156,7 @@ jobs:
             docker compose up -d
 
       # --------------------------------------------------------
-      # 5) 배포 성공 시 Discord 알림
+      # 6) 배포 성공 시 Discord 알림
       - name: Discord Notification (Success)
         if: ${{ success() }}
         uses: sarisia/actions-status-discord@v1
@@ -122,7 +170,7 @@ jobs:
           username: Deploy Bot
 
       # --------------------------------------------------------
-      # 6) 배포 실패 시 Discord 알림 (롤백 직후 실행)
+      # 7) 배포 실패 시 Discord 알림 (롤백 직후 실행)
       - name: Discord Notification (Failure)
         if: ${{ failure() }}
         uses: sarisia/actions-status-discord@v1

@@ -12,6 +12,7 @@ import jakarta.annotation.PostConstruct;
 import java.util.Date;
 import javax.crypto.SecretKey;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 /**
@@ -19,6 +20,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class JwtTokenProvider {
 
   private final JwtProperties jwtProperties;//jwt 설정값 자동바인딩(DTO)
@@ -27,6 +29,9 @@ public class JwtTokenProvider {
   //의존성주입 후, 시크릿키 초기화 메서드 실행함
   @PostConstruct
   public void init() {
+    String secret = jwtProperties.getSecretKey();
+    log.info("[JWT-DEBUG] Loaded Secret Key: [{}]", secret);
+    
     if (jwtProperties.getSecretKey() == null) {
       throw new IllegalArgumentException("JWT시크릿 키가 null입니다.");
     } else {
