@@ -1,8 +1,8 @@
 package com.helloworld.backend_api.user.repository;
 
-import com.helloworld.backend_api.user.domain.Users;
+import com.helloworld.backend_api.user.domain.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface UserRepository extends JpaRepository<Users, Long> {
-    public Users findByUsername(String username);
+public interface UserRepository extends JpaRepository<User, Long> {
+    public User findByUsername(String username);
 }

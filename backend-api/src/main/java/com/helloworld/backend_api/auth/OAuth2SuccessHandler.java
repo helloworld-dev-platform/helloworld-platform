@@ -3,7 +3,7 @@ package com.helloworld.backend_api.auth;
 import com.helloworld.backend_api.auth.jwt.JwtTokenProvider;
 import com.helloworld.backend_api.auth.model.PrincipalDetails;
 import com.helloworld.backend_api.auth.service.RedisTokenService;
-import com.helloworld.backend_api.user.domain.Users;
+import com.helloworld.backend_api.user.domain.User;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -24,7 +24,7 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
   public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
       Authentication authentication) throws IOException, ServletException {
     PrincipalDetails principal = (PrincipalDetails) authentication.getPrincipal();
-    Users user = principal.getUser();
+    User user = principal.getUser();
 
     String accessToken = jwtTokenProvider.generateToken(user);
     String refreshToken = jwtTokenProvider.generateRefreshToken(user);

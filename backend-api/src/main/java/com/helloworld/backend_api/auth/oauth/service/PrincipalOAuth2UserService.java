@@ -4,7 +4,7 @@ import com.helloworld.backend_api.auth.jwt.JwtTokenProvider;
 import com.helloworld.backend_api.auth.model.PrincipalDetails;
 import com.helloworld.backend_api.auth.oauth.userinfo.GoogleUserInfo;
 import com.helloworld.backend_api.auth.oauth.userinfo.OAuth2UserInfo;
-import com.helloworld.backend_api.user.domain.Users;
+import com.helloworld.backend_api.user.domain.User;
 import com.helloworld.backend_api.user.repository.UserRepository;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -42,9 +42,9 @@ public class PrincipalOAuth2UserService extends DefaultOAuth2UserService {
         String username = provider+"_"+providerId;
         String email = oAuth2UserInfo.getEmail();
         String role = "USER";
-        Users user = userRepository.findByUsername(username);
+        User user = userRepository.findByUsername(username);
         if (user == null) {
-            user = new Users();
+            user = new User();
             user.setUsername(username);
             user.setProvider(provider);
             user.setProviderId(providerId);

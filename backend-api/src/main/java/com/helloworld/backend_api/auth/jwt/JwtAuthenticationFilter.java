@@ -3,7 +3,7 @@ package com.helloworld.backend_api.auth.jwt;
 import com.helloworld.backend_api.auth.service.RedisTokenService;
 import com.helloworld.backend_api.common.exception.CustomException;
 import com.helloworld.backend_api.common.exception.ErrorCode;
-import com.helloworld.backend_api.user.domain.Users;
+import com.helloworld.backend_api.user.domain.User;
 import com.helloworld.backend_api.user.repository.UserRepository;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;
@@ -44,7 +44,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
       }
       Claims claims = jwtTokenProvider.getClaims(token);
       Long userId = jwtTokenProvider.getUserId(token);
-      Users user = userRepository.findById(userId).orElse(null);
+      User user = userRepository.findById(userId).orElse(null);
 
       if (user != null) {
         UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(

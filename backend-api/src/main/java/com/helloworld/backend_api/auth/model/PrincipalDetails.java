@@ -1,6 +1,6 @@
 package com.helloworld.backend_api.auth.model;
 
-import com.helloworld.backend_api.user.domain.Users;
+import com.helloworld.backend_api.user.domain.User;
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -12,14 +12,14 @@ import java.util.Map;
 
 @Data
 public class PrincipalDetails implements UserDetails, OAuth2User {
-    private Users user;
+    private User user;
 
     private Map<String, Object> attributes;
-    public PrincipalDetails(Users user) {
+    public PrincipalDetails(User user) {
         this.user = user;
     }
 
-    public PrincipalDetails(Users user, Map<String, Object> attributes) {
+    public PrincipalDetails(User user, Map<String, Object> attributes) {
         this.user = user;
         this.attributes = attributes;
     }

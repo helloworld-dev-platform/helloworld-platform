@@ -6,19 +6,16 @@ import com.helloworld.backend_api.common.exception.CustomException;
 import com.helloworld.backend_api.common.exception.ErrorCode;
 import com.helloworld.backend_api.common.response.DataResponseDto;
 import com.helloworld.backend_api.common.swagger.ApiErrorCodeExamples;
-import com.helloworld.backend_api.user.domain.Users;
+import com.helloworld.backend_api.user.domain.User;
 import com.helloworld.backend_api.user.repository.UserRepository;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import java.util.HashMap;
-import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @Tag(name = "Auth", description = "인증/인가 및 토큰 관리 API")
 @RestController
@@ -57,7 +54,7 @@ public class AuthController {
       throw new CustomException(ErrorCode.UNAUTHORIZED);
     }
     //유저 정보 조회
-    Users user = userRepository.findById(userId)
+    User user = userRepository.findById(userId)
         .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
     //새로운 토큰 발급
     String newAccessToken = jwtTokenProvider.generateToken(user);
@@ -76,7 +73,7 @@ public class AuthController {
 
   @Operation(summary = "로그아웃", description = "현재 액세스 토큰을 블랙리스트 처리하고, Redis에 저장된 리프레시 토큰을 삭제한다.")
   @PostMapping("/logout")
-  public DataResponseDto<Void> logout(@AuthenticationPrincipal Users user,
+  public DataResponseDto<Void> logout(@AuthenticationPrincipal User user,
       @RequestHeader("Authorization") String token) {
     String accessToken = token.replace("Bearer ", "");
     long expiration = jwtTokenProvider.getTokenRemainingTime(accessToken);

@@ -1,6 +1,6 @@
 package com.helloworld.backend_api.auth.jwt;
 
-import com.helloworld.backend_api.user.domain.Users;
+import com.helloworld.backend_api.user.domain.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.JwtException;
@@ -43,16 +43,16 @@ public class JwtTokenProvider {
   /**
    * 액세스 토큰 생성
    */
-  public String generateToken(Users users) {
+  public String generateToken(User user) {
     Date now = new Date();
     Date expiryDate = new Date(now.getTime() + jwtProperties.getExpirationTime());
 
     return Jwts.builder()
-        .setSubject(Long.toString(users.getId()))
-        .claim("role", users.getRole())
-        .claim("provider", users.getProvider())
-        .claim("email", users.getEmail())
-        .claim("username", users.getUsername())
+        .setSubject(Long.toString(user.getId()))
+        .claim("role", user.getRole())
+        .claim("provider", user.getProvider())
+        .claim("email", user.getEmail())
+        .claim("username", user.getUsername())
         .setIssuedAt(new Date())
         .setExpiration(expiryDate)
         .signWith(secretKey, SignatureAlgorithm.HS256)
@@ -62,7 +62,7 @@ public class JwtTokenProvider {
   /**
    * 리프레시 토큰 생성
    */
-  public String generateRefreshToken(Users user) {
+  public String generateRefreshToken(User user) {
     Date now = new Date();
     Date expiryDate = new Date(now.getTime() + 1000L * 60 * 60 * 24 * 7); // 7일
 
