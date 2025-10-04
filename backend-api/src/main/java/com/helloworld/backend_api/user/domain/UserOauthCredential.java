@@ -3,6 +3,7 @@ package com.helloworld.backend_api.user.domain;
 import com.helloworld.backend_api.common.domain.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -29,5 +30,12 @@ public class UserOauthCredential extends BaseTimeEntity {
 
     @Column(name = "PROVIDER_ID", nullable = false, length = 100)
     private String providerId;
+
+    @Builder
+    public UserOauthCredential(User user, String provider, String providerId) {
+        this.user = user;
+        this.provider = provider;
+        this.providerId = providerId;
+    }
 
 }
