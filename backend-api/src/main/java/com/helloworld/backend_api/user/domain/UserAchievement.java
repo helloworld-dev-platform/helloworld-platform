@@ -2,7 +2,15 @@ package com.helloworld.backend_api.user.domain;
 
 import com.helloworld.backend_api.achievement.domain.Achievement;
 import com.helloworld.backend_api.common.domain.BaseTimeEntity;
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,19 +24,18 @@ import lombok.NoArgsConstructor;
 @Table(name = "user_achievement")
 public class UserAchievement extends BaseTimeEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_achievement_id_seq_generator")
-    @SequenceGenerator(name = "user_achievement_id_seq_generator", sequenceName = "user_achievement_id_seq", allocationSize = 1)
-    private Long id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "USER_ID", nullable = false)
-    private User user;
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "USER_ID", nullable = false)
+  private User user;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "ACHIEVE_ID", nullable = false)
-    private Achievement achievement;
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "ACHIEVE_ID", nullable = false)
+  private Achievement achievement;
 
-    @Column(name = "NOW_PROGRESS_LEVEL", nullable = false)
-    private Integer nowProgressLevel;
+  @Column(name = "NOW_PROGRESS_LEVEL", nullable = false)
+  private Integer nowProgressLevel;
 }

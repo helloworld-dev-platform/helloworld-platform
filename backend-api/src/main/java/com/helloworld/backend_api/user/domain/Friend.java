@@ -1,6 +1,13 @@
 package com.helloworld.backend_api.user.domain;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,17 +21,16 @@ import lombok.NoArgsConstructor;
 @Table(name = "friend")
 public class Friend {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "friend_id_seq_generator")
-    @SequenceGenerator(name = "friend_id_seq_generator", sequenceName = "friend_id_seq", allocationSize = 1)
-    private Long id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
 
-    // 중복을 피하고 조회를 쉽게 하기 위해 보통 ID값이 작은 쪽을 A, 큰 쪽을 B에 저장하는 규칙을 적용합니다.
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "users_id_low", nullable = false)
-    private User userA;
+  // 중복을 피하고 조회를 쉽게 하기 위해 보통 ID값이 작은 쪽을 A, 큰 쪽을 B에 저장하는 규칙을 적용합니다.
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "users_id_low", nullable = false)
+  private User userA;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "users_id_high", nullable = false)
-    private User userB;
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "users_id_high", nullable = false)
+  private User userB;
 }

@@ -1,7 +1,12 @@
 package com.helloworld.backend_api.problem.domain;
 
 import com.helloworld.backend_api.common.domain.BaseTimeEntity;
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,11 +19,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "LEARNING_LANGUAGE")
 public class LearningLanguage extends BaseTimeEntity {
-    @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "learning_language_id_seq_generator")
-    @SequenceGenerator(name = "learning_language_id_seq_generator", sequenceName = "learning_language_id_seq", allocationSize = 1)
-    private Long id;
 
-    @Column(name = "LANGUAGE_NAME", nullable = false)
-    private String languageName;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
+
+  @Column(name = "LANGUAGE_NAME", nullable = false)
+  private String languageName;
 }

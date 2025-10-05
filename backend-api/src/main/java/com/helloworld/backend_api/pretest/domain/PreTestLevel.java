@@ -1,7 +1,12 @@
 package com.helloworld.backend_api.pretest.domain;
 
 import com.helloworld.backend_api.common.domain.BaseTimeEntity;
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,14 +17,13 @@ import lombok.NoArgsConstructor;
 @Table(name = "PRE_TEST_LEVEL")
 public class PreTestLevel extends BaseTimeEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "pre_test_level_id_seq_generator")
-    @SequenceGenerator(name = "pre_test_level_id_seq_generator", sequenceName = "pre_test_level_id_seq", allocationSize = 50)
-    private Long id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
 
-    @Column(name = "PRE_TEST_LEVEL_NAME", nullable = false)
-    private String preTestLevelName;
+  @Column(name = "PRE_TEST_LEVEL_NAME", nullable = false)
+  private String preTestLevelName;
 
-    @Column(name = "PRE_TEST_END_MSG", columnDefinition = "TEXT")
-    private String preTestEndMsg;
+  @Column(name = "PRE_TEST_END_MSG", columnDefinition = "TEXT")
+  private String preTestEndMsg;
 }
