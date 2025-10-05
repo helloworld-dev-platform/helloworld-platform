@@ -1,16 +1,19 @@
 package com.helloworld.backend_api.auth.jwt;
 
 import com.helloworld.backend_api.user.domain.User;
-import io.jsonwebtoken.*;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jws;
+import io.jsonwebtoken.JwtException;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
+import java.util.Date;
+import javax.crypto.SecretKey;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-
-import javax.crypto.SecretKey;
-import java.util.Date;
 
 /**
  * JWT 생성 및 검증 유틸리티
@@ -28,7 +31,7 @@ public class JwtTokenProvider {
   public void init() {
     String secret = jwtProperties.getSecretKey();
     log.info("[JWT-DEBUG] Loaded Secret Key: [{}]", secret);
-    
+
     if (jwtProperties.getSecretKey() == null) {
       throw new IllegalArgumentException("JWT시크릿 키가 null입니다.");
     } else {
@@ -47,7 +50,6 @@ public class JwtTokenProvider {
     return Jwts.builder()
         .setSubject(Long.toString(user.getId()))
         .claim("role", user.getUserRole())
-        .claim("provider", user.getProvider())
         .claim("email", user.getUserEmail())
         .claim("username", user.getUserName())
         .setIssuedAt(new Date())

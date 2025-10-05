@@ -2,62 +2,69 @@ package com.helloworld.backend_api.user.domain;
 
 import com.helloworld.backend_api.common.domain.BaseTimeEntity;
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.SequenceGenerator;
+import jakarta.persistence.Table;
+import java.time.LocalDateTime;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 
-import java.time.LocalDateTime;
-
 @Entity
 @NoArgsConstructor
 @Schema(description = "회원 정보 Entity")
-@Table(name="Users")
+@Table(name = "Users")
 @Getter
 public class User extends BaseTimeEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    @JdbcTypeCode(SqlTypes.BIGINT)
-    @SequenceGenerator(
-            name = "users_seq_generator",
-            sequenceName = "users_seq", // 데이터베이스에 생성될 시퀀스 이름
-            initialValue = 1,      // 시작 값
-            allocationSize = 50     // 한 번에 할당할 시퀀스 수
-    )
-    private Long id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.SEQUENCE)
+  @JdbcTypeCode(SqlTypes.BIGINT)
+  @SequenceGenerator(
+      name = "users_seq_generator",
+      sequenceName = "users_seq", // 데이터베이스에 생성될 시퀀스 이름
+      initialValue = 1,      // 시작 값
+      allocationSize = 50     // 한 번에 할당할 시퀀스 수
+  )
+  private Long id;
 
-    @Column(name = "STEPUP_COURSE_ID")
-    private Long stepupCourseId;
+  @Column(name = "STEPUP_COURSE_ID")
+  private Long stepupCourseId;
 
-    @Column(name = "USER_EMAIL", nullable = false, unique = true, length = 255)
-    private String userEmail;
+  @Column(name = "USER_EMAIL", nullable = false, unique = true, length = 255)
+  private String userEmail;
 
-    @Column(name = "USER_NAME", length = 50)
-    private String userName;
+  @Column(name = "USER_NAME", length = 50)
+  private String userName;
 
-    @Column(name = "USER_ROLE", length = 50)
-    private String userRole;
+  @Column(name = "USER_ROLE", length = 50)
+  private String userRole;
 
-    @Column(name = "USER_STAT_CD", length = 20)
-    private String userStatCd;
+  @Column(name = "USER_STAT_CD", length = 20)
+  private String userStatCd;
 
-    @Column(name = "TOTAL_POINT", nullable = false)
-    private Integer totalPoint;
+  @Column(name = "TOTAL_POINT", nullable = false)
+  private Integer totalPoint;
 
-    @Column(name = "LAST_LOGIN_AT", nullable = false)
-    private LocalDateTime lastLoginAt;
+  @Column(name = "LAST_LOGIN_AT", nullable = false)
+  private LocalDateTime lastLoginAt;
 
-    @Builder
-    public User(String userEmail, String userName, String userRole, String userStatCd) {
-        this.userEmail = userEmail;
-        this.userName = userName;
-        this.userRole = userRole != null ? userRole : "USER"; // 기본값 설정
-        this.userStatCd = userStatCd != null ? userStatCd : "ACTIVE"; // 기본값 설정
-        this.totalPoint = 0; // 초기 포인트는 0으로 설정
-        this.lastLoginAt = LocalDateTime.now(); // 생성 시점의 로그인 시간 기록
-    }
+  @Builder
+  public User(Long stepupCourseId, String userEmail, String userName, String userRole,
+      String userStatCd) {
+    this.stepupCourseId = stepupCourseId;
+    this.userEmail = userEmail;
+    this.userName = userName;
+    this.userRole = userRole != null ? userRole : "USER"; // 기본값 설정
+    this.userStatCd = userStatCd != null ? userStatCd : "ACTIVE"; // 기본값 설정
+    this.totalPoint = 0; // 초기 포인트는 0으로 설정
+    this.lastLoginAt = LocalDateTime.now(); // 생성 시점의 로그인 시간 기록
+  }
 
 }
