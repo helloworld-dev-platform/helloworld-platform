@@ -4,6 +4,8 @@ import com.helloworld.backend_api.common.domain.BaseTimeEntity;
 import com.helloworld.backend_api.stepup.domain.StepupStep;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -22,7 +24,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "PROBLEMS")
+@Table(name = "PROBLEM")
 public class Problem extends BaseTimeEntity {
 
   @Id
@@ -38,8 +40,8 @@ public class Problem extends BaseTimeEntity {
   @JoinColumn(name = "STEPUP_STEP_ID")
   private StepupStep stepupStep;
 
-  @Column(name = "PROBLEM_TYPE", nullable = false)
-  private String problemType;
+  @Enumerated(EnumType.STRING)
+  private ProblemType problemType;
 
   @Column(name = "CONTENT", nullable = false, columnDefinition = "TEXT")
   private String content;
@@ -47,6 +49,7 @@ public class Problem extends BaseTimeEntity {
   @Column(name = "DOMAIN_TYPE", nullable = false)
   private String domainType;
 
-  @Column(name = "DIFFICULTY", nullable = false)
-  private String difficulty;
+  @Enumerated(EnumType.STRING)
+  @Column(name = "difficulty", nullable = false)
+  private Difficulty difficulty;
 }

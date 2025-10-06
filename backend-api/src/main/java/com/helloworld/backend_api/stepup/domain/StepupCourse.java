@@ -33,7 +33,7 @@ public class StepupCourse extends BaseTimeEntity {
   private Long id;
 
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "LEANING_LANGUAGE_ID", nullable = false)
+  @JoinColumn(name = "LEARNING_LANGUAGE_ID", nullable = false)
   private LearningLanguage learningLanguage;
 
   @Column(name = "COURSE_NAME")

@@ -8,6 +8,8 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -17,6 +19,8 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
+@Builder
 @Table(name = "LEARNING_LANGUAGE")
 public class LearningLanguage extends BaseTimeEntity {
 
@@ -26,4 +30,9 @@ public class LearningLanguage extends BaseTimeEntity {
 
   @Column(name = "LANGUAGE_NAME", nullable = false)
   private String languageName;
+
+  @Builder
+  public LearningLanguage(String languageName) {
+    this.languageName = languageName;
+  }
 }

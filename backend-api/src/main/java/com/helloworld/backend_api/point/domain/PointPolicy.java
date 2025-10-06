@@ -3,6 +3,8 @@ package com.helloworld.backend_api.point.domain;
 import com.helloworld.backend_api.common.domain.BaseTimeEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
@@ -17,16 +19,20 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "POINT_POLICY")
 public class PointPolicy extends BaseTimeEntity {
-    @Id
-    @Column(name = "TRANSACTION_TYPE")
-    private String transactionType;
 
-    @Column(name = "POINT_AMOUNT", nullable = false)
-    private Integer pointAmount;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
 
-    @Column(name = "POINT_DESCRIPTION")
-    private String pointDescription;
+  @Column(name = "TRANSACTION_TYPE")
+  private String transactionType;
 
-    @Column(name = "IS_ACTIVE", nullable = false)
-    private boolean isActive;
+  @Column(name = "POINT_AMOUNT", nullable = false)
+  private Integer pointAmount;
+
+  @Column(name = "POINT_DESCRIPTION")
+  private String pointDescription;
+
+  @Column(name = "IS_ACTIVE", nullable = false)
+  private boolean isActive;
 }

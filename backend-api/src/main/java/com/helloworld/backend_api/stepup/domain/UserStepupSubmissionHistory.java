@@ -1,8 +1,9 @@
-package com.helloworld.backend_api.pretest.domain;
+package com.helloworld.backend_api.stepup.domain;
 
 import com.helloworld.backend_api.common.domain.BaseTimeEntity;
 import com.helloworld.backend_api.problem.domain.Choice;
 import com.helloworld.backend_api.problem.domain.Problem;
+import com.helloworld.backend_api.user.domain.User;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -18,33 +19,36 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 /**
- * 사용자가 사전 테스트의 각 문제에 제출한 답안을 기록하는 엔티티
+ * 사용자의 스텝업 코스 문제 풀이 진행 상황을 기록하는 엔티티
  */
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "USER_PRE_TEST_ANSWER")
-public class UserPreTestAnswer extends BaseTimeEntity {
+@Table(name = "USER_COURSE_PROGRESS")
+public class UserStepupSubmissionHistory extends BaseTimeEntity {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "USER_PRE_TEST_SESSION_ID", nullable = false)
-  private UserPreTestSession userPreTestSession;
+  @JoinColumn(name = "USER_ID", nullable = false)
+  private User user;
 
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "PROBLEMS_ID", nullable = false)
+  @JoinColumn(name = "PROBLEM_ID", nullable = false)
   private Problem problem;
 
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "CHOICES_ID", nullable = false)
-  private Choice choice;
+  @JoinColumn(name = "choice_id")
+  private Choice selectedChoice;
 
-  @Column(name = "ANSWERED_AT")
-  private LocalDateTime answeredAt;
+  @Column(name = "TEXP_ANSWER", columnDefinition = "TEXT")
+  private String textAnswer;
 
-  @Column(name = "SUBMITTED_ANSWER", columnDefinition = "TEXT")
-  private String submittedAnswer;
+  @Column(name = "is_correct", nullable = false)
+  private boolean isCorrect;
+
+  @Column(name = "COMPLETED_AT")
+  private LocalDateTime completedAt;
 }
