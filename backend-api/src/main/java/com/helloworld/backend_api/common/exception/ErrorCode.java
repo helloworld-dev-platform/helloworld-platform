@@ -1,7 +1,5 @@
 package com.helloworld.backend_api.common.exception;
 
-import java.util.Optional;
-import java.util.function.Predicate;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -23,20 +21,16 @@ public enum ErrorCode {
   OAUTH_PROVIDER_ERROR("AUTH_004", HttpStatus.BAD_REQUEST, "OAuth 제공자 오류입니다."),
   TOKEN_INVALID("AUTH_005", HttpStatus.UNAUTHORIZED, "유효한 토큰이 아닙니다."),
 
-  INTERNAL_SERVER_ERROR("COMMON_001", HttpStatus.INTERNAL_SERVER_ERROR, "서버 오류입니다.");
+  //공통
+  INTERNAL_SERVER_ERROR("COMMON_001", HttpStatus.INTERNAL_SERVER_ERROR, "서버 오류입니다."),
+  INVALID_INPUT_VALUE("COMMON_002", HttpStatus.BAD_REQUEST, "유효성 검증에 실패했습니다.");
 
   private final String code;
   private final HttpStatus httpStatus;
   private final String message;
 
-  public String getMessage(Throwable throwable) {
-    return this.getMessage(this.getMessage(this.getMessage() + " - " + throwable.getMessage()));
+  public String getMessage(Throwable e) {
+    // 기존 메시지 + 원인 예외의 메시지를 조합
+    return this.getMessage() + " - " + e.getMessage();
   }
-
-  public String getMessage(String message) {
-    return Optional.ofNullable(message)
-        .filter(Predicate.not(String::isBlank))
-        .orElse(this.getMessage());
-  }
-
 }
