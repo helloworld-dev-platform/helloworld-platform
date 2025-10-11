@@ -29,7 +29,7 @@ public class Solution extends BaseTimeEntity {
   private Long id;
 
   @OneToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "PROBLEMS_ID", nullable = false)
+  @JoinColumn(name = "PROBLEM_ID", nullable = false)
   private Problem problem;
 
   @Column(name = "CONTENT", nullable = false, columnDefinition = "TEXT")

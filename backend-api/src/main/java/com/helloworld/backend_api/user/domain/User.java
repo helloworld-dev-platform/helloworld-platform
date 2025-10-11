@@ -36,9 +36,6 @@ public class User extends BaseTimeEntity {
   )
   private Long id;
 
-  @Column(name = "STEPUP_COURSE_ID")
-  private Long stepupCourseId;
-
   @Column(name = "USER_EMAIL", nullable = false, unique = true, length = 255)
   private String userEmail;
 
@@ -53,20 +50,20 @@ public class User extends BaseTimeEntity {
   private UserStatus status;
 
   @Column(name = "TOTAL_POINT", nullable = false)
-  private Integer totalPoint;
+  private Integer totalPoint = 0;
 
   @Column(name = "LAST_LOGIN_AT", nullable = false)
   private LocalDateTime lastLoginAt;
 
   @Builder
-  public User(Long stepupCourseId, String userEmail, String userName, String userRole,
+  public User(Long id, String userEmail, String userName, String userRole,
       UserStatus status, Integer totalPoint) {
-    this.stepupCourseId = stepupCourseId;
+    this.id = id;
     this.userEmail = userEmail;
     this.userName = userName;
     this.userRole = userRole != null ? userRole : "USER"; // 기본값 설정
     this.status = status;
-    this.totalPoint = 0; // 초기 포인트는 0으로 설정
+    this.totalPoint = totalPoint; // 초기 포인트는 0으로 설정
     this.lastLoginAt = LocalDateTime.now(); // 생성 시점의 로그인 시간 기록
   }
 

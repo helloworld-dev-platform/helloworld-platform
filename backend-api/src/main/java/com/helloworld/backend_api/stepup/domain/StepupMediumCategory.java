@@ -24,8 +24,8 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "STEPUP_SECTION")
-public class StepupSection extends BaseTimeEntity {
+@Table(name = "STEPUP_MEDIUM_CATEGORY")
+public class StepupMediumCategory extends BaseTimeEntity {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,16 +33,16 @@ public class StepupSection extends BaseTimeEntity {
 
   // StepupCourse 엔티티와 다대일(N:1) 관계. 연관관계의 주인입니다.
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "STEPUP_COURSE_ID", nullable = false)
-  private StepupCourse stepupCourse;
+  @JoinColumn(name = "STEPUP_LARGE_CATEGORY_ID", nullable = false)
+  private StepupLargeCategory stepupLargeCategory;
 
-  @Column(name = "SECTION_NAME", nullable = false)
-  private String sectionName;
+  @Column(name = "MEDIUM_CATEGORY_NAME", nullable = false)
+  private String mediumCategoryName;
 
-  @Column(name = "SECTION_ORDER", nullable = false)
-  private Integer sectionOrder;
+  @Column(name = "MEDIUM_CATEGORY_ORDER", nullable = false)
+  private Integer mediumCategoryOrder;
 
   // StepupStep 엔티티와 일대다(1:N) 관계. 하나의 섹션은 여러 스텝을 가집니다.
-  @OneToMany(mappedBy = "stepupSection", cascade = CascadeType.ALL, orphanRemoval = true)
-  private List<StepupStep> steps = new ArrayList<>();
+  @OneToMany(mappedBy = "stepupMediumCategory", cascade = CascadeType.ALL, orphanRemoval = true)
+  private List<StepupSmallCategory> steps = new ArrayList<>();
 }

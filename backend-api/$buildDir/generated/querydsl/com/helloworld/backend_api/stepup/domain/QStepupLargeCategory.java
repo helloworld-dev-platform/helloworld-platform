@@ -11,50 +11,52 @@ import com.querydsl.core.types.dsl.PathInits;
 
 
 /**
- * QStepupCourse is a Querydsl query type for StepupCourse
+ * QStepupLargeCategory is a Querydsl query type for StepupLargeCategory
  */
 @Generated("com.querydsl.codegen.DefaultEntitySerializer")
-public class QStepupCourse extends EntityPathBase<StepupCourse> {
+public class QStepupLargeCategory extends EntityPathBase<StepupLargeCategory> {
 
-    private static final long serialVersionUID = -911889339L;
+    private static final long serialVersionUID = -186088977L;
 
     private static final PathInits INITS = PathInits.DIRECT2;
 
-    public static final QStepupCourse stepupCourse = new QStepupCourse("stepupCourse");
+    public static final QStepupLargeCategory stepupLargeCategory = new QStepupLargeCategory("stepupLargeCategory");
 
     public final com.helloworld.backend_api.common.domain.QBaseTimeEntity _super = new com.helloworld.backend_api.common.domain.QBaseTimeEntity(this);
-
-    public final StringPath courseName = createString("courseName");
 
     //inherited
     public final DateTimePath<java.time.LocalDateTime> createdAt = _super.createdAt;
 
+    public final EnumPath<com.helloworld.backend_api.problem.domain.Difficulty> difficulty = createEnum("difficulty", com.helloworld.backend_api.problem.domain.Difficulty.class);
+
     public final NumberPath<Long> id = createNumber("id", Long.class);
+
+    public final StringPath largeCategoryName = createString("largeCategoryName");
 
     public final com.helloworld.backend_api.problem.domain.QLearningLanguage learningLanguage;
 
-    public final ListPath<StepupSection, QStepupSection> sections = this.<StepupSection, QStepupSection>createList("sections", StepupSection.class, QStepupSection.class, PathInits.DIRECT2);
+    public final ListPath<StepupMediumCategory, QStepupMediumCategory> sections = this.<StepupMediumCategory, QStepupMediumCategory>createList("sections", StepupMediumCategory.class, QStepupMediumCategory.class, PathInits.DIRECT2);
 
     //inherited
     public final DateTimePath<java.time.LocalDateTime> updatedAt = _super.updatedAt;
 
-    public QStepupCourse(String variable) {
-        this(StepupCourse.class, forVariable(variable), INITS);
+    public QStepupLargeCategory(String variable) {
+        this(StepupLargeCategory.class, forVariable(variable), INITS);
     }
 
-    public QStepupCourse(Path<? extends StepupCourse> path) {
+    public QStepupLargeCategory(Path<? extends StepupLargeCategory> path) {
         this(path.getType(), path.getMetadata(), PathInits.getFor(path.getMetadata(), INITS));
     }
 
-    public QStepupCourse(PathMetadata metadata) {
+    public QStepupLargeCategory(PathMetadata metadata) {
         this(metadata, PathInits.getFor(metadata, INITS));
     }
 
-    public QStepupCourse(PathMetadata metadata, PathInits inits) {
-        this(StepupCourse.class, metadata, inits);
+    public QStepupLargeCategory(PathMetadata metadata, PathInits inits) {
+        this(StepupLargeCategory.class, metadata, inits);
     }
 
-    public QStepupCourse(Class<? extends StepupCourse> type, PathMetadata metadata, PathInits inits) {
+    public QStepupLargeCategory(Class<? extends StepupLargeCategory> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
         this.learningLanguage = inits.isInitialized("learningLanguage") ? new com.helloworld.backend_api.problem.domain.QLearningLanguage(forProperty("learningLanguage")) : null;
     }

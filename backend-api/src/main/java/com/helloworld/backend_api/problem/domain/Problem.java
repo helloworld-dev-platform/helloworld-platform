@@ -1,7 +1,7 @@
 package com.helloworld.backend_api.problem.domain;
 
 import com.helloworld.backend_api.common.domain.BaseTimeEntity;
-import com.helloworld.backend_api.stepup.domain.StepupStep;
+import com.helloworld.backend_api.stepup.domain.StepupSmallCategory;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -37,8 +37,8 @@ public class Problem extends BaseTimeEntity {
   private LearningLanguage learningLanguage;
 
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "STEPUP_STEP_ID")
-  private StepupStep stepupStep;
+  @JoinColumn(name = "STEPUP_SMALL_CATEGORY_ID")
+  private StepupSmallCategory stepupSmallCategory;
 
   @Enumerated(EnumType.STRING)
   private ProblemType problemType;

@@ -30,8 +30,6 @@ public class QUser extends EntityPathBase<User> {
 
     public final EnumPath<UserStatus> status = createEnum("status", UserStatus.class);
 
-    public final NumberPath<Long> stepupCourseId = createNumber("stepupCourseId", Long.class);
-
     public final NumberPath<Integer> totalPoint = createNumber("totalPoint", Integer.class);
 
     //inherited

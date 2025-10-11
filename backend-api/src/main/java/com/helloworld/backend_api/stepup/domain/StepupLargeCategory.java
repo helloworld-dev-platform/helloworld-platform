@@ -1,10 +1,13 @@
 package com.helloworld.backend_api.stepup.domain;
 
 import com.helloworld.backend_api.common.domain.BaseTimeEntity;
+import com.helloworld.backend_api.problem.domain.Difficulty;
 import com.helloworld.backend_api.problem.domain.LearningLanguage;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -25,8 +28,8 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "STEPUP_COURSE")
-public class StepupCourse extends BaseTimeEntity {
+@Table(name = "STEPUP_LARGE_CATEGORY")
+public class StepupLargeCategory extends BaseTimeEntity {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -36,9 +39,13 @@ public class StepupCourse extends BaseTimeEntity {
   @JoinColumn(name = "LEARNING_LANGUAGE_ID", nullable = false)
   private LearningLanguage learningLanguage;
 
-  @Column(name = "COURSE_NAME")
-  private String courseName;
+  @Column(name = "LARGE_CATEGORY_NAME")
+  private String largeCategoryName;
 
-  @OneToMany(mappedBy = "stepupCourse", cascade = CascadeType.ALL, orphanRemoval = true)
-  private List<StepupSection> sections = new ArrayList<>();
+  @Enumerated(EnumType.STRING)
+  @Column(name = "difficulty", nullable = false)
+  private Difficulty difficulty;
+
+  @OneToMany(mappedBy = "stepupLargeCategory", cascade = CascadeType.ALL, orphanRemoval = true)
+  private List<StepupMediumCategory> sections = new ArrayList<>();
 }

@@ -24,23 +24,23 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "STEPUP_STEP")
-public class StepupStep extends BaseTimeEntity {
+@Table(name = "STEPUP_SMALL_CATEGORY")
+public class StepupSmallCategory extends BaseTimeEntity {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "STEPUP_SECTION_ID", nullable = false)
-  private StepupSection stepupSection;
+  @JoinColumn(name = "STEPUP_MEDIUM_CATEGORY_ID", nullable = false)
+  private StepupMediumCategory stepupMediumCategory;
 
-  @Column(name = "STEP_TITLE")
-  private String stepTitle;
+  @Column(name = "SMALL_CATEGORY_TITLE")
+  private String smallCategoryTitle;
 
-  @Column(name = "STEP_ORDER")
-  private Integer stepOrder;
+  @Column(name = "SMALL_CATEGORY_ORDER")
+  private Integer SmallCategoryOrder;
 
-  @OneToMany(mappedBy = "stepupStep")
+  @OneToMany(mappedBy = "stepupSmallCategory")
   private List<Problem> problems = new ArrayList<>();
 }

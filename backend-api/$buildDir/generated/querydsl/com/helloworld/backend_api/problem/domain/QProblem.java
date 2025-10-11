@@ -39,7 +39,7 @@ public class QProblem extends EntityPathBase<Problem> {
 
     public final EnumPath<ProblemType> problemType = createEnum("problemType", ProblemType.class);
 
-    public final com.helloworld.backend_api.stepup.domain.QStepupStep stepupStep;
+    public final com.helloworld.backend_api.stepup.domain.QStepupSmallCategory stepupSmallCategory;
 
     //inherited
     public final DateTimePath<java.time.LocalDateTime> updatedAt = _super.updatedAt;
@@ -63,7 +63,7 @@ public class QProblem extends EntityPathBase<Problem> {
     public QProblem(Class<? extends Problem> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
         this.learningLanguage = inits.isInitialized("learningLanguage") ? new QLearningLanguage(forProperty("learningLanguage")) : null;
-        this.stepupStep = inits.isInitialized("stepupStep") ? new com.helloworld.backend_api.stepup.domain.QStepupStep(forProperty("stepupStep"), inits.get("stepupStep")) : null;
+        this.stepupSmallCategory = inits.isInitialized("stepupSmallCategory") ? new com.helloworld.backend_api.stepup.domain.QStepupSmallCategory(forProperty("stepupSmallCategory"), inits.get("stepupSmallCategory")) : null;
     }
 
 }

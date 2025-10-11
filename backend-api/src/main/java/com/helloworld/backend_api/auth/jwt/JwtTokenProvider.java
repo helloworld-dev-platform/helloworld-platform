@@ -1,8 +1,10 @@
 package com.helloworld.backend_api.auth.jwt;
 
 import com.helloworld.backend_api.user.domain.User;
+import com.helloworld.backend_api.user.domain.UserPretestResult;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
+import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -10,6 +12,7 @@ import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
 import java.util.Date;
+import java.util.Optional;
 import javax.crypto.SecretKey;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -43,19 +46,30 @@ public class JwtTokenProvider {
   /**
    * 액세스 토큰 생성
    */
-  public String generateToken(User user) {
+  public String generateToken(User user, Optional<UserPretestResult> testResultOpt) {
     Date now = new Date();
     Date expiryDate = new Date(now.getTime() + jwtProperties.getExpirationTime());
 
-    return Jwts.builder()
+    JwtBuilder builder = Jwts.builder()
         .setSubject(Long.toString(user.getId()))
         .claim("role", user.getUserRole())
         .claim("email", user.getUserEmail())
-        .claim("username", user.getUserName())
+        .claim("userName", user.getUserName())
         .setIssuedAt(new Date())
-        .setExpiration(expiryDate)
-        .signWith(secretKey, SignatureAlgorithm.HS256)
-        .compact();
+        .setExpiration(expiryDate);
+
+    testResultOpt.ifPresentOrElse(
+        testResult -> {
+          builder.claim("hasCompletedTest", true);
+          builder.claim("languageId", testResult.getLearningLanguage());
+          builder.claim("levelId", testResult.getPreTestLevel());
+        },
+        () -> {
+          builder.claim("hasCompletedTest", false); // 테스트 완료 안 함
+        }
+    );
+
+    return builder.signWith(secretKey, SignatureAlgorithm.HS256).compact();
   }
 
   /**

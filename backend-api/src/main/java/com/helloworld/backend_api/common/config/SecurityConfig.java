@@ -54,6 +54,7 @@ public class SecurityConfig {
                 "/swagger-resources/**",
                 "/webjars/**",
                 "/",
+                "/dev/**",
                 "/oauth2/**").permitAll() // /user/**로 시작하는 모든 요청은 로그인된 사용자만 가능
             .anyRequest().authenticated()
         )
