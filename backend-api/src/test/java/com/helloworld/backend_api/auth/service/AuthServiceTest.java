@@ -3,6 +3,7 @@ package com.helloworld.backend_api.auth.service;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -72,7 +73,7 @@ class AuthServiceTest {
     // then - 토큰 생성 시 '사전 테스트 결과'가 잘 전달되었는지 검증한다
     verify(jwtTokenProvider).generateToken(mockUser, Optional.of(mockTestResult));
     // then - 새로운 리프레시 토큰이 Redis에 저장되었는지 검증한다
-    verify(redisTokenService).saveRefreshToken(USER_ID, NEW_REFRESH_TOKEN, anyLong());
+    verify(redisTokenService).saveRefreshToken(eq(USER_ID), eq(NEW_REFRESH_TOKEN), anyLong());
   }
 
   @Test
@@ -80,7 +81,7 @@ class AuthServiceTest {
   void reissueTokens_Fail_InvalidTokenInRedis() {
     // given - Redis 검증에 실패하는 리프레시 토큰이 주어졌을 때
     String invalidToken = "invalid-in-redis-token";
-    when(jwtTokenProvider.isTampered(invalidToken)).thenReturn(true);
+    when(jwtTokenProvider.isTampered(invalidToken)).thenReturn(false);
     when(jwtTokenProvider.getUserId(invalidToken)).thenReturn(USER_ID);
     when(redisTokenService.isValid(USER_ID, invalidToken)).thenReturn(
         false); // Redis 검증 실패 상황 Mocking
@@ -95,7 +96,7 @@ class AuthServiceTest {
    * 책임 분리: '유효한 리프레시 토큰'이 주어졌을 때의 모든 Mock 객체 행동을 정의하는 헬퍼 메소드
    */
   private void givenValidRefreshToken(String refreshToken) {
-    when(jwtTokenProvider.isTampered(refreshToken)).thenReturn(true);
+    when(jwtTokenProvider.isTampered(refreshToken)).thenReturn(false);
     when(jwtTokenProvider.getUserId(refreshToken)).thenReturn(USER_ID);
     when(redisTokenService.isValid(USER_ID, refreshToken)).thenReturn(true);
     when(userRepository.findById(USER_ID)).thenReturn(Optional.of(mockUser));

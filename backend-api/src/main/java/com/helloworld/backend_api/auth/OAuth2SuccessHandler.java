@@ -1,6 +1,7 @@
 package com.helloworld.backend_api.auth;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.helloworld.backend_api.auth.jwt.AccessTokenResponseDto;
 import com.helloworld.backend_api.auth.jwt.JwtTokenProvider;
 import com.helloworld.backend_api.auth.jwt.JwtTokenResponseDto;
 import com.helloworld.backend_api.auth.model.PrincipalDetails;
@@ -9,23 +10,28 @@ import com.helloworld.backend_api.user.domain.User;
 import com.helloworld.backend_api.user.domain.UserPretestResult;
 import com.helloworld.backend_api.user.repository.UserPreTestResultRepository;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
+public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
   private final JwtTokenProvider jwtTokenProvider;
   private final RedisTokenService redisTokenService;
   private final ObjectMapper objectMapper;
   private final UserPreTestResultRepository userPreTestResultRepository;
+
+  private static final int ACCESS_TOKEN_EXPIRATION_SECONDS = 1800; //30분
+  private static final int REFRESH_TOKEN_EXPIRATION_DAYS = 7; //7일
+
 
   @Override
   public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
@@ -40,8 +46,12 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
     // 3단계: 토큰 발급 및 저장
     JwtTokenResponseDto tokens = issueAndSaveToken(user, latestTestResult);
 
-    // 4단계: 클라이언트에 응답 전송
-    sendSuccessResponse(response, tokens);
+    // 4단계: 쿠키에 정보 담기
+    addCookie(response, "refreshToken", tokens.getRefreshToken(),
+        REFRESH_TOKEN_EXPIRATION_DAYS * 24 * 60 * 60);
+
+    AccessTokenResponseDto atResponse = new AccessTokenResponseDto(tokens.getAccessToken());
+    sendSuccessResponse(response, atResponse);
 
   }
 
@@ -70,15 +80,24 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
     String accessToken = jwtTokenProvider.generateToken(user, testResult);
     String refreshToken = jwtTokenProvider.generateRefreshToken(user);
 
-//redis에 refresh토큰 저장 (만료시간 7일)
     redisTokenService.saveRefreshToken(user.getId(), refreshToken, 1000L * 60 * 60 * 24 * 7);
 
     return new JwtTokenResponseDto(accessToken, refreshToken);
   }
 
-  private void sendSuccessResponse(HttpServletResponse response, JwtTokenResponseDto tokens)
+  private void addCookie(HttpServletResponse response, String name, String value, int maxAge) {
+    Cookie cookie = new Cookie(name, value);
+    cookie.setHttpOnly(true);   // JavaScript에서 접근 불가
+    //cookie.setSecure(false);     // HTTPS 통신에서만 전송 (운영 환경에서는 true로 설정)
+    cookie.setPath("/");        // 웹사이트 전체 경로에서 유효
+    cookie.setMaxAge(maxAge);   // 쿠키 만료 시간 설정
+    response.addCookie(cookie);
+  }
+
+
+  private void sendSuccessResponse(HttpServletResponse response, AccessTokenResponseDto accessToken)
       throws IOException {
     response.setContentType("application/json;charset=UTF-8");
-    response.getWriter().write(objectMapper.writeValueAsString(tokens));
+    response.getWriter().write(objectMapper.writeValueAsString(accessToken));
   }
 }
