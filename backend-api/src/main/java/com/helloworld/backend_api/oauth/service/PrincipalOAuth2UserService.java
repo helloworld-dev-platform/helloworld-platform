@@ -1,10 +1,10 @@
-package com.helloworld.backend_api.auth.oauth.service;
+package com.helloworld.backend_api.oauth.service;
 
 import static com.helloworld.backend_api.user.domain.UserStatus.ACTIVE;
 
 import com.helloworld.backend_api.auth.model.PrincipalDetails;
-import com.helloworld.backend_api.auth.oauth.userinfo.GoogleUserInfo;
-import com.helloworld.backend_api.auth.oauth.userinfo.OAuth2UserInfo;
+import com.helloworld.backend_api.oauth.userinfo.GoogleUserInfo;
+import com.helloworld.backend_api.oauth.userinfo.OAuth2UserInfo;
 import com.helloworld.backend_api.user.domain.User;
 import com.helloworld.backend_api.user.domain.UserOauthCredential;
 import com.helloworld.backend_api.user.repository.UserOauthCredentialRepository;

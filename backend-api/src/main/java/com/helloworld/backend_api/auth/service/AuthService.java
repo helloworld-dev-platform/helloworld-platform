@@ -1,11 +1,15 @@
 package com.helloworld.backend_api.auth.service;
 
+import static com.helloworld.backend_api.user.domain.UserStatus.ACTIVE;
+
 import com.helloworld.backend_api.auth.jwt.JwtTokenProvider;
 import com.helloworld.backend_api.auth.jwt.JwtTokenResponseDto;
 import com.helloworld.backend_api.common.exception.CustomException;
 import com.helloworld.backend_api.common.exception.ErrorCode;
 import com.helloworld.backend_api.user.domain.User;
+import com.helloworld.backend_api.user.domain.UserOauthCredential;
 import com.helloworld.backend_api.user.domain.UserPretestResult;
+import com.helloworld.backend_api.user.repository.UserOauthCredentialRepository;
 import com.helloworld.backend_api.user.repository.UserPreTestResultRepository;
 import com.helloworld.backend_api.user.repository.UserRepository;
 import java.util.Optional;
@@ -20,7 +24,50 @@ public class AuthService {
   private final JwtTokenProvider jwtTokenProvider;
   private final RedisTokenService redisTokenService;
   private final UserRepository userRepository;
+  private final UserOauthCredentialRepository userOauthCredentialRepository;
   private final UserPreTestResultRepository userPreTestResultRepository;
+
+  @Transactional
+  public User findOrCreateOauthUser(String provider, String providerId, String email,
+      String username) {
+    // 1. 기존 연동 정보 확인
+    Optional<UserOauthCredential> credentialOptional =
+        userOauthCredentialRepository.findByProviderAndProviderId(provider, providerId);
+
+    if (credentialOptional.isPresent()) {
+      return credentialOptional.get().getUser(); // 기존 사용자 반환
+    }
+
+    // 2. 연동 정보가 없으면, User를 찾거나 새로 생성
+    User user = findOrCreateUser(username, email, "USER");
+
+    // 3. UserOauthCredential 엔티티 저장 (연동 정보 추가)
+    UserOauthCredential credential = UserOauthCredential.builder()
+        .user(user)
+        .provider(provider)
+        .providerId(providerId)
+        .build();
+    userOauthCredentialRepository.save(credential);
+
+    return user;
+  }
+
+  private User findOrCreateUser(String username, String email, String role) {
+    User existingUser = userRepository.findByUserName(username);
+    if (existingUser != null) {
+      return existingUser;
+    }
+
+    // 신규 User 엔티티 생성 및 저장 (회원가입)
+    User newUser = User.builder()
+        .userEmail(email)
+        .userName(username)
+        .userRole(role)
+        .totalPoint(0)
+        .status(ACTIVE) // (UserStatus.ACTIVE)
+        .build();
+    return userRepository.save(newUser);
+  }
 
   @Transactional
   public JwtTokenResponseDto reissueTokens(String refreshToken) {

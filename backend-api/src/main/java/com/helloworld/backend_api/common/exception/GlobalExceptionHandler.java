@@ -13,11 +13,11 @@ public class GlobalExceptionHandler {
   //커스텀 예외 처리(도메인 기준)
 
   @ExceptionHandler(CustomException.class)
-  public ResponseEntity<Object> handleCustomException(CustomException e) {
+  public ResponseEntity<ErrorResponseDto> handleCustomException(CustomException e) {
     log.error("handleCustomException:{}", e.getErrorCode());
     ErrorCode errorCode = e.getErrorCode();
 
-    return new ResponseEntity<>(ErrorResponseDto.of(errorCode), errorCode.getHttpStatus());
+    return new ResponseEntity<>(ErrorResponseDto.from(errorCode), errorCode.getHttpStatus());
   }
 
   /**
@@ -27,7 +27,7 @@ public class GlobalExceptionHandler {
   protected ResponseEntity<ErrorResponseDto> handleException(Exception e) {
     log.error("handleException", e);
     ErrorCode errorCode = ErrorCode.INTERNAL_SERVER_ERROR;
-    ErrorResponseDto response = (ErrorResponseDto) ErrorResponseDto.of(errorCode);
+    ErrorResponseDto response = ErrorResponseDto.from(errorCode);
     return new ResponseEntity<>(response, errorCode.getHttpStatus());
   }
 }

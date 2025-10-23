@@ -20,6 +20,7 @@ public enum ErrorCode {
   FORBIDDEN_ACCESS("AUTH_003", HttpStatus.FORBIDDEN, "접근 권한이 없습니다."),
   OAUTH_PROVIDER_ERROR("AUTH_004", HttpStatus.BAD_REQUEST, "OAuth 제공자 오류입니다."),
   TOKEN_INVALID("AUTH_005", HttpStatus.UNAUTHORIZED, "유효한 토큰이 아닙니다."),
+  AUTH_ERROR("AUTH_006", HttpStatus.UNAUTHORIZED, "구글 액세스 토큰을 가져오는 데 실패했습니다."),
 
   //공통
   INTERNAL_SERVER_ERROR("COMMON_001", HttpStatus.INTERNAL_SERVER_ERROR, "서버 오류입니다."),

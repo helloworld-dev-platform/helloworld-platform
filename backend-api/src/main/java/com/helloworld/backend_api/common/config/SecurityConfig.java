@@ -1,7 +1,7 @@
 package com.helloworld.backend_api.common.config;
 
 import com.helloworld.backend_api.auth.OAuth2SuccessHandler;
-import com.helloworld.backend_api.auth.oauth.service.PrincipalOAuth2UserService;
+import com.helloworld.backend_api.oauth.service.PrincipalOAuth2UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -55,15 +55,17 @@ public class SecurityConfig {
                 "/webjars/**",
                 "/",
                 "/dev/**",
+                "/login/oauth2/code/google",
+                "/auth/google/login",
                 "/oauth2/**").permitAll() // /user/**로 시작하는 모든 요청은 로그인된 사용자만 가능
             .anyRequest().authenticated()
-        )
-        .oauth2Login(oauth2 -> oauth2
+        );
+        /*.oauth2Login(oauth2 -> oauth2
             .userInfoEndpoint(userInfo -> userInfo
                 .userService(oAuth2UserService)
             )
             .successHandler(oAuth2SuccessHandler)
-        );
+        );*/
 
     return http.build();
   }
