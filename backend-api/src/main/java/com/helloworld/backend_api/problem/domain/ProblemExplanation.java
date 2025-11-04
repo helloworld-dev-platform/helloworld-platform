@@ -11,29 +11,42 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 /**
- * 객관식 문제(Problem)의 각 선택지를 나타내는 엔티티
+ * 문제 해설을 나타내는 엔티티
  */
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "CHOICE")
-public class Choice extends BaseTimeEntity {
+@AllArgsConstructor(access = AccessLevel.PROTECTED)
+@Table(name = "PROBLEM_EXPLANATION")
+public class ProblemExplanation extends BaseTimeEntity {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = "id", nullable = false)
   private Long id;
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "PROBLEM_ID", nullable = false)
   private Problem problem;
 
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "CHOICE_ID", nullable = true)
+  private Choice choice;
+
   @Column(name = "CONTENT", nullable = false, columnDefinition = "TEXT")
   private String content;
 
-  @Column(name = "IS_CORRECT", nullable = false)
-  private boolean isCorrect;
+  @Builder
+  public ProblemExplanation(Problem problem, Choice choice, String content) {
+    this.problem = problem;
+    this.choice = choice;
+    this.content = content;
+  }
+
 }

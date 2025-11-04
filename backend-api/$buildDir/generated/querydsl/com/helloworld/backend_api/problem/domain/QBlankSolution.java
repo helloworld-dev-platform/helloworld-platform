@@ -11,18 +11,20 @@ import com.querydsl.core.types.dsl.PathInits;
 
 
 /**
- * QSolution is a Querydsl query type for Solution
+ * QBlankSolution is a Querydsl query type for BlankSolution
  */
 @Generated("com.querydsl.codegen.DefaultEntitySerializer")
-public class QSolution extends EntityPathBase<Solution> {
+public class QBlankSolution extends EntityPathBase<BlankSolution> {
 
-    private static final long serialVersionUID = 781118036L;
+    private static final long serialVersionUID = 1969742578L;
 
     private static final PathInits INITS = PathInits.DIRECT2;
 
-    public static final QSolution solution = new QSolution("solution");
+    public static final QBlankSolution blankSolution = new QBlankSolution("blankSolution");
 
     public final com.helloworld.backend_api.common.domain.QBaseTimeEntity _super = new com.helloworld.backend_api.common.domain.QBaseTimeEntity(this);
+
+    public final NumberPath<Integer> blankOrder = createNumber("blankOrder", Integer.class);
 
     public final StringPath content = createString("content");
 
@@ -36,23 +38,23 @@ public class QSolution extends EntityPathBase<Solution> {
     //inherited
     public final DateTimePath<java.time.LocalDateTime> updatedAt = _super.updatedAt;
 
-    public QSolution(String variable) {
-        this(Solution.class, forVariable(variable), INITS);
+    public QBlankSolution(String variable) {
+        this(BlankSolution.class, forVariable(variable), INITS);
     }
 
-    public QSolution(Path<? extends Solution> path) {
+    public QBlankSolution(Path<? extends BlankSolution> path) {
         this(path.getType(), path.getMetadata(), PathInits.getFor(path.getMetadata(), INITS));
     }
 
-    public QSolution(PathMetadata metadata) {
+    public QBlankSolution(PathMetadata metadata) {
         this(metadata, PathInits.getFor(metadata, INITS));
     }
 
-    public QSolution(PathMetadata metadata, PathInits inits) {
-        this(Solution.class, metadata, inits);
+    public QBlankSolution(PathMetadata metadata, PathInits inits) {
+        this(BlankSolution.class, metadata, inits);
     }
 
-    public QSolution(Class<? extends Solution> type, PathMetadata metadata, PathInits inits) {
+    public QBlankSolution(Class<? extends BlankSolution> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
         this.problem = inits.isInitialized("problem") ? new QProblem(forProperty("problem"), inits.get("problem")) : null;
     }

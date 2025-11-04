@@ -1,4 +1,4 @@
-package com.helloworld.backend_api.problem.domain;
+package com.helloworld.backend_api.user.domain;
 
 import static com.querydsl.core.types.PathMetadataFactory.*;
 
@@ -11,50 +11,52 @@ import com.querydsl.core.types.dsl.PathInits;
 
 
 /**
- * QSolution is a Querydsl query type for Solution
+ * QUserProfile is a Querydsl query type for UserProfile
  */
 @Generated("com.querydsl.codegen.DefaultEntitySerializer")
-public class QSolution extends EntityPathBase<Solution> {
+public class QUserProfile extends EntityPathBase<UserProfile> {
 
-    private static final long serialVersionUID = 781118036L;
+    private static final long serialVersionUID = -159852489L;
 
     private static final PathInits INITS = PathInits.DIRECT2;
 
-    public static final QSolution solution = new QSolution("solution");
+    public static final QUserProfile userProfile = new QUserProfile("userProfile");
 
     public final com.helloworld.backend_api.common.domain.QBaseTimeEntity _super = new com.helloworld.backend_api.common.domain.QBaseTimeEntity(this);
-
-    public final StringPath content = createString("content");
 
     //inherited
     public final DateTimePath<java.time.LocalDateTime> createdAt = _super.createdAt;
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
-    public final QProblem problem;
+    public final StringPath nickname = createString("nickname");
+
+    public final StringPath profileImgUrl = createString("profileImgUrl");
 
     //inherited
     public final DateTimePath<java.time.LocalDateTime> updatedAt = _super.updatedAt;
 
-    public QSolution(String variable) {
-        this(Solution.class, forVariable(variable), INITS);
+    public final QUser user;
+
+    public QUserProfile(String variable) {
+        this(UserProfile.class, forVariable(variable), INITS);
     }
 
-    public QSolution(Path<? extends Solution> path) {
+    public QUserProfile(Path<? extends UserProfile> path) {
         this(path.getType(), path.getMetadata(), PathInits.getFor(path.getMetadata(), INITS));
     }
 
-    public QSolution(PathMetadata metadata) {
+    public QUserProfile(PathMetadata metadata) {
         this(metadata, PathInits.getFor(metadata, INITS));
     }
 
-    public QSolution(PathMetadata metadata, PathInits inits) {
-        this(Solution.class, metadata, inits);
+    public QUserProfile(PathMetadata metadata, PathInits inits) {
+        this(UserProfile.class, metadata, inits);
     }
 
-    public QSolution(Class<? extends Solution> type, PathMetadata metadata, PathInits inits) {
+    public QUserProfile(Class<? extends UserProfile> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
-        this.problem = inits.isInitialized("problem") ? new QProblem(forProperty("problem"), inits.get("problem")) : null;
+        this.user = inits.isInitialized("user") ? new QUser(forProperty("user")) : null;
     }
 
 }

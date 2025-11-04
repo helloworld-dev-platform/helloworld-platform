@@ -34,7 +34,4 @@ public class Solution extends BaseTimeEntity {
 
   @Column(name = "CONTENT", nullable = false, columnDefinition = "TEXT")
   private String content;
-
-  @Column(name = "CORRECT_DESCRIPTION", columnDefinition = "TEXT")
-  private String correctDescription;
 }

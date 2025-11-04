@@ -26,6 +26,8 @@ public class QSolution extends EntityPathBase<Solution> {
 
     public final StringPath content = createString("content");
 
+    public final StringPath correctDescription = createString("correctDescription");
+
     //inherited
     public final DateTimePath<java.time.LocalDateTime> createdAt = _super.createdAt;
 

@@ -29,7 +29,6 @@ public class UserPreTestSession {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  //사용자가 여러번 사전레벨테스트를 응시할 수 있다.
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "USER_ID", nullable = false)
   private User user;

@@ -11,48 +11,54 @@ import com.querydsl.core.types.dsl.PathInits;
 
 
 /**
- * QSolution is a Querydsl query type for Solution
+ * QChoice is a Querydsl query type for Choice
  */
 @Generated("com.querydsl.codegen.DefaultEntitySerializer")
-public class QSolution extends EntityPathBase<Solution> {
+public class QChoice extends EntityPathBase<Choice> {
 
-    private static final long serialVersionUID = 781118036L;
+    private static final long serialVersionUID = 1114010940L;
 
     private static final PathInits INITS = PathInits.DIRECT2;
 
-    public static final QSolution solution = new QSolution("solution");
+    public static final QChoice choice = new QChoice("choice");
 
     public final com.helloworld.backend_api.common.domain.QBaseTimeEntity _super = new com.helloworld.backend_api.common.domain.QBaseTimeEntity(this);
 
     public final StringPath content = createString("content");
+
+    public final StringPath correctDescription = createString("correctDescription");
 
     //inherited
     public final DateTimePath<java.time.LocalDateTime> createdAt = _super.createdAt;
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
+    public final StringPath incorrectDescription = createString("incorrectDescription");
+
+    public final BooleanPath isCorrect = createBoolean("isCorrect");
+
     public final QProblem problem;
 
     //inherited
     public final DateTimePath<java.time.LocalDateTime> updatedAt = _super.updatedAt;
 
-    public QSolution(String variable) {
-        this(Solution.class, forVariable(variable), INITS);
+    public QChoice(String variable) {
+        this(Choice.class, forVariable(variable), INITS);
     }
 
-    public QSolution(Path<? extends Solution> path) {
+    public QChoice(Path<? extends Choice> path) {
         this(path.getType(), path.getMetadata(), PathInits.getFor(path.getMetadata(), INITS));
     }
 
-    public QSolution(PathMetadata metadata) {
+    public QChoice(PathMetadata metadata) {
         this(metadata, PathInits.getFor(metadata, INITS));
     }
 
-    public QSolution(PathMetadata metadata, PathInits inits) {
-        this(Solution.class, metadata, inits);
+    public QChoice(PathMetadata metadata, PathInits inits) {
+        this(Choice.class, metadata, inits);
     }
 
-    public QSolution(Class<? extends Solution> type, PathMetadata metadata, PathInits inits) {
+    public QChoice(Class<? extends Choice> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
         this.problem = inits.isInitialized("problem") ? new QProblem(forProperty("problem"), inits.get("problem")) : null;
     }

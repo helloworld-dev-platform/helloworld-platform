@@ -26,14 +26,10 @@ public class QChoice extends EntityPathBase<Choice> {
 
     public final StringPath content = createString("content");
 
-    public final StringPath correctDescription = createString("correctDescription");
-
     //inherited
     public final DateTimePath<java.time.LocalDateTime> createdAt = _super.createdAt;
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
-
-    public final StringPath incorrectDescription = createString("incorrectDescription");
 
     public final BooleanPath isCorrect = createBoolean("isCorrect");
 
