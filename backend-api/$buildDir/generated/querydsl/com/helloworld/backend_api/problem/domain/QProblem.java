@@ -31,15 +31,15 @@ public class QProblem extends EntityPathBase<Problem> {
 
     public final EnumPath<Difficulty> difficulty = createEnum("difficulty", Difficulty.class);
 
-    public final StringPath domainType = createString("domainType");
+    public final EnumPath<DomainType> domainType = createEnum("domainType", DomainType.class);
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
-    public final QLearningLanguage learningLanguage;
+    public final QLearningLanguage languageId;
 
     public final EnumPath<ProblemType> problemType = createEnum("problemType", ProblemType.class);
 
-    public final com.helloworld.backend_api.stepup.domain.QStepupSmallCategory stepupSmallCategory;
+    public final com.helloworld.backend_api.stepup.domain.QStepupSmallCategory smallCategoryId;
 
     //inherited
     public final DateTimePath<java.time.LocalDateTime> updatedAt = _super.updatedAt;
@@ -62,8 +62,8 @@ public class QProblem extends EntityPathBase<Problem> {
 
     public QProblem(Class<? extends Problem> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
-        this.learningLanguage = inits.isInitialized("learningLanguage") ? new QLearningLanguage(forProperty("learningLanguage")) : null;
-        this.stepupSmallCategory = inits.isInitialized("stepupSmallCategory") ? new com.helloworld.backend_api.stepup.domain.QStepupSmallCategory(forProperty("stepupSmallCategory"), inits.get("stepupSmallCategory")) : null;
+        this.languageId = inits.isInitialized("languageId") ? new QLearningLanguage(forProperty("languageId")) : null;
+        this.smallCategoryId = inits.isInitialized("smallCategoryId") ? new com.helloworld.backend_api.stepup.domain.QStepupSmallCategory(forProperty("smallCategoryId"), inits.get("smallCategoryId")) : null;
     }
 
 }

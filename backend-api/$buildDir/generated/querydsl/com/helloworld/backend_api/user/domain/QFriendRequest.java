@@ -24,11 +24,11 @@ public class QFriendRequest extends EntityPathBase<FriendRequest> {
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
-    public final QUser receiver;
+    public final QUser receiverId;
 
     public final DateTimePath<java.time.LocalDateTime> requestedAt = createDateTime("requestedAt", java.time.LocalDateTime.class);
 
-    public final QUser requester;
+    public final QUser requesterId;
 
     public final DateTimePath<java.time.LocalDateTime> respondedAt = createDateTime("respondedAt", java.time.LocalDateTime.class);
 
@@ -52,8 +52,8 @@ public class QFriendRequest extends EntityPathBase<FriendRequest> {
 
     public QFriendRequest(Class<? extends FriendRequest> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
-        this.receiver = inits.isInitialized("receiver") ? new QUser(forProperty("receiver")) : null;
-        this.requester = inits.isInitialized("requester") ? new QUser(forProperty("requester")) : null;
+        this.receiverId = inits.isInitialized("receiverId") ? new QUser(forProperty("receiverId")) : null;
+        this.requesterId = inits.isInitialized("requesterId") ? new QUser(forProperty("requesterId")) : null;
     }
 
 }

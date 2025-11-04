@@ -34,7 +34,7 @@ public class UserAchievement extends BaseTimeEntity {
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "ACHIEVE_ID", nullable = false)
-  private Achievement achievement;
+  private Achievement achieveId;
 
   @Column(name = "NOW_PROGRESS_LEVEL", nullable = false)
   private Integer nowProgressLevel;

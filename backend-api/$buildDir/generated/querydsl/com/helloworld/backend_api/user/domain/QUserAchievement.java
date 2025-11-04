@@ -24,7 +24,7 @@ public class QUserAchievement extends EntityPathBase<UserAchievement> {
 
     public final com.helloworld.backend_api.common.domain.QBaseTimeEntity _super = new com.helloworld.backend_api.common.domain.QBaseTimeEntity(this);
 
-    public final com.helloworld.backend_api.achievement.domain.QAchievement achievement;
+    public final com.helloworld.backend_api.achievement.domain.QAchievement achieveId;
 
     //inherited
     public final DateTimePath<java.time.LocalDateTime> createdAt = _super.createdAt;
@@ -56,7 +56,7 @@ public class QUserAchievement extends EntityPathBase<UserAchievement> {
 
     public QUserAchievement(Class<? extends UserAchievement> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
-        this.achievement = inits.isInitialized("achievement") ? new com.helloworld.backend_api.achievement.domain.QAchievement(forProperty("achievement")) : null;
+        this.achieveId = inits.isInitialized("achieveId") ? new com.helloworld.backend_api.achievement.domain.QAchievement(forProperty("achieveId")) : null;
         this.user = inits.isInitialized("user") ? new QUser(forProperty("user")) : null;
     }
 

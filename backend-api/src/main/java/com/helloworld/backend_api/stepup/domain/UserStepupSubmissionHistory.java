@@ -37,11 +37,11 @@ public class UserStepupSubmissionHistory extends BaseTimeEntity {
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "PROBLEM_ID", nullable = false)
-  private Problem problem;
+  private Problem problemId;
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "choice_id")
-  private Choice selectedChoice;
+  private Choice choiceId;
 
   @Column(name = "TEXP_ANSWER", columnDefinition = "TEXT")
   private String textAnswer;

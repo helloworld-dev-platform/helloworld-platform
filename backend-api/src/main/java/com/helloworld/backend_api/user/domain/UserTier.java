@@ -34,7 +34,7 @@ public class UserTier extends BaseTimeEntity {
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "TIER_ID", nullable = false)
-  private Tier tier;
+  private Tier tierId;
 
   @Column(name = "SEASON_INFO", length = 50)
   private String seasonInfo;

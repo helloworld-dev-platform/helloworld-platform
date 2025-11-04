@@ -31,7 +31,7 @@ public class QUserTier extends EntityPathBase<UserTier> {
 
     public final StringPath seasonInfo = createString("seasonInfo");
 
-    public final com.helloworld.backend_api.achievement.domain.QTier tier;
+    public final com.helloworld.backend_api.achievement.domain.QTier tierId;
 
     //inherited
     public final DateTimePath<java.time.LocalDateTime> updatedAt = _super.updatedAt;
@@ -56,7 +56,7 @@ public class QUserTier extends EntityPathBase<UserTier> {
 
     public QUserTier(Class<? extends UserTier> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
-        this.tier = inits.isInitialized("tier") ? new com.helloworld.backend_api.achievement.domain.QTier(forProperty("tier")) : null;
+        this.tierId = inits.isInitialized("tierId") ? new com.helloworld.backend_api.achievement.domain.QTier(forProperty("tierId")) : null;
         this.user = inits.isInitialized("user") ? new QUser(forProperty("user")) : null;
     }
 

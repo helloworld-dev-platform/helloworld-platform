@@ -692,3 +692,33 @@ VALUES
     (101, NULL,
      '클로저(Closure)는 함수와 그 함수가 선언된 렉시컬 환경(Lexical Scope)의 조합입니다. 이를 통해 내부 함수가 외부 함수의 변수에 접근할 수 있습니다.',
      NOW(), NOW());
+
+-- #####################################################################
+-- 11. PRE_TEST_LEVEL (레벨정보)
+-- #####################################################################
+INSERT INTO public.pre_test_level (created_at, id, updated_at, pre_test_end_msg,
+                                   pre_test_level_name)
+VALUES ('2025-11-04 15:46:01.000000', 1, '2025-11-04 15:46:09.000000', '레벨이 확정되었습니다(임시)', 'LV1');
+INSERT INTO public.pre_test_level (created_at, id, updated_at, pre_test_end_msg,
+                                   pre_test_level_name)
+VALUES ('2025-11-04 15:46:24.000000', 2, '2025-11-04 15:46:32.000000', '레벨이 확정되었습니다(임시)', 'LV2');
+INSERT INTO public.pre_test_level (created_at, id, updated_at, pre_test_end_msg,
+                                   pre_test_level_name)
+VALUES ('2025-11-04 15:46:39.000000', 3, '2025-11-04 15:46:40.000000', '레벨이 확정되었습니다(임시)', 'LV3');
+
+-- #####################################################################
+-- 12. 테스트 사용자정보
+-- #####################################################################
+INSERT INTO Users (id, USER_EMAIL, USER_NAME, PASSWORD, USER_ROLE, USER_STATUS, TOTAL_POINT,
+                   TOTAL_STUDY_SECOND, LAST_LOGIN_AT, CREATED_AT, UPDATED_AT)
+VALUES (9999,
+        'helloworld@test.com',
+        '테스트계정',
+        '0000',
+        'USER',
+        'ACTIVE',
+        0,
+        0,
+        NOW(),
+        NOW(),
+        NOW());

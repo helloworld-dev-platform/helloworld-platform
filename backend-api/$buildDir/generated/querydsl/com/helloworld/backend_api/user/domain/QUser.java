@@ -28,6 +28,8 @@ public class QUser extends EntityPathBase<User> {
 
     public final DateTimePath<java.time.LocalDateTime> lastLoginAt = createDateTime("lastLoginAt", java.time.LocalDateTime.class);
 
+    public final StringPath password = createString("password");
+
     public final EnumPath<UserStatus> status = createEnum("status", UserStatus.class);
 
     public final NumberPath<Integer> totalPoint = createNumber("totalPoint", Integer.class);

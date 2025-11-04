@@ -10,7 +10,8 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.NoOpPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
@@ -19,8 +20,20 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfig {
 
   @Bean
-  public BCryptPasswordEncoder passwordEncoder() {
-    return new BCryptPasswordEncoder();
+  public PasswordEncoder passwordEncoder() {
+//    Map<String, PasswordEncoder> encoders = new HashMap<>();
+//    encoders.put("bcrypt", new BCryptPasswordEncoder());
+//    encoders.put("noop", NoOpPasswordEncoder.getInstance());
+
+    //테스트를 위해 임시로 평문
+
+    return NoOpPasswordEncoder.getInstance();
+  }
+
+  @Bean
+  public AuthenticationManager authenticationManager(AuthenticationConfiguration config)
+      throws Exception {
+    return config.getAuthenticationManager();
   }
 
   @Autowired
@@ -57,7 +70,9 @@ public class SecurityConfig {
                 "/dev/**",
                 "/login/oauth2/code/google",
                 "/auth/google/login",
-                "/oauth2/**").permitAll() // /user/**로 시작하는 모든 요청은 로그인된 사용자만 가능
+                "/oauth2/**",
+                "/auth/login"
+            ).permitAll()
             .anyRequest().authenticated()
         );
         /*.oauth2Login(oauth2 -> oauth2

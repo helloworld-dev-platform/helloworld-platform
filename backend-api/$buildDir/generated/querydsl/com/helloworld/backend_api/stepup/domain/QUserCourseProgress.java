@@ -31,7 +31,7 @@ public class QUserCourseProgress extends EntityPathBase<UserCourseProgress> {
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
-    public final com.helloworld.backend_api.problem.domain.QProblem problem;
+    public final com.helloworld.backend_api.problem.domain.QProblem problemId;
 
     public final EnumPath<StepupStatus> status = createEnum("status", StepupStatus.class);
 
@@ -60,7 +60,7 @@ public class QUserCourseProgress extends EntityPathBase<UserCourseProgress> {
 
     public QUserCourseProgress(Class<? extends UserCourseProgress> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
-        this.problem = inits.isInitialized("problem") ? new com.helloworld.backend_api.problem.domain.QProblem(forProperty("problem"), inits.get("problem")) : null;
+        this.problemId = inits.isInitialized("problemId") ? new com.helloworld.backend_api.problem.domain.QProblem(forProperty("problemId"), inits.get("problemId")) : null;
         this.user = inits.isInitialized("user") ? new com.helloworld.backend_api.user.domain.QUser(forProperty("user")) : null;
     }
 

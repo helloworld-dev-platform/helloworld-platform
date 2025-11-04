@@ -13,12 +13,15 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import java.time.LocalDateTime;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
+@Builder
 @NoArgsConstructor
+@AllArgsConstructor
 @Schema(description = "공부세션기록Entity")
 @Table(name = "study_session")
 @Getter
@@ -35,7 +38,7 @@ public class StudySession extends BaseTimeEntity {
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "PROBLEM_ID")
-  private Problem problem;
+  private Problem problemId;
 
   @Column(name = "DOMAIN_TYPE", nullable = false)
   private String domainType;
@@ -49,13 +52,4 @@ public class StudySession extends BaseTimeEntity {
   @Column(name = "DURATION_SECOND", nullable = false)
   private int durationSecond;
 
-  @Builder
-  public StudySession(Long id, User user, Problem problem, String domainType, int durationSecond) {
-    this.id = id;
-    this.user = user;
-    this.problem = problem;
-    this.domainType = domainType;
-    this.durationSecond = durationSecond;
-    this.startTime = LocalDateTime.now();
-  }
 }

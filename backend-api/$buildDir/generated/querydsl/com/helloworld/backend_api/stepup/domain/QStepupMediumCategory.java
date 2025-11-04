@@ -29,13 +29,13 @@ public class QStepupMediumCategory extends EntityPathBase<StepupMediumCategory> 
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
+    public final QStepupLargeCategory largeCategoryId;
+
     public final StringPath mediumCategoryName = createString("mediumCategoryName");
 
     public final NumberPath<Integer> mediumCategoryOrder = createNumber("mediumCategoryOrder", Integer.class);
 
     public final ListPath<StepupSmallCategory, QStepupSmallCategory> steps = this.<StepupSmallCategory, QStepupSmallCategory>createList("steps", StepupSmallCategory.class, QStepupSmallCategory.class, PathInits.DIRECT2);
-
-    public final QStepupLargeCategory stepupLargeCategory;
 
     //inherited
     public final DateTimePath<java.time.LocalDateTime> updatedAt = _super.updatedAt;
@@ -58,7 +58,7 @@ public class QStepupMediumCategory extends EntityPathBase<StepupMediumCategory> 
 
     public QStepupMediumCategory(Class<? extends StepupMediumCategory> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
-        this.stepupLargeCategory = inits.isInitialized("stepupLargeCategory") ? new QStepupLargeCategory(forProperty("stepupLargeCategory"), inits.get("stepupLargeCategory")) : null;
+        this.largeCategoryId = inits.isInitialized("largeCategoryId") ? new QStepupLargeCategory(forProperty("largeCategoryId"), inits.get("largeCategoryId")) : null;
     }
 
 }

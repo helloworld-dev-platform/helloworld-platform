@@ -34,7 +34,7 @@ public class StepupMediumCategory extends BaseTimeEntity {
   // StepupCourse 엔티티와 다대일(N:1) 관계. 연관관계의 주인입니다.
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "STEPUP_LARGE_CATEGORY_ID", nullable = false)
-  private StepupLargeCategory stepupLargeCategory;
+  private StepupLargeCategory largeCategoryId;
 
   @Column(name = "MEDIUM_CATEGORY_NAME", nullable = false)
   private String mediumCategoryName;
@@ -43,6 +43,6 @@ public class StepupMediumCategory extends BaseTimeEntity {
   private Integer mediumCategoryOrder;
 
   // StepupStep 엔티티와 일대다(1:N) 관계. 하나의 섹션은 여러 스텝을 가집니다.
-  @OneToMany(mappedBy = "stepupMediumCategory", cascade = CascadeType.ALL, orphanRemoval = true)
+  @OneToMany(mappedBy = "mediumCategoryId", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<StepupSmallCategory> steps = new ArrayList<>();
 }

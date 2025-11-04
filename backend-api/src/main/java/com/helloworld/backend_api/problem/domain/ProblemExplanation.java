@@ -23,6 +23,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
+@Builder
 @Table(name = "PROBLEM_EXPLANATION")
 public class ProblemExplanation extends BaseTimeEntity {
 
@@ -33,20 +34,14 @@ public class ProblemExplanation extends BaseTimeEntity {
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "PROBLEM_ID", nullable = false)
-  private Problem problem;
+  private Problem problemId;
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "CHOICE_ID", nullable = true)
-  private Choice choice;
+  private Choice choiceId;
 
   @Column(name = "CONTENT", nullable = false, columnDefinition = "TEXT")
   private String content;
 
-  @Builder
-  public ProblemExplanation(Problem problem, Choice choice, String content) {
-    this.problem = problem;
-    this.choice = choice;
-    this.content = content;
-  }
 
 }

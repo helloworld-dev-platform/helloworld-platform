@@ -34,7 +34,7 @@ public class UserPretestResult extends BaseTimeEntity {
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "LEARNING_LANGUAGE_ID", nullable = false)
-  private LearningLanguage learningLanguage;
+  private LearningLanguage languageId;
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "USER_ID", nullable = false)
@@ -42,18 +42,18 @@ public class UserPretestResult extends BaseTimeEntity {
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "PRE_TEST_LEVEL_ID", nullable = false)
-  private PreTestLevel preTestLevel;
+  private PreTestLevel levelId;
 
   @Column(name = "COMPLETED_AT")
   private LocalDateTime completedAt;
 
   @Builder
-  public UserPretestResult(Long id, LearningLanguage learningLanguage, User user,
-      PreTestLevel preTestLevel, LocalDateTime completedAt) {
+  public UserPretestResult(Long id, LearningLanguage languageId, User user,
+      PreTestLevel levelId, LocalDateTime completedAt) {
     this.id = id;
-    this.learningLanguage = learningLanguage;
+    this.languageId = languageId;
     this.user = user;
-    this.preTestLevel = preTestLevel;
+    this.levelId = levelId;
     this.completedAt = completedAt;
   }
 }

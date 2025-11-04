@@ -18,14 +18,11 @@ public class PrincipalDetailsService implements UserDetailsService {
   private UserRepository userRepository;
 
   @Override
-  public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-    log.info(">>>>>>>>>>>>>>>>>  username={}", username);
-    User userEntity = userRepository.findByUserName(username);
+  public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+    log.info(">>>>>>>>>>>>>>>>>  username(email)={}", email);
+    User userEntity = userRepository.findByUserEmail(email)
+        .orElseThrow(() -> new UsernameNotFoundException(email + "을(를) 데이터베이스에서 찾을 수 없습니다."));
 
-    if (userEntity != null) {
-      return new PrincipalDetails(userEntity);
-    }
-
-    return null;
+    return new PrincipalDetails(userEntity);
   }
 }

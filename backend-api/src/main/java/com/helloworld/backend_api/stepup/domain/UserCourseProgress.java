@@ -38,7 +38,7 @@ public class UserCourseProgress extends BaseTimeEntity {
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "PROBLEM_ID", nullable = false)
-  private Problem problem;
+  private Problem problemId;
 
   @Enumerated(EnumType.STRING)
   @Column(name = "STEPUP_STATUS")

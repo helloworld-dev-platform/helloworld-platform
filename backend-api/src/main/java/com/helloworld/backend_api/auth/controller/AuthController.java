@@ -1,5 +1,6 @@
 package com.helloworld.backend_api.auth.controller;
 
+import com.helloworld.backend_api.auth.dto.LoginRequest;
 import com.helloworld.backend_api.auth.dto.TokenReissueRequestDto;
 import com.helloworld.backend_api.auth.jwt.AccessTokenResponseDto;
 import com.helloworld.backend_api.auth.jwt.JwtTokenProvider;
@@ -17,6 +18,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import lombok.RequiredArgsConstructor;
@@ -41,6 +43,29 @@ public class AuthController {
 
   private static final int REFRESH_TOKEN_EXPIRATION_DAYS = 7;
 
+  @Operation(summary = "일반 로그인 (이메일/비밀번호)", description = "이메일과 비밀번호로 로그인하고 AT/RT를 발급받습니다.")
+  @ApiErrorCodeExamples({
+      ErrorCode.UNAUTHORIZED,
+      ErrorCode.TOKEN_EXPIRED,
+      ErrorCode.TOKEN_INVALID,
+      ErrorCode.FORBIDDEN_ACCESS,
+      ErrorCode.INTERNAL_SERVER_ERROR
+  })
+  @PostMapping("/login")
+  public DataResponseDto<AccessTokenResponseDto> login(
+      @RequestBody @Valid LoginRequest request,
+      HttpServletResponse response) {
+
+    JwtTokenResponseDto tokens = authService.authenticateAndIssueToken(request);
+
+    addCookie(response, "refreshToken", tokens.getRefreshToken(),
+        REFRESH_TOKEN_EXPIRATION_DAYS * 24 * 60 * 60);
+
+    AccessTokenResponseDto atResponse = new AccessTokenResponseDto(tokens.getAccessToken());
+
+    return DataResponseDto.from(atResponse);
+  }
+
   @PostMapping("/google/login")
   public DataResponseDto<AccessTokenResponseDto> googleLogin(
       @RequestBody GoogleLoginRequest request,
@@ -49,7 +74,7 @@ public class AuthController {
     // 1. 구글과 통신하여 사용자 정보를 가져오고, 우리 서비스의 토큰을 발급받습니다.
     String code = request.getAuthorizationCode();
     String decodedCode = URLDecoder.decode(code, StandardCharsets.UTF_8);
-    
+
     JwtTokenResponseDto tokens = googleLoginService.login(decodedCode);
 
     // 2. Refresh Token은 HttpOnly 쿠키로 응답 헤더에 추가합니다.

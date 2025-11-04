@@ -35,7 +35,7 @@ public class QStudySession extends EntityPathBase<StudySession> {
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
-    public final com.helloworld.backend_api.problem.domain.QProblem problem;
+    public final com.helloworld.backend_api.problem.domain.QProblem problemId;
 
     public final DateTimePath<java.time.LocalDateTime> startTime = createDateTime("startTime", java.time.LocalDateTime.class);
 
@@ -62,7 +62,7 @@ public class QStudySession extends EntityPathBase<StudySession> {
 
     public QStudySession(Class<? extends StudySession> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
-        this.problem = inits.isInitialized("problem") ? new com.helloworld.backend_api.problem.domain.QProblem(forProperty("problem"), inits.get("problem")) : null;
+        this.problemId = inits.isInitialized("problemId") ? new com.helloworld.backend_api.problem.domain.QProblem(forProperty("problemId"), inits.get("problemId")) : null;
         this.user = inits.isInitialized("user") ? new QUser(forProperty("user")) : null;
     }
 

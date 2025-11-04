@@ -12,19 +12,19 @@ import lombok.NoArgsConstructor;
 @Table(name = "user_profile")
 public class UserProfile extends BaseTimeEntity {
 
-    @Id
-    @Column(name = "users_id")
-    private Long id;
+  @Id
+  @Column(name = "users_id")
+  private Long id;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @MapsId
-    @JoinColumn(name = "users_id")
-    private User user;
+  @OneToOne(fetch = FetchType.LAZY)
+  @MapsId
+  @JoinColumn(name = "users_id")
+  private User user;
 
-    @Column(name = "NICKNAME", length = 50)
-    private String nickname;
+  @Column(name = "NICKNAME", length = 50)
+  private String nickname;
 
-    @Column(name = "PROFILE_IMG_URL", columnDefinition = "TEXT")
-    private String profileImgUrl;
+  @Column(name = "PROFILE_IMG_URL", columnDefinition = "TEXT")
+  private String profileImgUrl;
 
 }

@@ -33,7 +33,7 @@ public class StepupSmallCategory extends BaseTimeEntity {
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "STEPUP_MEDIUM_CATEGORY_ID", nullable = false)
-  private StepupMediumCategory stepupMediumCategory;
+  private StepupMediumCategory mediumCategoryId;
 
   @Column(name = "SMALL_CATEGORY_TITLE")
   private String smallCategoryTitle;
@@ -41,6 +41,6 @@ public class StepupSmallCategory extends BaseTimeEntity {
   @Column(name = "SMALL_CATEGORY_ORDER")
   private Integer SmallCategoryOrder;
 
-  @OneToMany(mappedBy = "stepupSmallCategory")
+  @OneToMany(mappedBy = "smallCategoryId")
   private List<Problem> problems = new ArrayList<>();
 }

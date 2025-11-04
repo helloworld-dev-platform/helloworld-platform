@@ -31,11 +31,11 @@ public class FriendRequest {
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "REQUESTER_ID", nullable = false)
-  private User requester;
+  private User requesterId;
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "RECEIVER_ID", nullable = false)
-  private User receiver;
+  private User receiverId;
 
   @Enumerated(EnumType.STRING)
   @Column(name = "FRIEND_REQ_STATUS")

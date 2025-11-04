@@ -31,9 +31,9 @@ public class QUserPretestResult extends EntityPathBase<UserPretestResult> {
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
-    public final com.helloworld.backend_api.problem.domain.QLearningLanguage learningLanguage;
+    public final com.helloworld.backend_api.problem.domain.QLearningLanguage languageId;
 
-    public final com.helloworld.backend_api.pretest.domain.QPreTestLevel preTestLevel;
+    public final com.helloworld.backend_api.pretest.domain.QPreTestLevel levelId;
 
     //inherited
     public final DateTimePath<java.time.LocalDateTime> updatedAt = _super.updatedAt;
@@ -58,8 +58,8 @@ public class QUserPretestResult extends EntityPathBase<UserPretestResult> {
 
     public QUserPretestResult(Class<? extends UserPretestResult> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
-        this.learningLanguage = inits.isInitialized("learningLanguage") ? new com.helloworld.backend_api.problem.domain.QLearningLanguage(forProperty("learningLanguage")) : null;
-        this.preTestLevel = inits.isInitialized("preTestLevel") ? new com.helloworld.backend_api.pretest.domain.QPreTestLevel(forProperty("preTestLevel")) : null;
+        this.languageId = inits.isInitialized("languageId") ? new com.helloworld.backend_api.problem.domain.QLearningLanguage(forProperty("languageId")) : null;
+        this.levelId = inits.isInitialized("levelId") ? new com.helloworld.backend_api.pretest.domain.QPreTestLevel(forProperty("levelId")) : null;
         this.user = inits.isInitialized("user") ? new QUser(forProperty("user")) : null;
     }
 

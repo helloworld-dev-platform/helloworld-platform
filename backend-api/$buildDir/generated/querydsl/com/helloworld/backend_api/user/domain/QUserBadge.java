@@ -24,9 +24,9 @@ public class QUserBadge extends EntityPathBase<UserBadge> {
 
     public final com.helloworld.backend_api.common.domain.QBaseTimeEntity _super = new com.helloworld.backend_api.common.domain.QBaseTimeEntity(this);
 
-    public final com.helloworld.backend_api.achievement.domain.QBadge badge;
-
     public final DateTimePath<java.time.LocalDateTime> badgeGetAt = createDateTime("badgeGetAt", java.time.LocalDateTime.class);
+
+    public final com.helloworld.backend_api.achievement.domain.QBadge badgeId;
 
     //inherited
     public final DateTimePath<java.time.LocalDateTime> createdAt = _super.createdAt;
@@ -58,7 +58,7 @@ public class QUserBadge extends EntityPathBase<UserBadge> {
 
     public QUserBadge(Class<? extends UserBadge> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
-        this.badge = inits.isInitialized("badge") ? new com.helloworld.backend_api.achievement.domain.QBadge(forProperty("badge")) : null;
+        this.badgeId = inits.isInitialized("badgeId") ? new com.helloworld.backend_api.achievement.domain.QBadge(forProperty("badgeId")) : null;
         this.user = inits.isInitialized("user") ? new QUser(forProperty("user")) : null;
     }
 

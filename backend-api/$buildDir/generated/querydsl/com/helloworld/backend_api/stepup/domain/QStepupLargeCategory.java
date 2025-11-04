@@ -31,9 +31,9 @@ public class QStepupLargeCategory extends EntityPathBase<StepupLargeCategory> {
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
-    public final StringPath largeCategoryName = createString("largeCategoryName");
+    public final com.helloworld.backend_api.problem.domain.QLearningLanguage languageId;
 
-    public final com.helloworld.backend_api.problem.domain.QLearningLanguage learningLanguage;
+    public final StringPath largeCategoryName = createString("largeCategoryName");
 
     public final ListPath<StepupMediumCategory, QStepupMediumCategory> sections = this.<StepupMediumCategory, QStepupMediumCategory>createList("sections", StepupMediumCategory.class, QStepupMediumCategory.class, PathInits.DIRECT2);
 
@@ -58,7 +58,7 @@ public class QStepupLargeCategory extends EntityPathBase<StepupLargeCategory> {
 
     public QStepupLargeCategory(Class<? extends StepupLargeCategory> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
-        this.learningLanguage = inits.isInitialized("learningLanguage") ? new com.helloworld.backend_api.problem.domain.QLearningLanguage(forProperty("learningLanguage")) : null;
+        this.languageId = inits.isInitialized("languageId") ? new com.helloworld.backend_api.problem.domain.QLearningLanguage(forProperty("languageId")) : null;
     }
 
 }

@@ -61,8 +61,8 @@ public class JwtTokenProvider {
     testResultOpt.ifPresentOrElse(
         testResult -> {
           builder.claim("hasCompletedTest", true);
-          builder.claim("languageId", testResult.getLearningLanguage());
-          builder.claim("levelId", testResult.getPreTestLevel());
+          builder.claim("languageId", testResult.getLanguageId());
+          builder.claim("levelId", testResult.getLevelId());
         },
         () -> {
           builder.claim("hasCompletedTest", false); // 테스트 완료 안 함

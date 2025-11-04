@@ -29,7 +29,7 @@ public class Choice extends BaseTimeEntity {
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "PROBLEM_ID", nullable = false)
-  private Problem problem;
+  private Problem problemId;
 
   @Column(name = "CONTENT", nullable = false, columnDefinition = "TEXT")
   private String content;

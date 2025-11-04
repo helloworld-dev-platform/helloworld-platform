@@ -2,8 +2,10 @@ package com.helloworld.backend_api.auth.service;
 
 import static com.helloworld.backend_api.user.domain.UserStatus.ACTIVE;
 
+import com.helloworld.backend_api.auth.dto.LoginRequest;
 import com.helloworld.backend_api.auth.jwt.JwtTokenProvider;
 import com.helloworld.backend_api.auth.jwt.JwtTokenResponseDto;
+import com.helloworld.backend_api.auth.model.PrincipalDetails;
 import com.helloworld.backend_api.common.exception.CustomException;
 import com.helloworld.backend_api.common.exception.ErrorCode;
 import com.helloworld.backend_api.user.domain.User;
@@ -14,6 +16,9 @@ import com.helloworld.backend_api.user.repository.UserPreTestResultRepository;
 import com.helloworld.backend_api.user.repository.UserRepository;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,6 +31,7 @@ public class AuthService {
   private final UserRepository userRepository;
   private final UserOauthCredentialRepository userOauthCredentialRepository;
   private final UserPreTestResultRepository userPreTestResultRepository;
+  private final AuthenticationManager authenticationManager;
 
   @Transactional
   public User findOrCreateOauthUser(String provider, String providerId, String email,
@@ -39,7 +45,7 @@ public class AuthService {
     }
 
     // 2. 연동 정보가 없으면, User를 찾거나 새로 생성
-    User user = findOrCreateUser(username, email, "USER");
+    User user = findOrCreateUserByEmail(email, username, "USER");
 
     // 3. UserOauthCredential 엔티티 저장 (연동 정보 추가)
     UserOauthCredential credential = UserOauthCredential.builder()
@@ -52,21 +58,28 @@ public class AuthService {
     return user;
   }
 
-  private User findOrCreateUser(String username, String email, String role) {
-    User existingUser = userRepository.findByUserName(username);
-    if (existingUser != null) {
-      return existingUser;
-    }
+  /**
+   * 기존 사용자인지 확인 후, 기존 사용자가 아니면 신규 User를 생성함
+   *
+   * @param username
+   * @param email
+   * @param role
+   * @return
+   */
+  private User findOrCreateUserByEmail(String email, String username, String role) {
 
-    // 신규 User 엔티티 생성 및 저장 (회원가입)
-    User newUser = User.builder()
-        .userEmail(email)
-        .userName(username)
-        .userRole(role)
-        .totalPoint(0)
-        .status(ACTIVE) // (UserStatus.ACTIVE)
-        .build();
-    return userRepository.save(newUser);
+    return userRepository.findByUserEmail(email)
+        .orElseGet(() -> {
+          User newUser = User.builder()
+              .userEmail(email)
+              .userName(username) // Google에서 받은 이름 또는 안전한 기본값
+              .userRole(role)     // "USER" (전달된 값)
+              .status(ACTIVE) // UserStatus.ACTIVE ENUM 값 사용
+              .totalPoint(0)
+              .totalStudySecond(Long.valueOf(0))
+              .build();
+          return userRepository.save(newUser);
+        });
   }
 
   @Transactional
@@ -113,5 +126,19 @@ public class AuthService {
     redisTokenService.saveRefreshToken(user.getId(), newRefreshToken, 1000L * 60 * 60 * 24 * 7);
 
     return new JwtTokenResponseDto(newAccessToken, newRefreshToken);
+  }
+
+  public JwtTokenResponseDto authenticateAndIssueToken(LoginRequest request) {
+    // 1. 인증 로직 (책임: 인증 확인)
+    Authentication authentication = authenticationManager.authenticate(
+        new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
+    );
+
+    // 2. 사용자 객체 획득 (책임: 사용자 정보 획득)
+    PrincipalDetails principalDetails = (PrincipalDetails) authentication.getPrincipal();
+    User user = principalDetails.getUser();
+
+    // 3. 토큰 발급 및 저장 (책임: 토큰 처리)
+    return generateAndSaveTokens(user, findLatestTestResult(user.getId()));
   }
 }

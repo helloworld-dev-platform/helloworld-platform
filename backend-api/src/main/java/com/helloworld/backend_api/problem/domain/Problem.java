@@ -34,11 +34,11 @@ public class Problem extends BaseTimeEntity {
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "LEARNING_LANGUAGE_ID")
-  private LearningLanguage learningLanguage;
+  private LearningLanguage languageId;
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "STEPUP_SMALL_CATEGORY_ID")
-  private StepupSmallCategory stepupSmallCategory;
+  private StepupSmallCategory smallCategoryId;
 
   @Enumerated(EnumType.STRING)
   private ProblemType problemType;
@@ -46,8 +46,8 @@ public class Problem extends BaseTimeEntity {
   @Column(name = "CONTENT", nullable = false, columnDefinition = "TEXT")
   private String content;
 
-  @Column(name = "DOMAIN_TYPE", nullable = false)
-  private String domainType;
+  @Enumerated(EnumType.STRING)
+  private DomainType domainType;
 
   @Enumerated(EnumType.STRING)
   @Column(name = "difficulty", nullable = false)

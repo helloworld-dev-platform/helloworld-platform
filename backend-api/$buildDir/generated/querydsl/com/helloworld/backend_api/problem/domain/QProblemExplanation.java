@@ -24,7 +24,7 @@ public class QProblemExplanation extends EntityPathBase<ProblemExplanation> {
 
     public final com.helloworld.backend_api.common.domain.QBaseTimeEntity _super = new com.helloworld.backend_api.common.domain.QBaseTimeEntity(this);
 
-    public final QChoice choice;
+    public final QChoice choiceId;
 
     public final StringPath content = createString("content");
 
@@ -33,7 +33,7 @@ public class QProblemExplanation extends EntityPathBase<ProblemExplanation> {
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
-    public final QProblem problem;
+    public final QProblem problemId;
 
     //inherited
     public final DateTimePath<java.time.LocalDateTime> updatedAt = _super.updatedAt;
@@ -56,8 +56,8 @@ public class QProblemExplanation extends EntityPathBase<ProblemExplanation> {
 
     public QProblemExplanation(Class<? extends ProblemExplanation> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
-        this.choice = inits.isInitialized("choice") ? new QChoice(forProperty("choice"), inits.get("choice")) : null;
-        this.problem = inits.isInitialized("problem") ? new QProblem(forProperty("problem"), inits.get("problem")) : null;
+        this.choiceId = inits.isInitialized("choiceId") ? new QChoice(forProperty("choiceId"), inits.get("choiceId")) : null;
+        this.problemId = inits.isInitialized("problemId") ? new QProblem(forProperty("problemId"), inits.get("problemId")) : null;
     }
 
 }

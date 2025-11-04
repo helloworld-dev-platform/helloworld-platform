@@ -35,7 +35,7 @@ public class PointHistory {
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "POINT_POLICY_ID", nullable = false)
-  private PointPolicy pointPolicy;
+  private PointPolicy pointPolicyId;
 
   @Column(name = "POINT_AMOUNT", nullable = false)
   private Integer pointAmount;

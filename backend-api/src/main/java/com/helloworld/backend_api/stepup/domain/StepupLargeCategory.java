@@ -37,7 +37,7 @@ public class StepupLargeCategory extends BaseTimeEntity {
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "LEARNING_LANGUAGE_ID", nullable = false)
-  private LearningLanguage learningLanguage;
+  private LearningLanguage languageId;
 
   @Column(name = "LARGE_CATEGORY_NAME")
   private String largeCategoryName;
@@ -46,6 +46,6 @@ public class StepupLargeCategory extends BaseTimeEntity {
   @Column(name = "difficulty", nullable = false)
   private Difficulty difficulty;
 
-  @OneToMany(mappedBy = "stepupLargeCategory", cascade = CascadeType.ALL, orphanRemoval = true)
+  @OneToMany(mappedBy = "largeCategoryId", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<StepupMediumCategory> sections = new ArrayList<>();
 }

@@ -33,7 +33,7 @@ public class QHint extends EntityPathBase<Hint> {
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
-    public final QProblem problem;
+    public final QProblem problemId;
 
     //inherited
     public final DateTimePath<java.time.LocalDateTime> updatedAt = _super.updatedAt;
@@ -56,7 +56,7 @@ public class QHint extends EntityPathBase<Hint> {
 
     public QHint(Class<? extends Hint> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
-        this.problem = inits.isInitialized("problem") ? new QProblem(forProperty("problem"), inits.get("problem")) : null;
+        this.problemId = inits.isInitialized("problemId") ? new QProblem(forProperty("problemId"), inits.get("problemId")) : null;
     }
 
 }

@@ -24,6 +24,8 @@ public class QUserStepupSubmissionHistory extends EntityPathBase<UserStepupSubmi
 
     public final com.helloworld.backend_api.common.domain.QBaseTimeEntity _super = new com.helloworld.backend_api.common.domain.QBaseTimeEntity(this);
 
+    public final com.helloworld.backend_api.problem.domain.QChoice choiceId;
+
     public final DateTimePath<java.time.LocalDateTime> completedAt = createDateTime("completedAt", java.time.LocalDateTime.class);
 
     //inherited
@@ -33,9 +35,7 @@ public class QUserStepupSubmissionHistory extends EntityPathBase<UserStepupSubmi
 
     public final BooleanPath isCorrect = createBoolean("isCorrect");
 
-    public final com.helloworld.backend_api.problem.domain.QProblem problem;
-
-    public final com.helloworld.backend_api.problem.domain.QChoice selectedChoice;
+    public final com.helloworld.backend_api.problem.domain.QProblem problemId;
 
     public final StringPath textAnswer = createString("textAnswer");
 
@@ -62,8 +62,8 @@ public class QUserStepupSubmissionHistory extends EntityPathBase<UserStepupSubmi
 
     public QUserStepupSubmissionHistory(Class<? extends UserStepupSubmissionHistory> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
-        this.problem = inits.isInitialized("problem") ? new com.helloworld.backend_api.problem.domain.QProblem(forProperty("problem"), inits.get("problem")) : null;
-        this.selectedChoice = inits.isInitialized("selectedChoice") ? new com.helloworld.backend_api.problem.domain.QChoice(forProperty("selectedChoice"), inits.get("selectedChoice")) : null;
+        this.choiceId = inits.isInitialized("choiceId") ? new com.helloworld.backend_api.problem.domain.QChoice(forProperty("choiceId"), inits.get("choiceId")) : null;
+        this.problemId = inits.isInitialized("problemId") ? new com.helloworld.backend_api.problem.domain.QProblem(forProperty("problemId"), inits.get("problemId")) : null;
         this.user = inits.isInitialized("user") ? new com.helloworld.backend_api.user.domain.QUser(forProperty("user")) : null;
     }
 

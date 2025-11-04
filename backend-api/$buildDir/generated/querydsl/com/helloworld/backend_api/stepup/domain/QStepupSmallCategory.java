@@ -29,13 +29,13 @@ public class QStepupSmallCategory extends EntityPathBase<StepupSmallCategory> {
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
+    public final QStepupMediumCategory mediumCategoryId;
+
     public final ListPath<com.helloworld.backend_api.problem.domain.Problem, com.helloworld.backend_api.problem.domain.QProblem> problems = this.<com.helloworld.backend_api.problem.domain.Problem, com.helloworld.backend_api.problem.domain.QProblem>createList("problems", com.helloworld.backend_api.problem.domain.Problem.class, com.helloworld.backend_api.problem.domain.QProblem.class, PathInits.DIRECT2);
 
     public final NumberPath<Integer> SmallCategoryOrder = createNumber("SmallCategoryOrder", Integer.class);
 
     public final StringPath smallCategoryTitle = createString("smallCategoryTitle");
-
-    public final QStepupMediumCategory stepupMediumCategory;
 
     //inherited
     public final DateTimePath<java.time.LocalDateTime> updatedAt = _super.updatedAt;
@@ -58,7 +58,7 @@ public class QStepupSmallCategory extends EntityPathBase<StepupSmallCategory> {
 
     public QStepupSmallCategory(Class<? extends StepupSmallCategory> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
-        this.stepupMediumCategory = inits.isInitialized("stepupMediumCategory") ? new QStepupMediumCategory(forProperty("stepupMediumCategory"), inits.get("stepupMediumCategory")) : null;
+        this.mediumCategoryId = inits.isInitialized("mediumCategoryId") ? new QStepupMediumCategory(forProperty("mediumCategoryId"), inits.get("mediumCategoryId")) : null;
     }
 
 }

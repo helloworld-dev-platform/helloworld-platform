@@ -30,7 +30,7 @@ public class QPointHistory extends EntityPathBase<PointHistory> {
 
     public final StringPath pointDescription = createString("pointDescription");
 
-    public final QPointPolicy pointPolicy;
+    public final QPointPolicy pointPolicyId;
 
     public final com.helloworld.backend_api.user.domain.QUser user;
 
@@ -52,7 +52,7 @@ public class QPointHistory extends EntityPathBase<PointHistory> {
 
     public QPointHistory(Class<? extends PointHistory> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
-        this.pointPolicy = inits.isInitialized("pointPolicy") ? new QPointPolicy(forProperty("pointPolicy")) : null;
+        this.pointPolicyId = inits.isInitialized("pointPolicyId") ? new QPointPolicy(forProperty("pointPolicyId")) : null;
         this.user = inits.isInitialized("user") ? new com.helloworld.backend_api.user.domain.QUser(forProperty("user")) : null;
     }
 

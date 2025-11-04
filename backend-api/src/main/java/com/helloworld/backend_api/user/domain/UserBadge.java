@@ -35,7 +35,7 @@ public class UserBadge extends BaseTimeEntity {
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "BADGE_ID", nullable = false)
-  private Badge badge;
+  private Badge badgeId;
 
   @Column(name = "BADGE_GET_AT", nullable = false)
   private LocalDateTime badgeGetAt;

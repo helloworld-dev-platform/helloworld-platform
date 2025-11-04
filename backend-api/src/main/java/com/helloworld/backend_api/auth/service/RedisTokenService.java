@@ -16,27 +16,27 @@ public class RedisTokenService {
   private final RedisTemplate<String, String> redisTemplate; //Redis 연결
 
   //리프레시 토큰 저장 메서드
-  public void saveRefreshToken(Long userId, String refreshToken, long expirationMillis) {
+  public void saveRefreshToken(Long user, String refreshToken, long expirationMillis) {
     ValueOperations<String, String> ops = redisTemplate.opsForValue();
-    String key = PREFIX + userId; //리프레시토큰 키값 => RT:userId
+    String key = PREFIX + user; //리프레시토큰 키값 => RT:user
     ops.set(key, refreshToken, Duration.ofMillis(expirationMillis)); //key-value, 유효기간 설정
   }
 
   //리프레시 토큰 조회
-  public String getRefreshToken(Long userId) {
-    return redisTemplate.opsForValue().get(PREFIX + userId); //RT:userID 키값으로 조회
+  public String getRefreshToken(Long user) {
+    return redisTemplate.opsForValue().get(PREFIX + user); //RT:userID 키값으로 조회
   }
 
   //리프레시 토큰 삭제 (로그아웃시 사용)
-  public void deleteRefreshToken(Long userId) {
-    redisTemplate.delete(PREFIX + userId);
+  public void deleteRefreshToken(Long user) {
+    redisTemplate.delete(PREFIX + user);
   }
 
   /**
    * 리프레시토큰과 요청된 토큰 비교 일치 : true 불일치 : false
    */
-  public boolean isValid(Long userId, String requestRefreshToken) {
-    String saved = getRefreshToken(userId); //저장된 토큰 가져옴
+  public boolean isValid(Long user, String requestRefreshToken) {
+    String saved = getRefreshToken(user); //저장된 토큰 가져옴
     return saved != null && saved.equals(requestRefreshToken); //요청토큰과 저장된 토큰 일치여부 확인
   }
 

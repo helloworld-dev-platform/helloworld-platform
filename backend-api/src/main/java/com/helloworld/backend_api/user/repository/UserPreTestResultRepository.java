@@ -6,6 +6,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface UserPreTestResultRepository extends JpaRepository<UserPretestResult, Long> {
 
-  Optional<UserPretestResult> findFirstByUserIdOrderByCompletedAtDesc(Long userId);
+  Optional<UserPretestResult> findFirstByUserIdOrderByCompletedAtDesc(Long user);
 
 }

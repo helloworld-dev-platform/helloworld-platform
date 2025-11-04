@@ -35,11 +35,11 @@ public class UserPreTestSession {
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "PRE_TEST_LEVEL_ID", nullable = false)
-  private PreTestLevel preTestLevel;
+  private PreTestLevel levelId;
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "LEANING_LANGUAGE_ID", nullable = false)
-  private LearningLanguage learningLanguage;
+  private LearningLanguage languageId;
 
   @Column(name = "TEST_STARTED_AT", nullable = false)
   private LocalDateTime testStartedAt;
