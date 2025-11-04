@@ -32,6 +32,8 @@ public class QUser extends EntityPathBase<User> {
 
     public final NumberPath<Integer> totalPoint = createNumber("totalPoint", Integer.class);
 
+    public final NumberPath<Long> totalStudySecond = createNumber("totalStudySecond", Long.class);
+
     //inherited
     public final DateTimePath<java.time.LocalDateTime> updatedAt = _super.updatedAt;
 

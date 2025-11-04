@@ -52,12 +52,15 @@ public class User extends BaseTimeEntity {
   @Column(name = "TOTAL_POINT", nullable = false)
   private Integer totalPoint = 0;
 
+  @Column(name = "TOTAL_STUDY_SECOND", nullable = false)
+  private Long totalStudySecond;
+
   @Column(name = "LAST_LOGIN_AT", nullable = false)
   private LocalDateTime lastLoginAt;
 
   @Builder
   public User(Long id, String userEmail, String userName, String userRole,
-      UserStatus status, Integer totalPoint) {
+      UserStatus status, Integer totalPoint, Long totalStudySecond) {
     this.id = id;
     this.userEmail = userEmail;
     this.userName = userName;
@@ -65,6 +68,7 @@ public class User extends BaseTimeEntity {
     this.status = status;
     this.totalPoint = totalPoint; // 초기 포인트는 0으로 설정
     this.lastLoginAt = LocalDateTime.now(); // 생성 시점의 로그인 시간 기록
+    this.totalStudySecond = totalStudySecond;
   }
 
 }
