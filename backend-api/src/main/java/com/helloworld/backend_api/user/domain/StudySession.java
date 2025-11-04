@@ -19,7 +19,7 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @NoArgsConstructor
-@Schema(description = "공부세션기록 Entity")
+@Schema(description = "공부세션기록Entity")
 @Table(name = "study_session")
 @Getter
 public class StudySession extends BaseTimeEntity {
