@@ -1,8 +1,8 @@
 package com.helloworld.backend_api.problem.repository;
 
 import com.helloworld.backend_api.problem.domain.Difficulty;
-import com.helloworld.backend_api.problem.domain.LearningLanguage;
 import com.helloworld.backend_api.problem.domain.Problem;
+import jakarta.validation.constraints.NotNull;
 import java.util.List;
 
 /**
@@ -10,5 +10,5 @@ import java.util.List;
  */
 public interface ProblemRepositoryQuery {
 
-  List<Problem> findPreTestProblems(LearningLanguage languageId, Difficulty difficulty);
+  List<Problem> findPreTestProblems(@NotNull Long languageId, Difficulty difficulty);
 }

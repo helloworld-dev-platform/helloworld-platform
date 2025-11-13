@@ -2,7 +2,6 @@ package com.helloworld.backend_api.auth.controller;
 
 import com.helloworld.backend_api.auth.dto.LoginRequest;
 import com.helloworld.backend_api.auth.dto.TokenReissueRequestDto;
-import com.helloworld.backend_api.auth.jwt.AccessTokenResponseDto;
 import com.helloworld.backend_api.auth.jwt.JwtTokenProvider;
 import com.helloworld.backend_api.auth.jwt.JwtTokenResponseDto;
 import com.helloworld.backend_api.auth.service.AuthService;
@@ -52,7 +51,7 @@ public class AuthController {
       ErrorCode.INTERNAL_SERVER_ERROR
   })
   @PostMapping("/login")
-  public DataResponseDto<AccessTokenResponseDto> login(
+  public DataResponseDto<JwtTokenResponseDto> login(
       @RequestBody @Valid LoginRequest request,
       HttpServletResponse response) {
 
@@ -61,13 +60,13 @@ public class AuthController {
     addCookie(response, "refreshToken", tokens.getRefreshToken(),
         REFRESH_TOKEN_EXPIRATION_DAYS * 24 * 60 * 60);
 
-    AccessTokenResponseDto atResponse = new AccessTokenResponseDto(tokens.getAccessToken());
+//    AccessTokenResponseDto atResponse = new AccessTokenResponseDto(tokens.getAccessToken());
 
-    return DataResponseDto.from(atResponse);
+    return DataResponseDto.from(tokens);
   }
 
   @PostMapping("/google/login")
-  public DataResponseDto<AccessTokenResponseDto> googleLogin(
+  public DataResponseDto<JwtTokenResponseDto> googleLogin(
       @RequestBody GoogleLoginRequest request,
       HttpServletResponse response) {
 
@@ -82,8 +81,8 @@ public class AuthController {
         REFRESH_TOKEN_EXPIRATION_DAYS * 24 * 60 * 60);
 
     // 3. Access Token은 JSON 본문으로 응답합니다.
-    AccessTokenResponseDto atResponse = new AccessTokenResponseDto(tokens.getAccessToken());
-    return DataResponseDto.from(atResponse);
+//    AccessTokenResponseDto atResponse = new AccessTokenResponseDto(tokens.getAccessToken());
+    return DataResponseDto.from(tokens);
   }
 
   private void addCookie(HttpServletResponse response, String name, String value, int maxAge) {

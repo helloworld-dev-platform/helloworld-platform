@@ -22,6 +22,9 @@ public enum ErrorCode {
   TOKEN_INVALID("AUTH_005", HttpStatus.UNAUTHORIZED, "유효한 토큰이 아닙니다."),
   AUTH_ERROR("AUTH_006", HttpStatus.UNAUTHORIZED, "구글 액세스 토큰을 가져오는 데 실패했습니다."),
 
+  //PROBLEM 도메인
+  LANGUAGE_NOT_FOUND("PROBLEM_001", HttpStatus.NOT_FOUND, "해당 학습 언어를 찾을 수 없습니다."),
+  PROBLEM_NOT_FOUND("PROBLEM_002", HttpStatus.NOT_FOUND, "요청 조건에 해당하는 문제가 존재하지 않습니다."),
   //공통
   INTERNAL_SERVER_ERROR("COMMON_001", HttpStatus.INTERNAL_SERVER_ERROR, "서버 오류입니다."),
   INVALID_INPUT_VALUE("COMMON_002", HttpStatus.BAD_REQUEST, "유효성 검증에 실패했습니다.");
