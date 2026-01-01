@@ -28,7 +28,7 @@ public class ProblemRepositoryImpl implements ProblemRepositoryQuery {
         .where(
             problem.languageId.id.eq(languageId),
             problem.difficulty.eq(difficulty),
-            problem.domainType.eq(DomainType.PRE_TEST)
+            problem.domainType.eq(DomainType.LEVEL_TEST)
         )
         .fetch();
   }

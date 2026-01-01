@@ -7,7 +7,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum DomainType {
   STEPUP("STEPUP", "스텝업코스"),
-  PRE_TEST("PRE_TEST", "사전레벨테스트");
+  LEVEL_TEST("LEVEL_TEST", "사전레벨테스트");
 
   private final String code;
   private final String description;

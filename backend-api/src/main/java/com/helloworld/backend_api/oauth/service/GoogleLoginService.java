@@ -6,8 +6,8 @@ import com.helloworld.backend_api.auth.service.AuthService;
 import com.helloworld.backend_api.auth.service.RedisTokenService;
 import com.helloworld.backend_api.common.exception.CustomException;
 import com.helloworld.backend_api.common.exception.ErrorCode;
+import com.helloworld.backend_api.pretest.domain.UserPreTestResult;
 import com.helloworld.backend_api.user.domain.User;
-import com.helloworld.backend_api.user.domain.UserPretestResult;
 import com.helloworld.backend_api.user.repository.UserPreTestResultRepository;
 import java.util.Optional;
 import lombok.Getter;
@@ -57,7 +57,7 @@ public class GoogleLoginService {
     User user = authService.findOrCreateOauthUser(provider, providerId, email, username);
 
     // 4. 우리 서비스의 AT/RT 발급
-    Optional<UserPretestResult> latestTestResult =
+    Optional<UserPreTestResult> latestTestResult =
         userPreTestResultRepository.findFirstByUserIdOrderByCompletedAtDesc(user.getId());
 
     String accessToken = jwtTokenProvider.generateToken(user, latestTestResult);

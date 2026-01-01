@@ -39,7 +39,7 @@ public class BlankSolution extends BaseTimeEntity {
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "PROBLEM_ID", nullable = false)
-  private Problem problemId;
+  private Problem problem;
 
   @Column(name = "BLANK_ORDER", nullable = false, columnDefinition = "TEXT")
   private int blankOrder;

@@ -34,7 +34,7 @@ public class ProblemExplanation extends BaseTimeEntity {
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "PROBLEM_ID", nullable = false)
-  private Problem problemId;
+  private Problem problem;
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "CHOICE_ID", nullable = true)

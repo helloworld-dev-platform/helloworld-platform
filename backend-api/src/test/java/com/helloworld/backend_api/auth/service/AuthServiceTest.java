@@ -11,8 +11,8 @@ import com.helloworld.backend_api.auth.jwt.JwtTokenProvider;
 import com.helloworld.backend_api.auth.jwt.JwtTokenResponseDto;
 import com.helloworld.backend_api.common.exception.CustomException;
 import com.helloworld.backend_api.common.exception.ErrorCode;
+import com.helloworld.backend_api.pretest.domain.UserPreTestResult;
 import com.helloworld.backend_api.user.domain.User;
-import com.helloworld.backend_api.user.domain.UserPretestResult;
 import com.helloworld.backend_api.user.repository.UserPreTestResultRepository;
 import com.helloworld.backend_api.user.repository.UserRepository;
 import java.util.Optional;
@@ -43,7 +43,7 @@ class AuthServiceTest {
   private static final String NEW_ACCESS_TOKEN = "new-access-token";
   private static final String NEW_REFRESH_TOKEN = "new-refresh-token";
   private User mockUser;
-  private UserPretestResult mockTestResult;
+  private UserPreTestResult mockTestResult;
 
   // 테스트 대상 객체
   @InjectMocks
@@ -53,7 +53,7 @@ class AuthServiceTest {
   void setUp() {
     //테스트 실행전 객체 초기화
     mockUser = User.builder().id(USER_ID).build();
-    mockTestResult = UserPretestResult.builder().id(10L).build();
+    mockTestResult = UserPreTestResult.builder().userId(1L).preTestLevelId(1L).learningLanguageId(1L).build();
   }
 
 

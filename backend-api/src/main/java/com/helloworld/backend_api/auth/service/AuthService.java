@@ -8,9 +8,9 @@ import com.helloworld.backend_api.auth.jwt.JwtTokenResponseDto;
 import com.helloworld.backend_api.auth.model.PrincipalDetails;
 import com.helloworld.backend_api.common.exception.CustomException;
 import com.helloworld.backend_api.common.exception.ErrorCode;
+import com.helloworld.backend_api.pretest.domain.UserPreTestResult;
 import com.helloworld.backend_api.user.domain.User;
 import com.helloworld.backend_api.user.domain.UserOauthCredential;
-import com.helloworld.backend_api.user.domain.UserPretestResult;
 import com.helloworld.backend_api.user.repository.UserOauthCredentialRepository;
 import com.helloworld.backend_api.user.repository.UserPreTestResultRepository;
 import com.helloworld.backend_api.user.repository.UserRepository;
@@ -91,7 +91,7 @@ public class AuthService {
     User user = findUserById(userId);
 
     // 3단계: 사용자의 최근 사전 테스트 결과 조회
-    Optional<UserPretestResult> latestTestResult = findLatestTestResult(userId);
+    Optional<UserPreTestResult> latestTestResult = findLatestTestResult(userId);
 
     // 4단계: 새로운 토큰 발급 및 저장
     return generateAndSaveTokens(user, latestTestResult);
@@ -114,12 +114,12 @@ public class AuthService {
         .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
   }
 
-  private Optional<UserPretestResult> findLatestTestResult(Long userId) {
+  private Optional<UserPreTestResult> findLatestTestResult(Long userId) {
     return userPreTestResultRepository.findFirstByUserIdOrderByCompletedAtDesc(userId);
   }
 
   private JwtTokenResponseDto generateAndSaveTokens(User user,
-      Optional<UserPretestResult> testResult) {
+      Optional<UserPreTestResult> testResult) {
     String newAccessToken = jwtTokenProvider.generateToken(user, testResult);
     String newRefreshToken = jwtTokenProvider.generateRefreshToken(user);
 

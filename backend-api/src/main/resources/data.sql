@@ -12,10 +12,10 @@ VALUES ('Python', NOW(), NOW()), -- ID 1
 -- #####################################################################
 INSERT INTO stepup_large_category (learning_language_id, large_category_name, difficulty,
                                    created_at, updated_at)
-VALUES (1, 'Python 기초 문법 완벽 마스터', 'EASY', NOW(), NOW()),   -- ID 1
-       (1, 'Python 데이터 구조와 알고리즘', 'MEDIUM', NOW(), NOW()), -- ID 2
-       (2, 'Java 프로그래밍 핵심 입문', 'EASY', NOW(), NOW()),      -- ID 3
-       (3, 'JavaScript와 웹 프론트엔드 기초', 'EASY', NOW(), NOW());
+VALUES (1, 'Python 기초 문법 완벽 마스터', 'LEVEL_1', NOW(), NOW()), -- ID 1
+       (1, 'Python 데이터 구조와 알고리즘', 'LEVEL_4', NOW(), NOW()), -- ID 2
+       (2, 'Java 프로그래밍 핵심 입문', 'LEVEL_1', NOW(), NOW()),    -- ID 3
+       (3, 'JavaScript와 웹 프론트엔드 기초', 'LEVEL_1', NOW(), NOW());
 -- ID 4
 
 -- #####################################################################
@@ -63,284 +63,338 @@ VALUES (1, '변수 선언과 초기화', 1, NOW(), NOW()),         -- ID 1
 -- ##### 5-1. 스텝업 문제 (P_ID 1 ~ 17) #####
 INSERT INTO problem (learning_language_id, stepup_small_category_id, problem_type, content,
                      domain_type, difficulty, created_at, updated_at)
-VALUES (1, 1, 'MULTIPLE_CHOICE', 'Python에서 정수 10을 변수 "count"에 할당하는 올바른 코드는?', 'STEPUP', 'EASY',
-        NOW(), NOW()),           -- P_ID 1
-       (1, 1, 'SUBJECTIVE', 'Python에서 두 변수 `a=5`와 `b=3`의 값을 서로 바꾸는 코드를 작성하세요.', 'STEPUP', 'MEDIUM',
-        NOW(), NOW()),           -- P_ID 2
-       (1, 2, 'MULTIPLE_CHOICE', 'Python 문자열 "Hello World"의 길이는?', 'STEPUP', 'EASY', NOW(),
-        NOW()),                  -- P_ID 3
-       (1, 3, 'MULTIPLE_CHOICE', 'Python에서 조건문 작성 시 반드시 필요한 요소는?', 'STEPUP', 'EASY', NOW(),
-        NOW()),                  -- P_ID 4
-       (1, 4, 'SUBJECTIVE', '1부터 5까지의 숫자를 출력하는 Python FOR문 코드를 작성하세요.', 'STEPUP', 'MEDIUM', NOW(),
-        NOW()),                  -- P_ID 5
+VALUES (1, 1, 'MULTIPLE_CHOICE', 'Python에서 정수 10을 변수 "count"에 할당하는 올바른 코드는?', 'STEPUP', 'LEVEL_1',
+        NOW(), NOW()),            -- P_ID 1
+       (1, 1, 'SUBJECTIVE', 'Python에서 두 변수 `a=5`와 `b=3`의 값을 서로 바꾸는 코드를 작성하세요.', 'STEPUP', 'LEVEL_4',
+        NOW(), NOW()),            -- P_ID 2
+       (1, 2, 'MULTIPLE_CHOICE', 'Python 문자열 "Hello World"의 길이는?', 'STEPUP', 'LEVEL_1', NOW(),
+        NOW()),                   -- P_ID 3
+       (1, 3, 'MULTIPLE_CHOICE', 'Python에서 조건문 작성 시 반드시 필요한 요소는?', 'STEPUP', 'LEVEL_2', NOW(),
+        NOW()),                   -- P_ID 4
+       (1, 4, 'SUBJECTIVE', '1부터 5까지의 숫자를 출력하는 Python FOR문 코드를 작성하세요.', 'STEPUP', 'LEVEL_4', NOW(),
+        NOW()),                   -- P_ID 5
        (1, 5, 'MULTIPLE_CHOICE', 'Python 리스트 `[1, 2, 3]`에서 두 번째 요소 "2"를 접근하는 인덱스는?', 'STEPUP',
-        'EASY', NOW(), NOW()),   -- P_ID 6
-       (2, 9, 'MULTIPLE_CHOICE', 'Java에서 `MyClass`의 객체를 생성하는 올바른 코드는?', 'STEPUP', 'EASY', NOW(),
-        NOW()),                  -- P_ID 7
-       (3, 13, 'MULTIPLE_CHOICE', 'JavaScript에서 재할당이 불가능한 변수 선언 키워드는?', 'STEPUP', 'MEDIUM', NOW(),
-        NOW()),                  -- P_ID 8
-       (1, 6, 'MULTIPLE_CHOICE', 'Python 튜플이 리스트와 다른 가장 큰 특징은?', 'STEPUP', 'EASY', NOW(),
-        NOW()),                  -- P_ID 9
-       (1, 7, 'MULTIPLE_CHOICE', 'Python 딕셔너리에서 키-값 쌍을 접근하는 메서드는?', 'STEPUP', 'MEDIUM', NOW(),
-        NOW()),                  -- P_ID 10
-       (1, 8, 'MULTIPLE_CHOICE', 'Python 집합(Set)의 특징으로 옳지 않은 것은?', 'STEPUP', 'EASY', NOW(),
-        NOW()),                  -- P_ID 11
-       (2, 10, 'SUBJECTIVE', 'Java에서 매개변수가 없는 `Car` 클래스의 생성자 코드를 작성하세요.', 'STEPUP', 'MEDIUM', NOW(),
-        NOW()),                  -- P_ID 12
-       (2, 11, 'MULTIPLE_CHOICE', 'Java에서 상속받은 부모 클래스의 메서드를 재정의하는 것을 무엇이라 하는가?', 'STEPUP', 'EASY',
-        NOW(), NOW()),           -- P_ID 13
-       (2, 12, 'MULTIPLE_CHOICE', 'Java에서 `@Override` 어노테이션의 역할은?', 'STEPUP', 'EASY', NOW(),
-        NOW()),                  -- P_ID 14
+        'LEVEL_2', NOW(), NOW()), -- P_ID 6
+       (2, 9, 'MULTIPLE_CHOICE', 'Java에서 `MyClass`의 객체를 생성하는 올바른 코드는?', 'STEPUP', 'LEVEL_1', NOW(),
+        NOW()),                   -- P_ID 7
+       (3, 13, 'MULTIPLE_CHOICE', 'JavaScript에서 재할당이 불가능한 변수 선언 키워드는?', 'STEPUP', 'LEVEL_5', NOW(),
+        NOW()),                   -- P_ID 8
+       (1, 6, 'MULTIPLE_CHOICE', 'Python 튜플이 리스트와 다른 가장 큰 특징은?', 'STEPUP', 'LEVEL_3', NOW(),
+        NOW()),                   -- P_ID 9
+       (1, 7, 'MULTIPLE_CHOICE', 'Python 딕셔너리에서 키-값 쌍을 접근하는 메서드는?', 'STEPUP', 'LEVEL_5', NOW(),
+        NOW()),                   -- P_ID 10
+       (1, 8, 'MULTIPLE_CHOICE', 'Python 집합(Set)의 특징으로 옳지 않은 것은?', 'STEPUP', 'LEVEL_3', NOW(),
+        NOW()),                   -- P_ID 11
+       (2, 10, 'SUBJECTIVE', 'Java에서 매개변수가 없는 `Car` 클래스의 생성자 코드를 작성하세요.', 'STEPUP', 'LEVEL_4',
+        NOW(),
+        NOW()),                   -- P_ID 12
+       (2, 11, 'MULTIPLE_CHOICE', 'Java에서 상속받은 부모 클래스의 메서드를 재정의하는 것을 무엇이라 하는가?', 'STEPUP',
+        'LEVEL_2',
+        NOW(), NOW()),            -- P_ID 13
+       (2, 12, 'MULTIPLE_CHOICE', 'Java에서 `@Override` 어노테이션의 역할은?', 'STEPUP', 'LEVEL_3', NOW(),
+        NOW()),                   -- P_ID 14
        (3, 14, 'SUBJECTIVE', 'JavaScript에서 변수 `x`를 10으로 설정하고 이를 콘솔에 출력하는 코드를 작성하세요.', 'STEPUP',
-        'EASY', NOW(), NOW()),   -- P_ID 15
+        'LEVEL_1', NOW(), NOW()), -- P_ID 15
        (3, 15, 'MULTIPLE_CHOICE', 'HTML 요소의 ID를 이용하여 해당 요소를 가져오는 JavaScript 함수는?', 'STEPUP',
-        'MEDIUM', NOW(), NOW()), -- P_ID 16
+        'LEVEL_5', NOW(), NOW()), -- P_ID 16
        (3, 16, 'SUBJECTIVE', 'JavaScript에서 ID가 "myButton"인 요소에 클릭 이벤트를 추가하는 코드를 작성하세요.', 'STEPUP',
-        'HARD', NOW(), NOW());
+        'LEVEL_8', NOW(), NOW());
 -- P_ID 17
 
 -- ##### 5-2. 사전 레벨 테스트 - Python EASY (P_ID 18 ~ 27) #####
 INSERT INTO problem (learning_language_id, stepup_small_category_id, problem_type, content,
                      domain_type, difficulty, created_at, updated_at)
-VALUES (1, NULL, 'SUBJECTIVE', '데이터를 저장하기 위해 이름을 붙인 메모리 공간을 무엇이라고 하나요? (한글)', 'PRE_TEST', 'EASY',
-        NOW(), NOW()),                     -- P_ID 18
-       (1, NULL, 'MULTIPLE_CHOICE', 'Python에서 사용되지 *않는* 변수 선언 키워드는?', 'PRE_TEST', 'EASY', NOW(),
-        NOW()),                            -- P_ID 19
-       (1, NULL, 'MULTIPLE_CHOICE', '`print(10 / 3)`의 결과는?', 'PRE_TEST', 'EASY', NOW(),
-        NOW()),                            -- P_ID 20
-       (1, NULL, 'SUBJECTIVE', '프로그래밍 언어를 기계어로 번역해주는 프로그램을 무엇이라고 하나요? (영어)', 'PRE_TEST', 'EASY',
-        NOW(), NOW()),                     -- P_ID 21
+VALUES (1, NULL, 'SUBJECTIVE', '데이터를 저장하기 위해 이름을 붙인 메모리 공간을 무엇이라고 하나요? (한글)', 'LEVEL_TEST',
+        'LEVEL_1',
+        NOW(), NOW()),                          -- P_ID 18
+       (1, NULL, 'MULTIPLE_CHOICE', 'Python에서 사용되지 *않는* 변수 선언 키워드는?', 'LEVEL_TEST', 'LEVEL_1',
+        NOW(),
+        NOW()),                                 -- P_ID 19
+       (1, NULL, 'MULTIPLE_CHOICE', '`print(10 / 3)`의 결과는?', 'LEVEL_TEST', 'LEVEL_2', NOW(),
+        NOW()),                                 -- P_ID 20
+       (1, NULL, 'SUBJECTIVE', '프로그래밍 언어를 기계어로 번역해주는 프로그램을 무엇이라고 하나요? (영어)', 'LEVEL_TEST',
+        'LEVEL_1',
+        NOW(), NOW()),                          -- P_ID 21
        (1, NULL, 'FILL_IN_THE_BLANK', '여러 값을 순서대로 저장하는 자료형으로, `[]` 기호를 사용하는 것은 ____입니다. (한글)',
-        'PRE_TEST', 'EASY', NOW(), NOW()), -- P_ID 22
-       (1, NULL, 'MULTIPLE_CHOICE', '`True` 또는 `False` 값을 가지는 데이터 타입은?', 'PRE_TEST', 'EASY', NOW(),
-        NOW()),                            -- P_ID 23
-       (1, NULL, 'FILL_IN_THE_BLANK', '문자열 "Hello"의 길이는 `____("Hello")` 함수로 구합니다.', 'PRE_TEST',
-        'EASY', NOW(), NOW()),             -- P_ID 24
-       (1, NULL, 'SUBJECTIVE', '특정 조건이 참(True)일 때만 코드를 실행하는 구문은 무엇인가요? (영어 소문자)', 'PRE_TEST',
-        'EASY', NOW(), NOW()),             -- P_ID 25
-       (1, NULL, 'MULTIPLE_CHOICE', 'Python에서 코드 블록을 구분하기 위해 사용하는 것은?', 'PRE_TEST', 'EASY', NOW(),
-        NOW()),                            -- P_ID 26
-       (1, NULL, 'SUBJECTIVE', '반복문에서 `i = i + 1`과 동일한 의미를 갖는 할당 연산자는 무엇인가요?', 'PRE_TEST', 'EASY',
+        'LEVEL_TEST', 'LEVEL_2', NOW(), NOW()), -- P_ID 22
+       (1, NULL, 'MULTIPLE_CHOICE', '`True` 또는 `False` 값을 가지는 데이터 타입은?', 'LEVEL_TEST', 'LEVEL_2',
+        NOW(),
+        NOW()),                                 -- P_ID 23
+       (1, NULL, 'FILL_IN_THE_BLANK', '문자열 "Hello"의 길이는 `____("Hello")` 함수로 구합니다.', 'LEVEL_TEST',
+        'LEVEL_3', NOW(), NOW()),               -- P_ID 24
+       (1, NULL, 'SUBJECTIVE', '특정 조건이 참(True)일 때만 코드를 실행하는 구문은 무엇인가요? (영어 소문자)', 'LEVEL_TEST',
+        'LEVEL_3', NOW(), NOW()),               -- P_ID 25
+       (1, NULL, 'MULTIPLE_CHOICE', 'Python에서 코드 블록을 구분하기 위해 사용하는 것은?', 'LEVEL_TEST', 'LEVEL_2',
+        NOW(),
+        NOW()),                                 -- P_ID 26
+       (1, NULL, 'SUBJECTIVE', '반복문에서 `i = i + 1`과 동일한 의미를 갖는 할당 연산자는 무엇인가요?', 'LEVEL_TEST',
+        'LEVEL_3',
         NOW(), NOW());
 -- P_ID 27
 
 -- ##### 5-3. 사전 레벨 테스트 - Java EASY (P_ID 28 ~ 37) #####
 INSERT INTO problem (learning_language_id, stepup_small_category_id, problem_type, content,
                      domain_type, difficulty, created_at, updated_at)
-VALUES (2, NULL, 'MULTIPLE_CHOICE', 'Java 코드를 실행하기 위해 반드시 필요한 환경은?', 'PRE_TEST', 'EASY', NOW(),
-        NOW()),                            -- P_ID 28
+VALUES (2, NULL, 'MULTIPLE_CHOICE', 'Java 코드를 실행하기 위해 반드시 필요한 환경은?', 'LEVEL_TEST', 'LEVEL_1', NOW(),
+        NOW()),                                 -- P_ID 28
        (2, NULL, 'SUBJECTIVE', 'Java에서 정수(integer)를 선언하는 기본 자료형(primitive type) 키워드는 무엇인가요?',
-        'PRE_TEST', 'EASY', NOW(), NOW()), -- P_ID 29
-       (2, NULL, 'MULTIPLE_CHOICE', 'Java 코드를 컴파일한 결과 생성되는 파일의 확장자는?', 'PRE_TEST', 'EASY', NOW(),
-        NOW()),                            -- P_ID 30
-       (2, NULL, 'SUBJECTIVE', '모든 Java 애플리케이션의 실행 시작점이 되는 메소드의 이름은 무엇인가요?', 'PRE_TEST', 'EASY',
-        NOW(), NOW()),                     -- P_ID 31
+        'LEVEL_TEST', 'LEVEL_1', NOW(), NOW()), -- P_ID 29
+       (2, NULL, 'MULTIPLE_CHOICE', 'Java 코드를 컴파일한 결과 생성되는 파일의 확장자는?', 'LEVEL_TEST', 'LEVEL_2',
+        NOW(),
+        NOW()),                                 -- P_ID 30
+       (2, NULL, 'SUBJECTIVE', '모든 Java 애플리케이션의 실행 시작점이 되는 메소드의 이름은 무엇인가요?', 'LEVEL_TEST',
+        'LEVEL_1',
+        NOW(), NOW()),                          -- P_ID 31
        (2, NULL, 'FILL_IN_THE_BLANK',
-        '`String`, `Integer`와 같이 객체를 생성해야 하는 데이터 타입을 ____ 타입이라고 합니다. (한글)', 'PRE_TEST', 'EASY',
-        NOW(), NOW()),                     -- P_ID 32
-       (2, NULL, 'MULTIPLE_CHOICE', 'Java에서 문장의 끝을 알리는 기호는 무엇인가요?', 'PRE_TEST', 'EASY', NOW(),
-        NOW()),                            -- P_ID 33
+        '`String`, `Integer`와 같이 객체를 생성해야 하는 데이터 타입을 ____ 타입이라고 합니다. (한글)', 'LEVEL_TEST', 'LEVEL_2',
+        NOW(), NOW()),                          -- P_ID 32
+       (2, NULL, 'MULTIPLE_CHOICE', 'Java에서 문장의 끝을 알리는 기호는 무엇인가요?', 'LEVEL_TEST', 'LEVEL_2', NOW(),
+        NOW()),                                 -- P_ID 33
        (2, NULL, 'FILL_IN_THE_BLANK', '`int x = 10;`에서 `x`는 ____, `10`은 ____입니다. (한글, /로 구분)',
-        'PRE_TEST', 'EASY', NOW(), NOW()), -- P_ID 34
-       (2, NULL, 'SUBJECTIVE', '객체를 생성(인스턴스화)할 때 사용하는 키워드는 무엇인가요?', 'PRE_TEST', 'EASY', NOW(),
-        NOW()),                            -- P_ID 35
-       (2, NULL, 'MULTIPLE_CHOICE', '객체를 만들기 위한 ''설계도'' 또는 ''틀''을 의미하는 것은?', 'PRE_TEST', 'EASY',
-        NOW(), NOW()),                     -- P_ID 36
-       (2, NULL, 'SUBJECTIVE', '값이 할당된 후 절대 변경될 수 없는 변수를 선언하는 키워드는 무엇인가요?', 'PRE_TEST', 'EASY',
+        'LEVEL_TEST', 'LEVEL_3', NOW(), NOW()), -- P_ID 34
+       (2, NULL, 'SUBJECTIVE', '객체를 생성(인스턴스화)할 때 사용하는 키워드는 무엇인가요?', 'LEVEL_TEST', 'LEVEL_3', NOW(),
+        NOW()),                                 -- P_ID 35
+       (2, NULL, 'MULTIPLE_CHOICE', '객체를 만들기 위한 ''설계도'' 또는 ''틀''을 의미하는 것은?', 'LEVEL_TEST',
+        'LEVEL_2',
+        NOW(), NOW()),                          -- P_ID 36
+       (2, NULL, 'SUBJECTIVE', '값이 할당된 후 절대 변경될 수 없는 변수를 선언하는 키워드는 무엇인가요?', 'LEVEL_TEST', 'LEVEL_3',
         NOW(), NOW());
 -- P_ID 37
 
--- ##### 5-4. 사전 레벨 테스트 - JavaScript EASY (P_ID 38 ~ 47) #####
+-- ##### 5-4. 레벨 테스트 - JavaScript EASY (P_ID 38 ~ 47) #####
 INSERT INTO problem (learning_language_id, stepup_small_category_id, problem_type, content,
                      domain_type, difficulty, created_at, updated_at)
-VALUES (3, NULL, 'MULTIPLE_CHOICE', 'JavaScript 코드가 주로 실행되는 환경은 어디인가요?', 'PRE_TEST', 'EASY', NOW(),
-        NOW()),                            -- P_ID 38
-       (3, NULL, 'SUBJECTIVE', '웹 페이지의 구조(뼈대)를 담당하는 마크업 언어는 무엇인가요?', 'PRE_TEST', 'EASY', NOW(),
-        NOW()),                            -- P_ID 39
-       (3, NULL, 'MULTIPLE_CHOICE', 'JavaScript에서 `var`, `let`과 함께 변수를 선언하는 또 다른 키워드는?', 'PRE_TEST',
-        'EASY', NOW(), NOW()),             -- P_ID 40
-       (3, NULL, 'SUBJECTIVE', '웹 페이지의 스타일(디자인)을 담당하는 언어는 무엇인가요?', 'PRE_TEST', 'EASY', NOW(),
-        NOW()),                            -- P_ID 41
+VALUES (3, NULL, 'MULTIPLE_CHOICE', 'JavaScript 코드가 주로 실행되는 환경은 어디인가요?', 'LEVEL_TEST', 'LEVEL_1',
+        NOW(),
+        NOW()),                                 -- P_ID 38
+       (3, NULL, 'SUBJECTIVE', '웹 페이지의 구조(뼈대)를 담당하는 마크업 언어는 무엇인가요?', 'LEVEL_TEST', 'LEVEL_1', NOW(),
+        NOW()),                                 -- P_ID 39
+       (3, NULL, 'MULTIPLE_CHOICE', 'JavaScript에서 `var`, `let`과 함께 변수를 선언하는 또 다른 키워드는?',
+        'LEVEL_TEST',
+        'LEVEL_2', NOW(), NOW()),               -- P_ID 40
+       (3, NULL, 'SUBJECTIVE', '웹 페이지의 스타일(디자인)을 담당하는 언어는 무엇인가요?', 'LEVEL_TEST', 'LEVEL_1', NOW(),
+        NOW()),                                 -- P_ID 41
        (3, NULL, 'MULTIPLE_CHOICE', '값이 `10`인 변수 `x`와 값이 `"10"`인 변수 `y`가 있을 때, `x == y`의 결과는?',
-        'PRE_TEST', 'EASY', NOW(), NOW()), -- P_ID 42
-       (3, NULL, 'SUBJECTIVE', '브라우저에서 사용자에게 경고창을 띄우는 함수는 무엇인가요? (괄호 제외)', 'PRE_TEST', 'EASY',
-        NOW(), NOW()),                     -- P_ID 43
+        'LEVEL_TEST', 'LEVEL_2', NOW(), NOW()), -- P_ID 42
+       (3, NULL, 'SUBJECTIVE', '브라우저에서 사용자에게 경고창을 띄우는 함수는 무엇인가요? (괄호 제외)', 'LEVEL_TEST', 'LEVEL_2',
+        NOW(), NOW()),                          -- P_ID 43
        (3, NULL, 'FILL_IN_THE_BLANK',
         '`null`과 `undefined`는 모두 ''값이 없음''을 나타내지만, `null`은 개발자가 의도적으로 값을 비운 것이고, `undefined`는 ____되지 않은 상태입니다.',
-        'PRE_TEST', 'EASY', NOW(), NOW()), -- P_ID 44
+        'LEVEL_TEST', 'LEVEL_3', NOW(), NOW()), -- P_ID 44
        (3, NULL, 'SUBJECTIVE', 'HTML 요소의 ID를 이용해 해당 요소를 가져오는 함수는 무엇인가요? (`document.` 제외, 괄호 제외)',
-        'PRE_TEST', 'EASY', NOW(), NOW()), -- P_ID 45
-       (3, NULL, 'MULTIPLE_CHOICE', 'JavaScript의 자료형이 아닌 것은?', 'PRE_TEST', 'EASY', NOW(),
-        NOW()),                            -- P_ID 46
+        'LEVEL_TEST', 'LEVEL_3', NOW(), NOW()), -- P_ID 45
+       (3, NULL, 'MULTIPLE_CHOICE', 'JavaScript의 자료형이 아닌 것은?', 'LEVEL_TEST', 'LEVEL_2', NOW(),
+        NOW()),                                 -- P_ID 46
        (3, NULL, 'FILL_IN_THE_BLANK', '배열 `[10, 20, 30]`의 길이는 `arr.____` 속성으로 알 수 있습니다.',
-        'PRE_TEST', 'EASY', NOW(), NOW());
+        'LEVEL_TEST', 'LEVEL_3', NOW(), NOW());
 -- P_ID 47
 
--- ##### 5-5. 사전 레벨 테스트 - Python MEDIUM (P_ID 48 ~ 57) #####
+-- ##### 5-5. 레벨 테스트 - Python MEDIUM (P_ID 48 ~ 57) #####
 INSERT INTO problem (learning_language_id, stepup_small_category_id, problem_type, content,
                      domain_type, difficulty, created_at, updated_at)
-VALUES (1, NULL, 'SUBJECTIVE', 'Key와 Value를 한 쌍으로 저장하는 Python의 자료형은 무엇인가요? (한글)', 'PRE_TEST',
-        'MEDIUM', NOW(), NOW()),             -- P_ID 48
-       (1, NULL, 'MULTIPLE_CHOICE', '순서가 있지만 수정이 불가능한(immutable) 시퀀스 자료형은?', 'PRE_TEST', 'MEDIUM',
-        NOW(), NOW()),                       -- P_ID 49
+VALUES (1, NULL, 'SUBJECTIVE', 'Key와 Value를 한 쌍으로 저장하는 Python의 자료형은 무엇인가요? (한글)', 'LEVEL_TEST',
+        'LEVEL_4', NOW(), NOW()),               -- P_ID 48
+       (1, NULL, 'MULTIPLE_CHOICE', '순서가 있지만 수정이 불가능한(immutable) 시퀀스 자료형은?', 'LEVEL_TEST',
+        'LEVEL_4',
+        NOW(), NOW()),                          -- P_ID 49
        (1, NULL, 'SUBJECTIVE', '특정 기능을 수행하는 코드의 묶음으로, `def` 키워드를 사용하여 정의하는 것은 무엇인가요? (한글)',
-        'PRE_TEST', 'MEDIUM', NOW(), NOW()), -- P_ID 50
-       (1, NULL, 'MULTIPLE_CHOICE', '`"Hello"[1:4]`의 슬라이싱 결과로 올바른 것은?', 'PRE_TEST', 'MEDIUM', NOW(),
-        NOW()),                              -- P_ID 51
-       (1, NULL, 'SUBJECTIVE', '다른 파일에 정의된 함수나 클래스를 가져올 때 사용하는 키워드는 무엇인가요?', 'PRE_TEST', 'MEDIUM',
-        NOW(), NOW()),                       -- P_ID 52
+        'LEVEL_TEST', 'LEVEL_5', NOW(), NOW()), -- P_ID 50
+       (1, NULL, 'MULTIPLE_CHOICE', '`"Hello"[1:4]`의 슬라이싱 결과로 올바른 것은?', 'LEVEL_TEST', 'LEVEL_5',
+        NOW(),
+        NOW()),                                 -- P_ID 51
+       (1, NULL, 'SUBJECTIVE', '다른 파일에 정의된 함수나 클래스를 가져올 때 사용하는 키워드는 무엇인가요?', 'LEVEL_TEST',
+        'LEVEL_4',
+        NOW(), NOW()),                          -- P_ID 52
        (1, NULL, 'FILL_IN_THE_BLANK',
-        '`[1, 1, 2, 3]` 리스트에서 중복된 값을 제거하려면 `____(myList)`로 변환할 수 있습니다.', 'PRE_TEST', 'MEDIUM',
-        NOW(), NOW()),                       -- P_ID 53
+        '`[1, 1, 2, 3]` 리스트에서 중복된 값을 제거하려면 `____(myList)`로 변환할 수 있습니다.', 'LEVEL_TEST', 'LEVEL_6',
+        NOW(), NOW()),                          -- P_ID 53
        (1, NULL, 'SUBJECTIVE', '`try...except` 구문에서 오류 발생 여부와 상관없이 항상 실행되는 블록을 정의하는 키워드는?',
-        'PRE_TEST', 'MEDIUM', NOW(), NOW()), -- P_ID 54
-       (1, NULL, 'MULTIPLE_CHOICE', '객체지향 프로그래밍에서 ''설계도''에 해당하는 것은?', 'PRE_TEST', 'MEDIUM', NOW(),
-        NOW()),                              -- P_ID 55
-       (1, NULL, 'SUBJECTIVE', '클래스로부터 실제 메모리에 생성된 객체를 무엇이라고 하나요? (한글)', 'PRE_TEST', 'MEDIUM',
-        NOW(), NOW()),                       -- P_ID 56
+        'LEVEL_TEST', 'LEVEL_5', NOW(), NOW()), -- P_ID 54
+       (1, NULL, 'MULTIPLE_CHOICE', '객체지향 프로그래밍에서 ''설계도''에 해당하는 것은?', 'LEVEL_TEST', 'LEVEL_6',
+        NOW(),
+        NOW()),                                 -- P_ID 55
+       (1, NULL, 'SUBJECTIVE', '클래스로부터 실제 메모리에 생성된 객체를 무엇이라고 하나요? (한글)', 'LEVEL_TEST', 'LEVEL_5',
+        NOW(), NOW()),                          -- P_ID 56
        (1, NULL, 'FILL_IN_THE_BLANK', '클래스 내부에 정의된 함수, 즉 객체의 동작을 나타내는 것을 ____라고 합니다. (영어)',
-        'PRE_TEST', 'MEDIUM', NOW(), NOW());
+        'LEVEL_TEST', 'LEVEL_6', NOW(), NOW());
 -- P_ID 57
 
--- ##### 5-6. 사전 레벨 테스트 - Java MEDIUM (P_ID 58 ~ 67) #####
+-- ##### 5-6. 레벨 테스트 - Java MEDIUM (P_ID 58 ~ 67) #####
 INSERT INTO problem (learning_language_id, stepup_small_category_id, problem_type, content,
                      domain_type, difficulty, created_at, updated_at)
 VALUES (2, NULL, 'SUBJECTIVE',
         '객체지향 프로그래밍(OOP)의 4가지 주요 특징 중 하나로, 부모 클래스의 속성과 메소드를 자식 클래스가 물려받는 것을 무엇이라고 하나요? (한글)',
-        'PRE_TEST', 'MEDIUM', NOW(), NOW()), -- P_ID 58
+        'LEVEL_TEST', 'LEVEL_4', NOW(), NOW()), -- P_ID 58
        (2, NULL, 'MULTIPLE_CHOICE', '객체의 속성(필드)은 숨기고, 외부에는 메소드만 공개하여 데이터를 보호하는 OOP 특징은?',
-        'PRE_TEST', 'MEDIUM', NOW(), NOW()), -- P_ID 59
-       (2, NULL, 'SUBJECTIVE', '순서가 없고 중복을 허용하지 않는 Java의 컬렉션 인터페이스는 무엇인가요?', 'PRE_TEST', 'MEDIUM',
-        NOW(), NOW()),                       -- P_ID 60
-       (2, NULL, 'SUBJECTIVE', '실행 시 발생하는 오류를 처리하기 위해 `try` 블록과 함께 사용하는 블록은 무엇인가요?', 'PRE_TEST',
-        'MEDIUM', NOW(), NOW()),             -- P_ID 61
+        'LEVEL_TEST', 'LEVEL_4', NOW(), NOW()), -- P_ID 59
+       (2, NULL, 'SUBJECTIVE', '순서가 없고 중복을 허용하지 않는 Java의 컬렉션 인터페이스는 무엇인가요?', 'LEVEL_TEST',
+        'LEVEL_5',
+        NOW(), NOW()),                          -- P_ID 60
+       (2, NULL, 'SUBJECTIVE', '실행 시 발생하는 오류를 처리하기 위해 `try` 블록과 함께 사용하는 블록은 무엇인가요?', 'LEVEL_TEST',
+        'LEVEL_5', NOW(), NOW()),               -- P_ID 61
        (2, NULL, 'FILL_IN_THE_BLANK', '하나의 메소드나 클래스가 다양한 타입의 객체를 처리할 수 있는 성질을 ____이라고 합니다. (한글)',
-        'PRE_TEST', 'MEDIUM', NOW(), NOW()), -- P_ID 62
-       (2, NULL, 'MULTIPLE_CHOICE', '다른 클래스의 멤버에 접근할 수 있는 범위를 지정하는 키워드(접근 제어자)가 아닌 것은?', 'PRE_TEST',
-        'MEDIUM', NOW(), NOW()),             -- P_ID 63
+        'LEVEL_TEST', 'LEVEL_4', NOW(), NOW()), -- P_ID 62
+       (2, NULL, 'MULTIPLE_CHOICE', '다른 클래스의 멤버에 접근할 수 있는 범위를 지정하는 키워드(접근 제어자)가 아닌 것은?',
+        'LEVEL_TEST',
+        'LEVEL_6', NOW(), NOW()),               -- P_ID 63
        (2, NULL, 'FILL_IN_THE_BLANK',
-        '`new` 키워드를 통해 객체가 생성될 때, 필드 초기화를 위해 가장 먼저 호출되는 것은 ____입니다. (한글)', 'PRE_TEST', 'MEDIUM',
-        NOW(), NOW()),                       -- P_ID 64
+        '`new` 키워드를 통해 객체가 생성될 때, 필드 초기화를 위해 가장 먼저 호출되는 것은 ____입니다. (한글)', 'LEVEL_TEST', 'LEVEL_5',
+        NOW(), NOW()),                          -- P_ID 64
        (2, NULL, 'SUBJECTIVE', 'Java에서 문자열 객체를 비교할 때, 주소값이 아닌 실제 내용(값)을 비교하는 메소드는 무엇인가요?',
-        'PRE_TEST', 'MEDIUM', NOW(), NOW()), -- P_ID 65
-       (2, NULL, 'MULTIPLE_CHOICE', '객체를 생성하지 않고도 클래스 이름으로 바로 접근할 수 있는 메소드를 선언하는 키워드는?', 'PRE_TEST',
-        'MEDIUM', NOW(), NOW()),             -- P_ID 66
-       (2, NULL, 'SUBJECTIVE', '실체가 없는 메소드, 즉 선언부만 있고 구현부가 없는 메소드를 무엇이라고 하나요? (한글)', 'PRE_TEST',
-        'MEDIUM', NOW(), NOW());
+        'LEVEL_TEST', 'LEVEL_6', NOW(), NOW()), -- P_ID 65
+       (2, NULL, 'MULTIPLE_CHOICE', '객체를 생성하지 않고도 클래스 이름으로 바로 접근할 수 있는 메소드를 선언하는 키워드는?',
+        'LEVEL_TEST',
+        'LEVEL_5', NOW(), NOW()),               -- P_ID 66
+       (2, NULL, 'SUBJECTIVE', '실체가 없는 메소드, 즉 선언부만 있고 구현부가 없는 메소드를 무엇이라고 하나요? (한글)', 'LEVEL_TEST',
+        'LEVEL_6', NOW(), NOW());
 -- P_ID 67
 
--- ##### 5-7. 사전 레벨 테스트 - JavaScript MEDIUM (P_ID 68 ~ 77) #####
+-- ##### 5-7. 레벨 테스트 - JavaScript MEDIUM (P_ID 68 ~ 77) #####
 INSERT INTO problem (learning_language_id, stepup_small_category_id, problem_type, content,
                      domain_type, difficulty, created_at, updated_at)
 VALUES (3, NULL, 'SUBJECTIVE',
         '웹 페이지의 특정 요소를 선택하고, 스타일을 변경하거나 이벤트를 추가하는 등 HTML을 제어하는 인터페이스(API)를 무엇이라고 하나요? (약어)',
-        'PRE_TEST', 'MEDIUM', NOW(), NOW()), -- P_ID 68
-       (3, NULL, 'MULTIPLE_CHOICE', '`"10"`과 `10`을 `===` 연산자로 비교했을 때의 결과는?', 'PRE_TEST', 'MEDIUM',
-        NOW(), NOW()),                       -- P_ID 69
-       (3, NULL, 'SUBJECTIVE', '배열 `arr`의 맨 뒤에 요소 `5`를 추가하는 메소드는 무엇인가요? (괄호 제외)', 'PRE_TEST',
-        'MEDIUM', NOW(), NOW()),             -- P_ID 70
+        'LEVEL_TEST', 'LEVEL_4', NOW(), NOW()), -- P_ID 68
+       (3, NULL, 'MULTIPLE_CHOICE', '`"10"`과 `10`을 `===` 연산자로 비교했을 때의 결과는?', 'LEVEL_TEST',
+        'LEVEL_4',
+        NOW(), NOW()),                          -- P_ID 69
+       (3, NULL, 'SUBJECTIVE', '배열 `arr`의 맨 뒤에 요소 `5`를 추가하는 메소드는 무엇인가요? (괄호 제외)', 'LEVEL_TEST',
+        'LEVEL_5', NOW(), NOW()),               -- P_ID 70
        (3, NULL, 'SUBJECTIVE', '서버와 데이터를 비동기적으로 주고받기 위해 사용되는, JavaScript 객체 표기법은 무엇인가요? (약어)',
-        'PRE_TEST', 'MEDIUM', NOW(), NOW()), -- P_ID 71
+        'LEVEL_TEST', 'LEVEL_5', NOW(), NOW()), -- P_ID 71
        (3, NULL, 'FILL_IN_THE_BLANK',
-        '`let`과 `const`는 `if`문이나 `for`문 내부에서만 유효한 ____ 스코프를 가집니다. (영어)', 'PRE_TEST', 'MEDIUM',
-        NOW(), NOW()),                       -- P_ID 72
+        '`let`과 `const`는 `if`문이나 `for`문 내부에서만 유효한 ____ 스코프를 가집니다. (영어)', 'LEVEL_TEST', 'LEVEL_4',
+        NOW(), NOW()),                          -- P_ID 72
        (3, NULL, 'MULTIPLE_CHOICE',
-        '배열 `[1, 2, 3]`의 각 요소를 제곱한 새 배열 `[1, 4, 9]`를 만드는 가장 적절한 배열 메소드는?', 'PRE_TEST', 'MEDIUM',
-        NOW(), NOW()),                       -- P_ID 73
-       (3, NULL, 'SUBJECTIVE', '사용자의 클릭, 키보드 입력 등 브라우저에서의 특정 동작을 ____라고 합니다. (한글)', 'PRE_TEST',
-        'MEDIUM', NOW(), NOW()),             -- P_ID 74
+        '배열 `[1, 2, 3]`의 각 요소를 제곱한 새 배열 `[1, 4, 9]`를 만드는 가장 적절한 배열 메소드는?', 'LEVEL_TEST', 'LEVEL_6',
+        NOW(), NOW()),                          -- P_ID 73
+       (3, NULL, 'SUBJECTIVE', '사용자의 클릭, 키보드 입력 등 브라우저에서의 특정 동작을 ____라고 합니다. (한글)', 'LEVEL_TEST',
+        'LEVEL_5', NOW(), NOW()),               -- P_ID 74
        (3, NULL, 'FILL_IN_THE_BLANK',
-        'ES6에서 도입된, 객체나 배열에서 값을 쉽게 추출할 수 있는 문법을 ''구조 분해 ____''이라고 합니다.', 'PRE_TEST', 'MEDIUM',
-        NOW(), NOW()),                       -- P_ID 75
+        'ES6에서 도입된, 객체나 배열에서 값을 쉽게 추출할 수 있는 문법을 ''구조 분해 ____''이라고 합니다.', 'LEVEL_TEST', 'LEVEL_6',
+        NOW(), NOW()),                          -- P_ID 75
        (3, NULL, 'SUBJECTIVE', '전통적인 `function` 선언 방식보다 간결하게 함수를 선언할 수 있는 ES6 문법은 무엇인가요? (한글)',
-        'PRE_TEST', 'MEDIUM', NOW(), NOW()), -- P_ID 76
+        'LEVEL_TEST', 'LEVEL_5', NOW(), NOW()), -- P_ID 76
        (3, NULL, 'SUBJECTIVE', 'JavaScript 객체를 JSON 문자열로 변환하는 메소드는 무엇인가요? (괄호 제외, `JSON.` 포함)',
-        'PRE_TEST', 'MEDIUM', NOW(), NOW());
+        'LEVEL_TEST', 'LEVEL_6', NOW(), NOW());
 -- P_ID 77
 
--- ##### 5-8. 사전 레벨 테스트 - Python HARD (P_ID 78 ~ 87) #####
+-- ##### 5-8. 레벨 테스트 - Python HARD (P_ID 78 ~ 87) #####
 INSERT INTO problem (learning_language_id, stepup_small_category_id, problem_type, content,
                      domain_type, difficulty, created_at, updated_at)
-VALUES (1, NULL, 'SUBJECTIVE', '운영체제(OS)로부터 시스템 자원을 할당받는 작업의 단위를 무엇이라고 하나요? (한글)', 'PRE_TEST',
-        'HARD', NOW(), NOW()),             -- P_ID 78 (CS 공통)
-       (1, NULL, 'SUBJECTIVE', '프로세스 내에서 실제로 작업을 수행하는 실행의 단위는 무엇인가요? (한글)', 'PRE_TEST', 'HARD',
-        NOW(), NOW()),                     -- P_ID 79 (CS 공통)
+VALUES (1, NULL, 'SUBJECTIVE', '운영체제(OS)로부터 시스템 자원을 할당받는 작업의 단위를 무엇이라고 하나요? (한글)', 'LEVEL_TEST',
+        'LEVEL_7', NOW(), NOW()),               -- P_ID 78 (CS 공통)
+       (1, NULL, 'SUBJECTIVE', '프로세스 내에서 실제로 작업을 수행하는 실행의 단위는 무엇인가요? (한글)', 'LEVEL_TEST', 'LEVEL_7',
+        NOW(), NOW()),                          -- P_ID 79 (CS 공통)
        (1, NULL, 'SUBJECTIVE',
-        'CPython에서 여러 스레드가 동시에 Python 바이트코드를 실행하는 것을 막는 잠금(Lock) 메커니즘은 무엇인가요? (약어)', 'PRE_TEST',
-        'HARD', NOW(), NOW()),             -- P_ID 80
+        'CPython에서 여러 스레드가 동시에 Python 바이트코드를 실행하는 것을 막는 잠금(Lock) 메커니즘은 무엇인가요? (약어)', 'LEVEL_TEST',
+        'LEVEL_9', NOW(), NOW()),               -- P_ID 80
        (1, NULL, 'MULTIPLE_CHOICE', '함수 실행을 잠시 멈추고 값을 반환한 뒤, 나중에 다시 이어서 실행할 수 있게 해주는 키워드는?',
-        'PRE_TEST', 'HARD', NOW(), NOW()), -- P_ID 81
-       (1, NULL, 'SUBJECTIVE', '함수를 인자로 받거나, 함수를 결과로 반환할 수 있는 함수를 무엇이라고 하나요? (한글)', 'PRE_TEST',
-        'HARD', NOW(), NOW()),             -- P_ID 82
+        'LEVEL_TEST', 'LEVEL_8', NOW(), NOW()), -- P_ID 81
+       (1, NULL, 'SUBJECTIVE', '함수를 인자로 받거나, 함수를 결과로 반환할 수 있는 함수를 무엇이라고 하나요? (한글)', 'LEVEL_TEST',
+        'LEVEL_8', NOW(), NOW()),               -- P_ID 82
        (1, NULL, 'FILL_IN_THE_BLANK',
-        '다른 함수를 꾸며주어(wrapping) 기존 코드 수정 없이 새로운 기능을 추가하는 함수를 ____라고 합니다. (영어)', 'PRE_TEST', 'HARD',
-        NOW(), NOW()),                     -- P_ID 83
-       (1, NULL, 'MULTIPLE_CHOICE', '`map(int, ["1", "2"])`의 반환 타입은?', 'PRE_TEST', 'HARD', NOW(),
-        NOW()),                            -- P_ID 84
+        '다른 함수를 꾸며주어(wrapping) 기존 코드 수정 없이 새로운 기능을 추가하는 함수를 ____라고 합니다. (영어)', 'LEVEL_TEST',
+        'LEVEL_9',
+        NOW(), NOW()),                          -- P_ID 83
+       (1, NULL, 'MULTIPLE_CHOICE', '`map(int, ["1", "2"])`의 반환 타입은?', 'LEVEL_TEST', 'LEVEL_7',
+        NOW(),
+        NOW()),                                 -- P_ID 84
        (1, NULL, 'SUBJECTIVE', '컴퓨터 네트워크에서 클라이언트가 서버에 데이터를 요청하기 위해 사용하는 표준화된 통신 규약은 무엇인가요? (약어)',
-        'PRE_TEST', 'HARD', NOW(), NOW()), -- P_ID 85 (CS 공통)
+        'LEVEL_TEST', 'LEVEL_7', NOW(), NOW()), -- P_ID 85 (CS 공통)
        (1, NULL, 'FILL_IN_THE_BLANK',
-        '`[x for x in range(10)]`와 같이 리스트를 간결하게 생성하는 문법을 리스트 ____이라고 합니다. (한글)', 'PRE_TEST', 'HARD',
-        NOW(), NOW()),                     -- P_ID 86
-       (1, NULL, 'SUBJECTIVE', '클래스가 객체 자신을 참조할 때 사용하는 첫 번째 매개변수의 관례적인 이름은?', 'PRE_TEST', 'HARD',
+        '`[x for x in range(10)]`와 같이 리스트를 간결하게 생성하는 문법을 리스트 ____이라고 합니다. (한글)', 'LEVEL_TEST',
+        'LEVEL_8',
+        NOW(), NOW()),                          -- P_ID 86
+       (1, NULL, 'SUBJECTIVE', '클래스가 객체 자신을 참조할 때 사용하는 첫 번째 매개변수의 관례적인 이름은?', 'LEVEL_TEST',
+        'LEVEL_10',
         NOW(), NOW());
 -- P_ID 87
 
--- ##### 5-9. 사전 레벨 테스트 - Java HARD (P_ID 88 ~ 97) #####
+-- ##### 5-9. 레벨 테스트 - Java HARD (P_ID 88 ~ 97) #####
 INSERT INTO problem (learning_language_id, stepup_small_category_id, problem_type, content,
                      domain_type, difficulty, created_at, updated_at)
 VALUES (2, NULL, 'SUBJECTIVE', 'Java에서 더 이상 사용되지 않는 객체를 메모리에서 자동으로 해제해주는 기능을 무엇이라고 하나요? (한글)',
-        'PRE_TEST', 'HARD', NOW(), NOW()), -- P_ID 88
-       (2, NULL, 'MULTIPLE_CHOICE', '`List`, `Set`, `Map` 등 Java의 자료구조 집합을 무엇이라고 부르나요?', 'PRE_TEST',
-        'HARD', NOW(), NOW()),             -- P_ID 89
+        'LEVEL_TEST', 'LEVEL_7', NOW(), NOW()), -- P_ID 88
+       (2, NULL, 'MULTIPLE_CHOICE', '`List`, `Set`, `Map` 등 Java의 자료구조 집합을 무엇이라고 부르나요?',
+        'LEVEL_TEST',
+        'LEVEL_7', NOW(), NOW()),               -- P_ID 89
        (2, NULL, 'SUBJECTIVE',
-        '컴파일 시에는 타입 검사를 하지만, 런타임 시에는 해당 타입 정보를 제거하는 Java 제네릭의 특징을 무엇이라고 하나요?', 'PRE_TEST', 'HARD',
-        NOW(), NOW()),                     -- P_ID 90
-       (2, NULL, 'MULTIPLE_CHOICE', '`Exception`과 `Error`의 공통 부모 클래스는 무엇인가요?', 'PRE_TEST', 'HARD',
-        NOW(), NOW()),                     -- P_ID 91
-       (2, NULL, 'SUBJECTIVE', '서로 다른 스레드가 동일한 자원에 동시에 접근하는 것을 막는 기술을 무엇이라고 하나요? (한글)', 'PRE_TEST',
-        'HARD', NOW(), NOW()),             -- P_ID 92 (CS 공통)
+        '컴파일 시에는 타입 검사를 하지만, 런타임 시에는 해당 타입 정보를 제거하는 Java 제네릭의 특징을 무엇이라고 하나요?', 'LEVEL_TEST',
+        'LEVEL_9',
+        NOW(), NOW()),                          -- P_ID 90
+       (2, NULL, 'MULTIPLE_CHOICE', '`Exception`과 `Error`의 공통 부모 클래스는 무엇인가요?', 'LEVEL_TEST',
+        'LEVEL_8',
+        NOW(), NOW()),                          -- P_ID 91
+       (2, NULL, 'SUBJECTIVE', '서로 다른 스레드가 동일한 자원에 동시에 접근하는 것을 막는 기술을 무엇이라고 하나요? (한글)',
+        'LEVEL_TEST',
+        'LEVEL_8', NOW(), NOW()),               -- P_ID 92 (CS 공통)
        (2, NULL, 'FILL_IN_THE_BLANK', '데이터베이스에 접근하여 데이터를 조작하는 데 사용되는 쿼리 언어는 `____` 입니다. (약어)',
-        'PRE_TEST', 'HARD', NOW(), NOW()), -- P_ID 93 (CS 공통)
+        'LEVEL_TEST', 'LEVEL_7', NOW(), NOW()), -- P_ID 93 (CS 공통)
        (2, NULL, 'SUBJECTIVE',
-        '`List<String> names`를 `String[]` 배열로 변환하는 스트림 API 메소드는 무엇인가요? (괄호 포함)', 'PRE_TEST', 'HARD',
-        NOW(), NOW()),                     -- P_ID 94
+        '`List<String> names`를 `String[]` 배열로 변환하는 스트림 API 메소드는 무엇인가요? (괄호 포함)', 'LEVEL_TEST',
+        'LEVEL_9',
+        NOW(), NOW()),                          -- P_ID 94
        (2, NULL, 'FILL_IN_THE_BLANK',
-        '`HashMap`과 `Hashtable`의 가장 큰 차이점 중 하나는 `HashMap`은 ____ 값 저장을 허용한다는 것입니다.', 'PRE_TEST',
-        'HARD', NOW(), NOW()),             -- P_ID 95
-       (2, NULL, 'SUBJECTIVE', '부모 클래스의 메소드를 자식 클래스에서 다시 정의(재정의)하는 것을 무엇이라고 하나요? (영어)', 'PRE_TEST',
-        'HARD', NOW(), NOW()),             -- P_ID 96
+        '`HashMap`과 `Hashtable`의 가장 큰 차이점 중 하나는 `HashMap`은 ____ 값 저장을 허용한다는 것입니다.', 'LEVEL_TEST',
+        'LEVEL_8', NOW(), NOW()),               -- P_ID 95
+       (2, NULL, 'SUBJECTIVE', '부모 클래스의 메소드를 자식 클래스에서 다시 정의(재정의)하는 것을 무엇이라고 하나요? (영어)',
+        'LEVEL_TEST',
+        'LEVEL_8', NOW(), NOW()),               -- P_ID 96
        (2, NULL, 'SUBJECTIVE', '인터페이스(Interface)에 선언된 모든 메소드는 기본적으로 어떤 접근 제어자를 가지나요? (Java 8 기준)',
-        'PRE_TEST', 'HARD', NOW(), NOW());
+        'LEVEL_TEST', 'LEVEL_10', NOW(), NOW());
 -- P_ID 97
 
--- ##### 5-10. 사전 레벨 테스트 - JavaScript HARD (P_ID 98 ~ 107) #####
+-- ##### 5-10. 레벨 테스트 - JavaScript HARD (P_ID 98 ~ 107) #####
 INSERT INTO problem (learning_language_id, stepup_small_category_id, problem_type, content,
                      domain_type, difficulty, created_at, updated_at)
 VALUES (3, NULL, 'SUBJECTIVE',
         '비동기 작업이 완료된 후 실행될 함수(콜백)를 등록하는 객체로, `pending`, `fulfilled`, `rejected` 상태를 갖는 것은?',
-        'PRE_TEST', 'HARD', NOW(), NOW()), -- P_ID 98
+        'LEVEL_TEST', 'LEVEL_8', NOW(), NOW()), -- P_ID 98
        (3, NULL, 'SUBJECTIVE',
-        '`Promise`를 기반으로 비동기 코드를 동기식 코드처럼 보이게 작성할 수 있게 해주는 두 개의 키워드는 무엇인가요? (a / b)', 'PRE_TEST',
-        'HARD', NOW(), NOW()),             -- P_ID 99
-       (3, NULL, 'MULTIPLE_CHOICE', '일반 함수와 달리, 화살표 함수(`=>`)의 `this`는 어떻게 결정되나요?', 'PRE_TEST',
-        'HARD', NOW(), NOW()),             -- P_ID 100
-       (3, NULL, 'SUBJECTIVE', '외부 함수의 변수에 접근할 수 있는 내부 함수와 그 환경의 조합을 무엇이라고 하나요? (한글)', 'PRE_TEST',
-        'HARD', NOW(), NOW()),             -- P_ID 101
+        '`Promise`를 기반으로 비동기 코드를 동기식 코드처럼 보이게 작성할 수 있게 해주는 두 개의 키워드는 무엇인가요? (a / b)', 'LEVEL_TEST',
+        'LEVEL_9', NOW(), NOW()),               -- P_ID 99
+       (3, NULL, 'MULTIPLE_CHOICE', '일반 함수와 달리, 화살표 함수(`=>`)의 `this`는 어떻게 결정되나요?', 'LEVEL_TEST',
+        'LEVEL_8', NOW(), NOW()),               -- P_ID 100
+       (3, NULL, 'SUBJECTIVE', '외부 함수의 변수에 접근할 수 있는 내부 함수와 그 환경의 조합을 무엇이라고 하나요? (한글)', 'LEVEL_TEST',
+        'LEVEL_9', NOW(), NOW()),               -- P_ID 101
        (3, NULL, 'MULTIPLE_CHOICE', '여러 개의 `Promise` 중 가장 *먼저* 완료(성공 또는 실패)되는 것의 결과를 반환하는 메소드는?',
-        'PRE_TEST', 'HARD', NOW(), NOW()), -- P_ID 102
+        'LEVEL_TEST', 'LEVEL_8', NOW(), NOW()), -- P_ID 102
        (3, NULL, 'FILL_IN_THE_BLANK', '`setTimeout(func, 1000)` 코드는 `func` 함수를 몇 초 뒤에 실행하나요? (숫자만)',
-        'PRE_TEST', 'HARD', NOW(), NOW()), -- P_ID 103
+        'LEVEL_TEST', 'LEVEL_7', NOW(), NOW()), -- P_ID 103
        (3, NULL, 'SUBJECTIVE', '웹 브라우저가 서버로부터 데이터를 요청하고 받아오는 데 사용되는 표준 통신 프로토콜은 무엇인가요? (약어)',
-        'PRE_TEST', 'HARD', NOW(), NOW()), -- P_ID 104 (CS 공통)
+        'LEVEL_TEST', 'LEVEL_7', NOW(), NOW()), -- P_ID 104 (CS 공통)
        (3, NULL, 'FILL_IN_THE_BLANK',
-        'JavaScript 객체의 속성과 값을 한 쌍으로 묶은 데이터를 전송하는 표준 형식은 `____` 입니다. (약어)', 'PRE_TEST', 'HARD',
-        NOW(), NOW()),                     -- P_ID 105
+        'JavaScript 객체의 속성과 값을 한 쌍으로 묶은 데이터를 전송하는 표준 형식은 `____` 입니다. (약어)', 'LEVEL_TEST',
+        'LEVEL_10',
+        NOW(), NOW()),                          -- P_ID 105
        (3, NULL, 'SUBJECTIVE', '변수 선언이 코드의 최상단으로 끌어올려지는 듯한 동작을 하는 JavaScript의 특징은 무엇인가요? (한글)',
-        'PRE_TEST', 'HARD', NOW(), NOW()), -- P_ID 106
-       (3, NULL, 'SUBJECTIVE', '객체의 원형(부모) 역할을 하는 객체를 무엇이라고 하나요? (영어)', 'PRE_TEST', 'HARD', NOW(),
+        'LEVEL_TEST', 'LEVEL_9', NOW(), NOW()), -- P_ID 106
+       (3, NULL, 'SUBJECTIVE', '객체의 원형(부모) 역할을 하는 객체를 무엇이라고 하나요? (영어)', 'LEVEL_TEST', 'LEVEL_10',
+        NOW(),
         NOW());
 -- P_ID 107
+
+-- ##### 5-11. [신규] 레벨 테스트 - 코딩/문법 빈칸 채우기 (P_ID 108 ~ 112) #####
+INSERT INTO problem (learning_language_id, stepup_small_category_id, problem_type, content,
+                     domain_type, difficulty, created_at, updated_at)
+VALUES (1, NULL, 'FILL_IN_THE_BLANK',
+        'Python 딕셔너리에 "apple" 키와 1 값을 ____하려면, `my_dict____"apple"____ = 1` 코드를 사용합니다.',
+        'LEVEL_TEST',
+        'LEVEL_5', NOW(), NOW()),               -- P_ID 108 (3개 빈칸)
+       (2, NULL, 'FILL_IN_THE_BLANK',
+        'Java에서 `List<String> names`의 모든 요소를 출력하는 향상된 for문은 `____ (String name ____ names) ____ System.out.println(name); ____` 입니다.',
+        'LEVEL_TEST', 'LEVEL_6', NOW(), NOW()), -- P_ID 109 (4개 빈칸)
+       (3, NULL, 'FILL_IN_THE_BLANK',
+        'JavaScript에서 `Promise`가 성공했을 때 `result` 값을 받아 처리하는 코드는 `myPromise.____(____ => { console.log(result); });` 입니다.',
+        'LEVEL_TEST', 'LEVEL_8', NOW(), NOW()), -- P_ID 110 (2개 빈칸)
+       (1, NULL, 'FILL_IN_THE_BLANK',
+        'Python 예외 처리: `____:` 시도할 코드. `____ ValueError:` `ValueError` 처리. `____:` 예외 미발생 시 실행. `____:` 항상 실행.',
+        'LEVEL_TEST', 'LEVEL_7', NOW(), NOW()), -- P_ID 111 (4개 빈칸)
+       (2, NULL, 'FILL_IN_THE_BLANK',
+        'Java Stream API로 리스트 `list`에서 "A"로 시작하는 요소만 필터링: `list.____().____(s -> s.startsWith("A")).collect(Collectors.____());`',
+        'LEVEL_TEST', 'LEVEL_9', NOW(), NOW());
+-- P_ID 112 (3개 빈칸)
 
 -- #####################################################################
 -- 6. CHOICE (모든 객관식 선택지)
@@ -585,8 +639,23 @@ VALUES
     (103, 1, '1', NOW(), NOW()),
     (105, 1, 'JSON', NOW(), NOW()),
     (106, 1, 'filter', NOW(), NOW()),
-    (107, 1, 'in', NOW(), NOW());
-
+    (107, 1, 'in', NOW(), NOW()),
+    (108, 1, '추가', NOW(), NOW()),
+    (108, 2, '[', NOW(), NOW()),
+    (108, 3, ']', NOW(), NOW()),
+    (109, 1, 'for', NOW(), NOW()),
+    (109, 2, ':', NOW(), NOW()),
+    (109, 3, '{', NOW(), NOW()),
+    (109, 4, '}', NOW(), NOW()),
+    (110, 1, 'then', NOW(), NOW()),
+    (110, 2, 'result', NOW(), NOW()),
+    (111, 1, 'try', NOW(), NOW()),
+    (111, 2, 'except', NOW(), NOW()),
+    (111, 3, 'else', NOW(), NOW()),
+    (111, 4, 'finally', NOW(), NOW()),
+    (112, 1, 'stream', NOW(), NOW()),
+    (112, 2, 'filter', NOW(), NOW()),
+    (112, 3, 'toList', NOW(), NOW());
 -- #####################################################################
 -- 9. HINTS (모든 힌트)
 -- #####################################################################
@@ -698,13 +767,16 @@ VALUES
 -- #####################################################################
 INSERT INTO public.pre_test_level (created_at, id, updated_at, pre_test_end_msg,
                                    pre_test_level_name)
-VALUES ('2025-11-04 15:46:01.000000', 1, '2025-11-04 15:46:09.000000', '레벨이 확정되었습니다(임시)', 'LV1');
-INSERT INTO public.pre_test_level (created_at, id, updated_at, pre_test_end_msg,
-                                   pre_test_level_name)
-VALUES ('2025-11-04 15:46:24.000000', 2, '2025-11-04 15:46:32.000000', '레벨이 확정되었습니다(임시)', 'LV2');
-INSERT INTO public.pre_test_level (created_at, id, updated_at, pre_test_end_msg,
-                                   pre_test_level_name)
-VALUES ('2025-11-04 15:46:39.000000', 3, '2025-11-04 15:46:40.000000', '레벨이 확정되었습니다(임시)', 'LV3');
+VALUES (NOW(), 1, NOW(), '레벨이 확정되었습니다 (LV1)', 'LV1'),
+       (NOW(), 2, NOW(), '레벨이 확정되었습니다 (LV2)', 'LV2'),
+       (NOW(), 3, NOW(), '레벨이 확정되었습니다 (LV3)', 'LV3'),
+       (NOW(), 4, NOW(), '레벨이 확정되었습니다 (LV4)', 'LV4'),
+       (NOW(), 5, NOW(), '레벨이 확정되었습니다 (LV5)', 'LV5'),
+       (NOW(), 6, NOW(), '레벨이 확정되었습니다 (LV6)', 'LV6'),
+       (NOW(), 7, NOW(), '레벨이 확정되었습니다 (LV7)', 'LV7'),
+       (NOW(), 8, NOW(), '레벨이 확정되었습니다 (LV8)', 'LV8'),
+       (NOW(), 9, NOW(), '레벨이 확정되었습니다 (LV9)', 'LV9'),
+       (NOW(), 10, NOW(), '레벨이 확정되었습니다 (LV10)', 'LV10');
 
 -- #####################################################################
 -- 12. 테스트 사용자정보

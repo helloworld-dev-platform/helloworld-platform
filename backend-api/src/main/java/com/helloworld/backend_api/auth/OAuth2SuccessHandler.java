@@ -6,8 +6,8 @@ import com.helloworld.backend_api.auth.jwt.JwtTokenProvider;
 import com.helloworld.backend_api.auth.jwt.JwtTokenResponseDto;
 import com.helloworld.backend_api.auth.model.PrincipalDetails;
 import com.helloworld.backend_api.auth.service.RedisTokenService;
+import com.helloworld.backend_api.pretest.domain.UserPreTestResult;
 import com.helloworld.backend_api.user.domain.User;
-import com.helloworld.backend_api.user.domain.UserPretestResult;
 import com.helloworld.backend_api.user.repository.UserPreTestResultRepository;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
@@ -41,7 +41,7 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
     User user = extractUserInfo(authentication);
 
     // 2단계: 부가 정보(사전 테스트 결과) 조회
-    Optional<UserPretestResult> latestTestResult = findLatestTestResult(user);
+    Optional<UserPreTestResult> latestTestResult = findLatestTestResult(user);
 
     // 3단계: 토큰 발급 및 저장
     JwtTokenResponseDto tokens = issueAndSaveToken(user, latestTestResult);
@@ -72,11 +72,11 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
    * @param user
    * @return
    */
-  private Optional<UserPretestResult> findLatestTestResult(User user) {
+  private Optional<UserPreTestResult> findLatestTestResult(User user) {
     return userPreTestResultRepository.findFirstByUserIdOrderByCompletedAtDesc(user.getId());
   }
 
-  private JwtTokenResponseDto issueAndSaveToken(User user, Optional<UserPretestResult> testResult) {
+  private JwtTokenResponseDto issueAndSaveToken(User user, Optional<UserPreTestResult> testResult) {
     String accessToken = jwtTokenProvider.generateToken(user, testResult);
     String refreshToken = jwtTokenProvider.generateRefreshToken(user);
 
