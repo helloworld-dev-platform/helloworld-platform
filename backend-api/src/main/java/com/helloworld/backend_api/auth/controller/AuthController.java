@@ -36,7 +36,6 @@ public class AuthController {
 
   private final GoogleLoginService googleLoginService;
   private final JwtTokenProvider jwtTokenProvider;
-  private final UserRepository userRepository;
   private final RedisTokenService redisTokenService;
   private final AuthService authService;
 

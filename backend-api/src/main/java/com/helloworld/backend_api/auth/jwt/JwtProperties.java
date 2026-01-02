@@ -11,7 +11,6 @@ import org.springframework.stereotype.Component;
  */
 @Getter
 @Setter
-@Component
 @ConfigurationProperties(prefix = "jwt")
 @Schema(description = "JWT설정 정보")
 public class JwtProperties {
