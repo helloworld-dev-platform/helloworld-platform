@@ -10,5 +10,5 @@ import java.util.List;
  */
 public interface ProblemRepositoryQuery {
 
-  List<Problem> findPreTestProblems(@NotNull Long languageId, Difficulty difficulty);
+  List<Problem> findLevelTestProblems(@NotNull Long languageId, Difficulty difficulty);
 }

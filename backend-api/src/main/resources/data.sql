@@ -763,10 +763,10 @@ VALUES
      NOW(), NOW());
 
 -- #####################################################################
--- 11. PRE_TEST_LEVEL (레벨정보)
+-- 11. LEVEL_TEST_LEVEL (레벨정보)
 -- #####################################################################
-INSERT INTO public.pre_test_level (created_at, id, updated_at, pre_test_end_msg,
-                                   pre_test_level_name)
+INSERT INTO public.level_test_level (created_at, id, updated_at, level_test_end_msg,
+                                     level_test_level_name)
 VALUES (NOW(), 1, NOW(), '레벨이 확정되었습니다 (LV1)', 'LV1'),
        (NOW(), 2, NOW(), '레벨이 확정되었습니다 (LV2)', 'LV2'),
        (NOW(), 3, NOW(), '레벨이 확정되었습니다 (LV3)', 'LV3'),

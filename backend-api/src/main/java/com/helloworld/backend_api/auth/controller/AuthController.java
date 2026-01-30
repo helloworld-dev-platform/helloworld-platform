@@ -12,7 +12,6 @@ import com.helloworld.backend_api.common.swagger.ApiErrorCodeExamples;
 import com.helloworld.backend_api.oauth.dto.GoogleLoginRequest;
 import com.helloworld.backend_api.oauth.service.GoogleLoginService;
 import com.helloworld.backend_api.user.domain.User;
-import com.helloworld.backend_api.user.repository.UserRepository;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.Cookie;

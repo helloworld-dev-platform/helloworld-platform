@@ -15,11 +15,10 @@ import org.springframework.stereotype.Repository;
 public class ProblemRepositoryImpl implements ProblemRepositoryQuery {
 
   private final JPAQueryFactory queryFactory;
-  private static final String DOMAIN_TYPE_PRE_TEST = "PRE_TEST";
 
 
   @Override
-  public List<Problem> findPreTestProblems(@NotNull Long languageId, Difficulty difficulty) {
+  public List<Problem> findLevelTestProblems(@NotNull Long languageId, Difficulty difficulty) {
 
     QProblem problem = QProblem.problem;
 

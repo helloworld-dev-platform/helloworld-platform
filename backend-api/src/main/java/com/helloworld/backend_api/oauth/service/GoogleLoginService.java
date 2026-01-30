@@ -6,9 +6,9 @@ import com.helloworld.backend_api.auth.service.AuthService;
 import com.helloworld.backend_api.auth.service.RedisTokenService;
 import com.helloworld.backend_api.common.exception.CustomException;
 import com.helloworld.backend_api.common.exception.ErrorCode;
-import com.helloworld.backend_api.pretest.domain.UserPreTestResult;
+import com.helloworld.backend_api.leveltest.domain.UserLevelTestResult;
 import com.helloworld.backend_api.user.domain.User;
-import com.helloworld.backend_api.user.repository.UserPreTestResultRepository;
+import com.helloworld.backend_api.user.repository.UserLevelTestResultRepository;
 import java.util.Optional;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -39,7 +39,7 @@ public class GoogleLoginService {
   private final AuthService authService; // 3단계에서 리팩토링한 서비스
   private final JwtTokenProvider jwtTokenProvider;
   private final RedisTokenService redisTokenService;
-  private final UserPreTestResultRepository userPreTestResultRepository;
+  private final UserLevelTestResultRepository userLevelTestResultRepository;
 
   public JwtTokenResponseDto login(String authorizationCode) {
     // 1. 인가 코드로 구글 토큰 받기
@@ -57,8 +57,8 @@ public class GoogleLoginService {
     User user = authService.findOrCreateOauthUser(provider, providerId, email, username);
 
     // 4. 우리 서비스의 AT/RT 발급
-    Optional<UserPreTestResult> latestTestResult =
-        userPreTestResultRepository.findFirstByUserIdOrderByCompletedAtDesc(user.getId());
+    Optional<UserLevelTestResult> latestTestResult =
+        userLevelTestResultRepository.findFirstByUserIdOrderByCompletedAtDesc(user.getId());
 
     String accessToken = jwtTokenProvider.generateToken(user, latestTestResult);
     String refreshToken = jwtTokenProvider.generateRefreshToken(user);

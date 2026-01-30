@@ -1,4 +1,4 @@
-name: Deploy to NCP Server
+name: Deploy to Public API Server
 
 # main 브랜치에 push 이벤트 발생 시 실행
 on:

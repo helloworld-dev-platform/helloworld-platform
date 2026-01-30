@@ -1,6 +1,6 @@
 package com.helloworld.backend_api.auth.jwt;
 
-import com.helloworld.backend_api.pretest.domain.UserPreTestResult;
+import com.helloworld.backend_api.leveltest.domain.UserLevelTestResult;
 import com.helloworld.backend_api.user.domain.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
@@ -46,7 +46,7 @@ public class JwtTokenProvider {
   /**
    * 액세스 토큰 생성
    */
-  public String generateToken(User user, Optional<UserPreTestResult> testResultOpt) {
+  public String generateToken(User user, Optional<UserLevelTestResult> testResultOpt) {
     Date now = new Date();
     Date expiryDate = new Date(now.getTime() + jwtProperties.getExpirationTime());
 
@@ -62,7 +62,7 @@ public class JwtTokenProvider {
         testResult -> {
           builder.claim("hasCompletedTest", true);
           builder.claim("languageId", testResult.getLearningLanguageId());
-          builder.claim("levelId", testResult.getPreTestLevelId());
+          builder.claim("levelId", testResult.getLevelTestLevelId());
         },
         () -> {
           builder.claim("hasCompletedTest", false); // 테스트 완료 안 함

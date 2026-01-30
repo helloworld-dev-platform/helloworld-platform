@@ -6,9 +6,9 @@ import com.helloworld.backend_api.auth.jwt.JwtTokenProvider;
 import com.helloworld.backend_api.auth.jwt.JwtTokenResponseDto;
 import com.helloworld.backend_api.auth.model.PrincipalDetails;
 import com.helloworld.backend_api.auth.service.RedisTokenService;
-import com.helloworld.backend_api.pretest.domain.UserPreTestResult;
+import com.helloworld.backend_api.leveltest.domain.UserLevelTestResult;
 import com.helloworld.backend_api.user.domain.User;
-import com.helloworld.backend_api.user.repository.UserPreTestResultRepository;
+import com.helloworld.backend_api.user.repository.UserLevelTestResultRepository;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -27,7 +27,7 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
   private final JwtTokenProvider jwtTokenProvider;
   private final RedisTokenService redisTokenService;
   private final ObjectMapper objectMapper;
-  private final UserPreTestResultRepository userPreTestResultRepository;
+  private final UserLevelTestResultRepository userLevelTestResultRepository;
 
   private static final int ACCESS_TOKEN_EXPIRATION_SECONDS = 1800; //30분
   private static final int REFRESH_TOKEN_EXPIRATION_DAYS = 7; //7일
@@ -41,7 +41,7 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
     User user = extractUserInfo(authentication);
 
     // 2단계: 부가 정보(사전 테스트 결과) 조회
-    Optional<UserPreTestResult> latestTestResult = findLatestTestResult(user);
+    Optional<UserLevelTestResult> latestTestResult = findLatestTestResult(user);
 
     // 3단계: 토큰 발급 및 저장
     JwtTokenResponseDto tokens = issueAndSaveToken(user, latestTestResult);
@@ -72,11 +72,12 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
    * @param user
    * @return
    */
-  private Optional<UserPreTestResult> findLatestTestResult(User user) {
-    return userPreTestResultRepository.findFirstByUserIdOrderByCompletedAtDesc(user.getId());
+  private Optional<UserLevelTestResult> findLatestTestResult(User user) {
+    return userLevelTestResultRepository.findFirstByUserIdOrderByCompletedAtDesc(user.getId());
   }
 
-  private JwtTokenResponseDto issueAndSaveToken(User user, Optional<UserPreTestResult> testResult) {
+  private JwtTokenResponseDto issueAndSaveToken(User user,
+      Optional<UserLevelTestResult> testResult) {
     String accessToken = jwtTokenProvider.generateToken(user, testResult);
     String refreshToken = jwtTokenProvider.generateRefreshToken(user);
 

@@ -11,9 +11,9 @@ import com.helloworld.backend_api.auth.jwt.JwtTokenProvider;
 import com.helloworld.backend_api.auth.jwt.JwtTokenResponseDto;
 import com.helloworld.backend_api.common.exception.CustomException;
 import com.helloworld.backend_api.common.exception.ErrorCode;
-import com.helloworld.backend_api.pretest.domain.UserPreTestResult;
+import com.helloworld.backend_api.leveltest.domain.UserLevelTestResult;
 import com.helloworld.backend_api.user.domain.User;
-import com.helloworld.backend_api.user.repository.UserPreTestResultRepository;
+import com.helloworld.backend_api.user.repository.UserLevelTestResultRepository;
 import com.helloworld.backend_api.user.repository.UserRepository;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
@@ -35,7 +35,7 @@ class AuthServiceTest {
   @Mock
   private UserRepository userRepository;
   @Mock
-  private UserPreTestResultRepository userPreTestResultRepository;
+  private UserLevelTestResultRepository userLevelTestResultRepository;
 
   // 테스트에서 사용할 상수 및 공통 객체
   private static final Long USER_ID = 1L;
@@ -43,7 +43,7 @@ class AuthServiceTest {
   private static final String NEW_ACCESS_TOKEN = "new-access-token";
   private static final String NEW_REFRESH_TOKEN = "new-refresh-token";
   private User mockUser;
-  private UserPreTestResult mockTestResult;
+  private UserLevelTestResult mockTestResult;
 
   // 테스트 대상 객체
   @InjectMocks
@@ -53,7 +53,8 @@ class AuthServiceTest {
   void setUp() {
     //테스트 실행전 객체 초기화
     mockUser = User.builder().id(USER_ID).build();
-    mockTestResult = UserPreTestResult.builder().userId(1L).preTestLevelId(1L).learningLanguageId(1L).build();
+    mockTestResult = UserLevelTestResult.builder().userId(1L).levelTestLevelId(1L)
+        .learningLanguageId(1L).build();
   }
 
 
@@ -100,7 +101,7 @@ class AuthServiceTest {
     when(jwtTokenProvider.getUserId(refreshToken)).thenReturn(USER_ID);
     when(redisTokenService.isValid(USER_ID, refreshToken)).thenReturn(true);
     when(userRepository.findById(USER_ID)).thenReturn(Optional.of(mockUser));
-    when(userPreTestResultRepository.findFirstByUserIdOrderByCompletedAtDesc(USER_ID))
+    when(userLevelTestResultRepository.findFirstByUserIdOrderByCompletedAtDesc(USER_ID))
         .thenReturn(Optional.of(mockTestResult));
     when(jwtTokenProvider.generateToken(mockUser, Optional.of(mockTestResult))).thenReturn(
         NEW_ACCESS_TOKEN);
