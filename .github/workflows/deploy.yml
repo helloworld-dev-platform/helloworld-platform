@@ -109,7 +109,9 @@ jobs:
             # 프로젝트 디렉토리로 이동 (본인의 실제 경로 확인)
             cd ~/dev/helloworld-platform 
             
-            echo "--- Git Pulling ---"
+            echo "--- Git Reset & Pulling ---"
+            git checkout .
+            git clean -fd
             git pull origin main
             
             echo "--- Generating .env file ---"
