@@ -111,7 +111,7 @@ jobs:
             
             echo "--- Git Reset & Pulling ---"
             git checkout .
-            git clean -fd
+            git clean -fd -e certbot/
             git pull origin main
             
             echo "--- Generating .env file ---"
