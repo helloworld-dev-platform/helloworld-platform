@@ -34,153 +34,128 @@ jobs:
         run: |
           for imageName in $(echo $IMAGE_NAMES | sed "s/,/ /g")
           do
-            echo "Backing up latest version of $imageName to previous tag..."
+            echo "Backing up latest version of $imageName..."
             docker pull ${{ env.REGISTRY }}/${{ env.DOCKER_USERNAME }}/$imageName:latest || true
             docker tag ${{ env.REGISTRY }}/${{ env.DOCKER_USERNAME }}/$imageName:latest ${{ env.REGISTRY }}/${{ env.DOCKER_USERNAME }}/$imageName:previous || true
             docker push ${{ env.REGISTRY }}/${{ env.DOCKER_USERNAME }}/$imageName:previous || true
           done
 
       # --------------------------------------------------------
-      # 2) Docker 이미지 빌드 및 푸시 (CI과정)
-      - name: Build, Push backend-server images with cache
+      # 2) Docker 이미지 빌드 및 푸시 (백엔드 & 웹소켓)
+      - name: Build and push backend-server
         uses: docker/build-push-action@v5
         with:
           context: ./backend-api
           push: true
           tags: ${{ env.REGISTRY }}/${{ env.DOCKER_USERNAME }}/backend-server:latest
-          cache-from: type=gha,scope=${{ github.workflow }}-${{ github.job }}-backend-server
-          cache-to: type=gha,mode=max,scope=${{ github.workflow }}-${{ github.job }}-backend-server
+          cache-from: type=gha,scope=${{ github.workflow }}-backend
+          cache-to: type=gha,mode=max,scope=${{ github.workflow }}-backend
 
 
-      - name: Build and push websocket-server image with cache
+      - name: Build and push websocket-server
         uses: docker/build-push-action@v5
         with:
           context: ./websocket-server
           push: true
           tags: ${{ env.REGISTRY }}/${{ env.DOCKER_USERNAME }}/websocket-server:latest
-          cache-from: type=gha,scope=${{ github.workflow }}-${{ github.job }}-websocket-server
-          cache-to: type=gha,mode=max,scope=${{ github.workflow }}-${{ github.job }}-websocket-server
+          cache-from: type=gha,scope=${{ github.workflow }}-websocket
+          cache-to: type=gha,mode=max,scope=${{ github.workflow }}-websocket
       
       # --------------------------------------------------------
-      # 3) 배포 전, 시크릿 값 유효성 검사
-      - name: Verify Secrets
-        shell: bash
-        run: |
-          if [ -z "${{ secrets.JWT_SECRET_KEY }}" ]; then
-            echo "❌ ERROR: JWT_SECRET_KEY secret is not set or empty!"
-            exit 1
-          else
-            echo "✅ SUCCESS: JWT_SECRET_KEY secret is loaded."
-          fi
-          if [ -z "${{ secrets.GOOGLE_CLIENT_ID }}" ]; then
-            echo "❌ ERROR: GOOGLE_CLIENT_ID secret is not set or empty!"
-            exit 1
-          else
-            echo "✅ SUCCESS: GOOGLE_CLIENT_ID secret is loaded."
-          fi
-          if [ -z "${{ secrets.GOOGLE_CLIENT_SECRET }}" ]; then
-            echo "❌ ERROR: GOOGLE_CLIENT_SECRET secret is not set or empty!"
-            exit 1
-          else
-            echo "✅ SUCCESS: GOOGLE_CLIENT_SECRET secret is loaded."
-          fi
-          if [ -z "${{ secrets.POSTGRES_DB }}" ]; then
-            echo "❌ ERROR: POSTGRES_DB secret is not set or empty!"
-            exit 1
-          else
-            echo "✅ SUCCESS: POSTGRES_DB secret is loaded."
-          fi
-          if [ -z "${{ secrets.POSTGRES_PASSWORD }}" ]; then
-            echo "❌ ERROR: POSTGRES_PASSWORD secret is not set or empty!"
-            exit 1
-          else
-            echo "✅ SUCCESS: POSTGRES_PASSWORD secret is loaded."
-          fi
-          if [ -z "${{ secrets.POSTGRES_USER }}" ]; then
-            echo "❌ ERROR: POSTGRES_USER secret is not set or empty!"
-            exit 1
-          else
-            echo "✅ SUCCESS: POSTGRES_USER secret is loaded."
-          fi
-
-      # --------------------------------------------------------
-      # 4) NCP 서버 접속하여 배포(CD과정)
-      - name: Deploy to NCP Server
+      # 3. AWS EC2 서버 접속 및 배포
+      - name: Deploy to AWS EC2
         id: deploy_latest
         uses: appleboy/ssh-action@master
         with:
-          host: ${{ secrets.NCP_SERVER_HOST }}
-          username: ${{ secrets.NCP_SERVER_USERNAME }}
-          key: ${{ secrets.NCP_SSH_PRIVATE_KEY }}
+          host: ${{ secrets.API_SERVER_HOST }}
+          username: ${{ secrets.AWS_EC2_USERNAME }}
+          key: ${{ secrets.API_SSH_KEY }}
           script: |
-            set -e  # 스크립트 내의 명령어 중 하나라도 실패하면 스크립트 중단
-            cd ~/dev/helloworld-platform
+            set -e
+            # 프로젝트 디렉토리로 이동 (본인의 실제 경로 확인)
+            cd ~/dev/helloworld-platform 
             
-            # docker-compose.yml 파일을 최신버전으로 업데이트
-            echo "--- Pulling latest source code from main branch ---"
+            echo "--- Git Pulling ---"
             git pull origin main
             
-            # .env 파일을 한번에 생성
-            echo "--- Creating .env file on server ---"
+            echo "--- Generating .env file ---"
             cat << EOF > .env
             DOCKER_USERNAME=${{ secrets.DOCKER_USERNAME }}
             IMAGE_TAG=latest
-            POSTGRES_DB=${{ secrets.POSTGRES_DB }}
+            
+            # [DB & Cache]
+            SPRING_DATASOURCE_URL=${{ secrets.RDS_ENDPOINT }}
             POSTGRES_USER=${{ secrets.POSTGRES_USER }}
             POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}
+            SPRING_REDIS_HOST=${{ secrets.REDIS_HOST }}
+            SPRING_REDIS_PORT=6379
+            
+            # [AWS SDK Credentials]
+            AWS_REGION=${{ secrets.AWS_REGION }}
+            
+            # [S3 & SQS for Grading]
+            S3_BUCKET_NAME=${{ secrets.S3_BUCKET_NAME }}
+            SQS_QUEUE_URL=${{ secrets.SQS_QUEUE_URL }}
+            
+            # [Auth & OAuth]
             JWT_SECRET_KEY=${{ secrets.JWT_SECRET_KEY }}
             GOOGLE_CLIENT_ID=${{ secrets.GOOGLE_CLIENT_ID }}
             GOOGLE_CLIENT_SECRET=${{ secrets.GOOGLE_CLIENT_SECRET }}
             EOF
             
-            echo "--- Pulling latest images ---"
-            docker compose pull
-            echo "--- Starting containers ---"
-            docker compose up -d
-            echo "--- Pruning unused images ---"
-            docker image prune -f
+            echo "--- Docker Compose Deploy ---"
+            # 개발용 도커 컴포즈 파일 지정 실행
+            docker compose -f docker-compose.dev.yml pull
+            docker compose -f docker-compose.dev.yml up -d
+            
+            echo "--- Cleanup ---"
+            docker image prune -f      
 
       # --------------------------------------------------------
-      # 5. 배포 실패 시 이전 버전으로 롤백
-      - name: Rollback to previous version on failure
+      # 4. 배포 실패 시 롤백 (이전 이미지 사용)
+      - name: Rollback on failure
         if: failure() && steps.deploy_latest.outcome == 'failure'
         uses: appleboy/ssh-action@master
         with:
-          host: ${{ secrets.NCP_SERVER_HOST }}
-          username: ${{ secrets.NCP_SERVER_USERNAME }}
-          key: ${{ secrets.NCP_SSH_PRIVATE_KEY }}
+          host: ${{ secrets.AWS_EC2_HOST }}
+          username: ${{ secrets.AWS_EC2_USERNAME }}
+          key: ${{ secrets.AWS_SSH_PRIVATE_KEY }}
           script: |
-            set -e
-            echo "Deployment failed. Rolling back to previous version..."
             cd ~/dev/helloworld-platform
-            
+            echo "Deployment failed. Rolling back to :previous version..."
             sed -i 's/^IMAGE_TAG=.*/IMAGE_TAG=previous/' .env
-            
-            docker compose pull
-            docker compose up -d
+            docker compose -f docker-compose.dev.yml pull
+            docker compose -f docker-compose.dev.yml up -d
 
       # --------------------------------------------------------
-      # 6) 배포 성공 시 Discord 알림
+      # 5) 배포 성공 시 Discord 알림
       - name: Discord Notification (Success)
         if: ${{ success() }}
         uses: sarisia/actions-status-discord@v1
         with:
           webhook: ${{ secrets.DISCORD_WEBHOOK_URL }}
-          title: "✅ 배포 성공!"
+          status: ${{ job.status }}
+          title: "✅ AWS Dev 서버 배포 성공!"
           description: |
-            • REST API: http://${{ secrets.NCP_SERVER_HOST }}:8081
-            • WebSocket: http://${{ secrets.NCP_SERVER_HOST }}:8091
+            **Status**: ${{ job.status }}
+            **Branch**: ${{ github.ref_name }}
+            **Commit**: ${{ github.sha }}
+            🔗 **API**: https://helloworld-coding-platform.com
+            🔗 **WebSocket**: wss://helloworld-coding-platform.com/ws
           color: 65280 #green
           username: Deploy Bot
 
       # --------------------------------------------------------
-      # 7) 배포 실패 시 Discord 알림 (롤백 직후 실행)
+      # 6) 배포 실패 시 Discord 알림 (롤백 직후 실행)
       - name: Discord Notification (Failure)
         if: ${{ failure() }}
         uses: sarisia/actions-status-discord@v1
         with:
           webhook: ${{ secrets.DISCORD_WEBHOOK_URL }}
-          title: "🚨 배포실패"
-          description: "NCP 서버 배포 중 오류가 발생했습니다. Actions 로그를 확인해주세요."
+          title: "🚨 AWS Dev 배포 실패"
+          description: |
+            **Status**: Failed
+            **Branch**: ${{ github.ref_name }}
+            **Commit**: ${{ github.sha }}
           color: 16711680 #Red
           username: Deploy Bot

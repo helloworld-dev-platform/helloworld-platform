@@ -36,3 +36,8 @@ out/
 ### VS Code ###
 .vscode/
 .env
+
+### Querydsl QClass
+/src/main/generated/
+/bin/
+/build/

@@ -2,7 +2,7 @@ services:
   backend-server:
     build:
       context: ./backend-api
-    image: docker.io/${DOCKER_USERNAME}/backend-server:${IMAGE_TAG:-latest}
+    image: backend-server:local
     container_name: backend-server
     env_file:
       - ./.env
