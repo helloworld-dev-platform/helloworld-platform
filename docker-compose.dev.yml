@@ -37,6 +37,7 @@ services:
       - ./.env
     environment:
       - SPRING_PROFILES_ACTIVE=dev
+      - SERVER_ADDRESS=0.0.0.0
     networks:
       - backend-net
     restart: always

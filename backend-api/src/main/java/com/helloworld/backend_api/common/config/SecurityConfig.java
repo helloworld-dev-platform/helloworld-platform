@@ -71,7 +71,9 @@ public class SecurityConfig {
                 "/login/oauth2/code/google",
                 "/auth/google/login",
                 "/oauth2/**",
-                "/auth/login"
+                "/auth/login",
+                "/api/health",
+                "/api/**"
             ).permitAll()
             .anyRequest().authenticated()
         );
