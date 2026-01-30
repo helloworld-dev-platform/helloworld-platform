@@ -67,7 +67,7 @@ jobs:
         id: deploy_latest
         uses: appleboy/ssh-action@master
         with:
-          host: ${{ secrets.API_SERVER_HOST }}
+          host: ${{ secrets.AWS_EC2_HOST }}
           username: ${{ secrets.AWS_EC2_USERNAME }}
           key: ${{ secrets.API_SSH_KEY }}
           script: |
