@@ -123,6 +123,8 @@ jobs:
             POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}
             SPRING_REDIS_HOST=${{ secrets.REDIS_HOST }}
             SPRING_REDIS_PORT=6379
+            REDIS_USER=${{ secrets.REDIS_USER }}
+            REDIS_PASSWORD=${{ secrets.REDIS_PASSWORD }}
             
             # [AWS SDK Credentials]
             AWS_REGION=${{ secrets.AWS_REGION }}
